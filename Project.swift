@@ -3,18 +3,25 @@ import ProjectDescription
 let project = Project(
     name: "SeaLens",
     targets: [
+        // MARK: - Main App Target
         .target(
             name: "SeaLens",
             destinations: .macOS,
             product: .app,
             bundleId: "dev.tuist.SeaLens",
             infoPlist: .default,
-            sources: ["SeaLens/sources/**],
-            resources: ["Sealens/resources/**"],
+            buildableFolders: [
+                "SeaLens/App",
+                "SeaLens/Features",
+                "SeaLens/Shared",
+                "SeaLens/Resources"
+            ],
             dependencies: [
-                .external(name: ZipArchive")
+                .external(name: "ZipArchive")
             ]
         ),
+
+        // MARK: - Tests Target
         .target(
             name: "SeaLensTests",
             destinations: .macOS,
@@ -24,7 +31,9 @@ let project = Project(
             buildableFolders: [
                 "SeaLens/Tests"
             ],
-            dependencies: [.target(name: "SeaLens")]
-        ),
+            dependencies: [
+                .target(name: "SeaLens")
+            ]
+        )
     ]
 )
