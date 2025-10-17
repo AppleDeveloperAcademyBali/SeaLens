@@ -10,9 +10,9 @@ let project = Project(
             product: .app,
             bundleId: "dev.tuist.SeaLens",
             infoPlist: .default,
-            sources: [
-                "SeaLens/App/**",
-                "SeaLens/Resources/**"
+            buildableFolders: [
+                "SeaLens/App",
+                "SeaLens/Resources"
             ],
             dependencies: [
                 .external(name: "ZipArchive")
