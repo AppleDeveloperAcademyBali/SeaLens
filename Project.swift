@@ -12,8 +12,6 @@ let project = Project(
             infoPlist: .default,
             sources: [
                 "SeaLens/App/**",
-                "SeaLens/Features/**",
-                "SeaLens/Shared/**",
                 "SeaLens/Resources/**"
             ],
             dependencies: [
