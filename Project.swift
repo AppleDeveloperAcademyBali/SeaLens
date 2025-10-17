@@ -10,7 +10,9 @@ let project = Project(
             bundleId: "dev.tuist.SeaLens",
             infoPlist: .default,
             buildableFolders: [
-                "SeaLens/Sources",
+                "SeaLens/App",
+                "SeaLens/Features",
+                "SeaLens/Shared",
                 "SeaLens/Resources",
             ],
             dependencies: []
