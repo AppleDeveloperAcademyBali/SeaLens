@@ -13,6 +13,9 @@ import ZipArchive
 enum FileServiceError: LocalizedError {
     case zipFileNotFound
     case extractionFailed(String)
+    case fileNotFound
+    case deletionFailed(String)
+    case directoryCreationFailed(String)
     
     var errorDescription: String? {
         switch self {
@@ -20,6 +23,12 @@ enum FileServiceError: LocalizedError {
             return "Zip file not found."
         case .extractionFailed(let message):
             return "Extraction failed: \(message)"
+        case .fileNotFound:
+            return "File or folder not found."
+        case .deletionFailed(let message):
+            return "Failed to delete item: \(message)"
+        case .directoryCreationFailed(let message):
+            return "Failed to create directory: \(message)"
         }
     }
 }
@@ -34,18 +43,23 @@ class FileService {
     // MARK: - Extract Zip File
     func extract(from zipURL: String, to destinationURL: String) async throws -> Bool {
         
-        // validate the Zip File Exists
+        // validate the zip file exists
         guard FileManager.default.fileExists(atPath: zipURL) else {
             throw FileServiceError.zipFileNotFound
         }
         
         // creates destination folder before extracting
-        try FileManager.default.createDirectory(
-            atPath: destinationURL,
-            withIntermediateDirectories: true,
-            attributes: nil)
+        do {
+            try FileManager.default.createDirectory(
+                atPath: destinationURL,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+        } catch {
+            throw FileServiceError.directoryCreationFailed(error.localizedDescription)
+        }
         
-        // perform Extraction
+        // perform extraction
         return try await withCheckedThrowingContinuation { continuation in
             
             // flag to prevent double-resume crashes
@@ -88,16 +102,40 @@ class FileService {
         let appDirectory = appSupport.appendingPathComponent("SeaLens")
         
         // creates the subfolder "SeaLens" if it doesn't exist
-        try FileManager.default.createDirectory(
-            at: appDirectory,
-            withIntermediateDirectories: true,
-            attributes: nil
+        do {
+            try FileManager.default.createDirectory(
+                at: appDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil
             )
+        } catch {
+            throw FileServiceError.directoryCreationFailed(error.localizedDescription)
+        }
         
         // returns the URL of the where the new folder should be
         return appDirectory.appendingPathComponent("ExtractedImages_\(UUID().uuidString.prefix(8))")
     
     }
+    
+    
+    // MARK: - Delete File or Folder
+    func deleteItem(at url: URL) throws {
+        
+        let fileManager = FileManager.default
+        
+        // check if the file exists before deleting
+        guard fileManager.fileExists(atPath: url.path) else {
+            throw FileServiceError.fileNotFound
+        }
+        
+        do {
+            try fileManager.removeItem(at: url)
+        } catch {
+            throw FileServiceError.deletionFailed(error.localizedDescription)
+        }
+        
+    }
+    
     
     
     

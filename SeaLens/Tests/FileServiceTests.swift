@@ -100,5 +100,75 @@ final class FileServiceTests: XCTestCase {
     }
     
     
+    // MARK: - Delete File Test
+    func testDeleteFile() throws {
+        
+        // create a test file
+        let testFile = testDirectory.appendingPathComponent("fileToDelete.txt")
+        try "Delete me".write(
+            to: testFile,
+            atomically: true,
+            encoding: .utf8
+        )
+        
+        // verify file exists before deletion
+        XCTAssertTrue(FileManager.default.fileExists(atPath: testFile.path), "File should exist before deletion")
+        
+        // delete the file
+        try fileService.deleteItem(at: testFile)
+        
+        // verify file no longer exists
+        XCTAssertFalse(FileManager.default.fileExists(atPath: testFile.path), "File should not exist after deletion")
+        
+    }
+    
+    
+    // MARK: - Delete Non-Existent File Text
+    func testDeleteFolder() throws {
+        
+        // create a test folder with files inside
+        let testFolder = testDirectory.appendingPathComponent("folderToDelete")
+        try FileManager.default.createDirectory(
+            at: testFolder,
+            withIntermediateDirectories: true
+        )
+        
+        let file1 = testFolder.appendingPathComponent("file1.txt")
+        let file2 = testFolder.appendingPathComponent("file2.txt")
+        try "File 1 content".write(to: file1, atomically: true, encoding: .utf8)
+        try "File 2 content".write(to: file2, atomically: true, encoding: .utf8)
+        
+        // verify folder exists before deletion
+        XCTAssertTrue(FileManager.default.fileExists(atPath: testFolder.path), "Folder should exist before deletion")
+        
+        // delete the folder
+        try fileService.deleteItem(at: testFolder)
+        
+        // verify the folder no longer exists
+        XCTAssertFalse(FileManager.default.fileExists(atPath: testFolder.path), "Folder should not exist after deletion")
+
+    }
+    
+    
+    // MARK: - Delete Non-Existent File Test
+    func testDeleteNonExistentFile() throws {
+        
+        // make the non existent file path
+        let nonExistentFile = testDirectory.appendingPathComponent("doesNotExists.txt")
+        
+        // attempt to delete non-existent file
+        do {
+            try fileService.deleteItem(at: nonExistentFile)
+            XCTFail("Should throw fileNotFound error")
+        } catch FileServiceError.fileNotFound {
+            XCTAssertTrue(true, "Correctly threw fileNotFound error")
+        } catch {
+            XCTFail("Wrong error type: \(error)")
+        }
+        
+    }
+    
+    
+    
     
 }
