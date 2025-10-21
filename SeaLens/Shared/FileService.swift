@@ -25,7 +25,8 @@ enum FileServiceError: LocalizedError {
 }
 
 
-// MARK: - FileService Class
+
+// MARK: FileService Class
 class FileService {
     
     
@@ -33,21 +34,21 @@ class FileService {
     // MARK: - Extract Zip File
     func extract(from zipURL: String, to destinationURL: String) async throws -> Bool {
         
-        // Validate the Zip File Exists
+        // validate the Zip File Exists
         guard FileManager.default.fileExists(atPath: zipURL) else {
             throw FileServiceError.zipFileNotFound
         }
         
-        // Creates destination folder before extracting
+        // creates destination folder before extracting
         try FileManager.default.createDirectory(
             atPath: destinationURL,
             withIntermediateDirectories: true,
             attributes: nil)
         
-        // Perform Extraction
+        // perform Extraction
         return try await withCheckedThrowingContinuation { continuation in
             
-            // Flag to prevent double-resume crashes
+            // flag to prevent double-resume crashes
             var hasResumed = false
             
             _ = SSZipArchive.unzipFile(
@@ -69,10 +70,33 @@ class FileService {
                 
             }
             
-            
         }
         
+    }
+    
+    
+    // MARK: - Create A Unique Extraction Path
+    func createUniqueExtractionPath() throws -> URL {
         
+        // asking macOS where the application support directory
+        let appSupport = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ) [0]
+        
+        // defines subfolder named "SeaLens" inside the application support directory
+        let appDirectory = appSupport.appendingPathComponent("SeaLens")
+        
+        // creates the subfolder "SeaLens" if it doesn't exist
+        try FileManager.default.createDirectory(
+            at: appDirectory,
+            withIntermediateDirectories: true,
+            attributes: nil
+            )
+        
+        // returns the URL of the where the new folder should be
+        return appDirectory.appendingPathComponent("ExtractedImages_\(UUID().uuidString.prefix(8))")
+    
     }
     
     

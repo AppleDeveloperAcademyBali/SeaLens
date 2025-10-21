@@ -9,6 +9,7 @@ import XCTest
 import ZipArchive
 @testable import SeaLens
 
+// MARK: - File Service Unit Tests
 final class FileServiceTests: XCTestCase {
     
     var fileService: FileService!
@@ -35,7 +36,9 @@ final class FileServiceTests: XCTestCase {
         testDirectory = nil
         try super.tearDownWithError()
     }
-
+    
+    
+    // MARK: - Zip Extraction Test
     func testExtraction() async throws {
         // create a test file
         let testFile = testDirectory.appendingPathComponent("test.txt")
@@ -65,7 +68,37 @@ final class FileServiceTests: XCTestCase {
             "Extracted file should exist"
         )
         
-        let content = try String(contentsOf: extractedFile)
+        let content = try String(contentsOf: extractedFile, encoding: .utf8)
         XCTAssertEqual(content, "Hello, World!", "Content should match")
     }
+    
+    
+    // MARK: - Create Unique Extraction Path Test
+    func testUniqueExtractionPath() throws {
+        
+        // create a new instance of the file service
+        let fileService = FileService()
+        
+        // call the function twice
+        let path1 = try fileService.createUniqueExtractionPath()
+        let path2 = try fileService.createUniqueExtractionPath()
+
+        
+        // verify the path has the expected app directory name
+        XCTAssertTrue(path1.path.contains("SeaLens"), "Path should include 'SeaLens' directory")
+        
+        // verify the folder name follows the expected naming conventions
+        XCTAssertTrue(path1.lastPathComponent.starts(with: "ExtractedImages_"), "Should create unique folder name")
+                      
+        // verify parent folder 'SeaLens' exists
+        let parentExists = FileManager.default.fileExists(atPath: path1.deletingLastPathComponent().path)
+        XCTAssertTrue(parentExists, "Parent directory 'SeaLens' should exist.")
+        
+        // verify both paths are not the same
+        XCTAssertNotEqual(path1.lastPathComponent, path2.lastPathComponent, "Each call should produce a unique folder name")
+        
+    }
+    
+    
+    
 }
