@@ -1,6 +1,8 @@
 import Testing
 @testable import SeaLens
 
+import XCTest
+
 struct SeaLensTests {
 
     @Test func example() async throws {
