@@ -1,17 +1,34 @@
 import SwiftUI
 
 public struct ContentView: View {
-    public init() {}
-
+    
+    @State private var selection = "Dashboard"
+    
     public var body: some View {
-        Text("Hello, World!")
-            .padding()
+        
+        NavigationSplitView (
+            sidebar: {
+                Sidebar(selection: $selection)
+            },
+            detail: {
+                switch selection {
+                case "Dashboard":
+                    DashboardView()
+                case "Recent Uploads":
+                    RecentUploadsView()
+                case "Fish Collection":
+                    FishCollectionView()
+                default:
+                    Text("Unknown Section")
+                }
+            }
+            
+        )
     }
 }
 
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
 }
+

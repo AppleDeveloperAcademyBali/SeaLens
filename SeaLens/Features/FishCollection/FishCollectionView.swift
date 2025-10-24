@@ -1,0 +1,18 @@
+//
+//  FishCollectionView.swift
+//  SeaLens
+//
+//  Created by Shreyas Venadan on 25/10/2025.
+//
+
+import SwiftUI
+
+public struct FishCollectionView: View {
+    
+    
+    public var body: some View  {
+        
+        Text("This may or may not be the Fish Collection")
+
+    }
+}
