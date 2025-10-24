@@ -4,7 +4,8 @@ let project = Project(
     name: "SeaLens",
     packages: [
         .remote(
-            url: 
+            url: "http://github.com/ZipArchive/ZipArchive"
+            requirements: .upToNextMajor(for: "2.5.0")
         )
     ]
     targets: [
@@ -18,7 +19,9 @@ let project = Project(
                 "SeaLens/Sources",
                 "SeaLens/Resources",
             ],
-            dependencies: []
+            dependencies: [
+                .package(product: "ZipArchive")
+            ]
         ),
         .target(
             name: "SeaLensTests",
