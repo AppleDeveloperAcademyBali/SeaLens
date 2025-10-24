@@ -35,7 +35,7 @@ enum FileServiceError: LocalizedError {
 
 
 
-// MARK: FileService Class
+// MARK: - FileService Class
 class FileService {
     
     

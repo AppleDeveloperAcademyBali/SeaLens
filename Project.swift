@@ -2,6 +2,11 @@ import ProjectDescription
 
 let project = Project(
     name: "SeaLens",
+    packages: [
+        .remote(
+            url: 
+        )
+    ]
     targets: [
         .target(
             name: "SeaLens",
