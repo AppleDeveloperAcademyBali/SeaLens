@@ -4,10 +4,10 @@ let project = Project(
     name: "SeaLens",
     packages: [
         .remote(
-            url: "http://github.com/ZipArchive/ZipArchive"
-            requirements: .upToNextMajor(for: "2.5.0")
+            url: "https://github.com/ZipArchive/ZipArchive.git",
+            requirement: .upToNextMajor(from: "2.5.0")
         )
-    ]
+    ],
     targets: [
         .target(
             name: "SeaLens",
@@ -32,7 +32,9 @@ let project = Project(
             buildableFolders: [
                 "SeaLens/Tests"
             ],
-            dependencies: [.target(name: "SeaLens")]
-        ),
+            dependencies: [
+                .target(name: "SeaLens")
+            ]
+        )
     ]
 )
