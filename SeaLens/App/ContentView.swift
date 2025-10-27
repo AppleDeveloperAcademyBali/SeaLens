@@ -13,7 +13,7 @@ public struct ContentView: View {
             detail: {
                 switch selection {
                 case "Dashboard":
-                    DashboardView()
+                    UploadVideoView()
                 case "Recent Uploads":
                     RecentUploadsView()
                 case "Fish Collection":
