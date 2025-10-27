@@ -1,5 +1,5 @@
 //
-//  UploadVideoView.swift
+//  UploadVideoPresentation.swift
 //  SeaLens
 //
 //  Created by Shreyas Venadan on 25/10/2025.
@@ -8,16 +8,9 @@
 import SwiftUI
 
 
-struct UploadVideoView: View {
+struct UploadVideoPresentation: View {
     
-    // state variables
-    @State private var fileName = ""
-    @State private var location = ""
-    @State private var site = ""
-    @State private var transect = ""
-    @State private var depth = ""
-    
-    @State private var originalFile = ""
+    @StateObject private var viewModel = UploadVideoViewModel()
     
     let suggestion = ["Bali", "Sydney", "Jakarta"]
 
@@ -74,9 +67,7 @@ struct UploadVideoView: View {
                                         
                                         // select a file button
                                         Button("Select a file") {
-//                                            if let url = pick() {
-//                                                originalFile = url.lastPathComponent
-                                            }
+                                            viewModel.selectFile()
                                         }
                                         .buttonStyle(.glass)
                                     }
@@ -90,25 +81,25 @@ struct UploadVideoView: View {
                                 VStack(alignment: .leading, spacing: 8){
                                     
                                     Text("File name")
-                                    TextField("", text: $fileName)
+                                    TextField("", text: $viewModel.fileName)
                                         .textFieldStyle(.roundedBorder)
                                         .frame(width: 220)
                                     
                                     Text("Location")
-                                    ComboBox(text: $location, values: suggestion)
+                                    ComboBox(text: $viewModel.location, values: suggestion)
                                         .frame(width: 220)
                                     
                                     Text("Site")
-                                    ComboBox(text: $site, values: suggestion)
+                                    ComboBox(text: $viewModel.site, values: suggestion)
                                         .frame(width: 220)
                                     
                                     Text("Transect")
-                                    ComboBox(text: $transect, values: suggestion)
+                                    ComboBox(text: $viewModel.transect, values: suggestion)
                                         .frame(width: 220)
                                     
                                     Text("Depth")
                                     ZStack(alignment: .trailing)  {
-                                        TextField("", text: $depth)
+                                        TextField("", text: $viewModel.depth)
                                             .textFieldStyle(.roundedBorder)
                                             .frame(width: 220)
                                             .padding(.trailing, 20)
@@ -117,6 +108,25 @@ struct UploadVideoView: View {
                                             .padding(.trailing, 30)
                                     }
                                     Spacer()
+                                    
+                                    Text("Original file name")
+                                    Text(viewModel.originalFileName.isEmpty ? "-" : viewModel.originalFileName)
+                                        .foregroundStyle(.secondary)
+
+                                    
+                                    Text("File duration")
+                                    Text(viewModel.fileDuration.isEmpty ? "-" : viewModel.fileDuration)
+                                        .foregroundStyle(.secondary)
+
+                                    
+                                    Text("Date taken")
+                                    Text(viewModel.dateTaken.isEmpty ? "-" : viewModel.dateTaken)
+                                        .foregroundStyle(.secondary)
+
+                                    
+                                    Spacer()
+
+                                    
                                 }
                                 .padding(.top, 20)
                                 
@@ -136,6 +146,6 @@ struct UploadVideoView: View {
 
 
 #Preview {
-    UploadVideoView()
+    UploadVideoPresentation()
         .frame(width: 1000, height: 700)
 }

@@ -1,5 +1,5 @@
 //
-//  FilePickerService.swift
+//  UploadVideoData.swift
 //  SeaLens
 //
 //  Created by Shreyas Venadan on 27/10/2025.
@@ -7,10 +7,10 @@
 
 import AppKit
 
-final class FilePickerService {
+struct UploadVideoData {
     
-    //
-    static func pickVideo() -> URL? {
+    // function to pick video from finder
+    func pickVideoFromFinder() -> URL? {
         
         let panel = NSOpenPanel()
         panel.title = "Select a Video File"
@@ -19,13 +19,11 @@ final class FilePickerService {
         panel.canChooseFiles = true                 // allows choosing files
         panel.canChooseDirectories = false          // cannot choose directories
         
-        // show the finder panel as a modal window
-        let response = panel.runModal()
-        if response == .OK  {
+
+        if panel.runModal() == .OK {
             return panel.url
-        }   else {
-            return nil
         }
+        return nil
         
     }
     
