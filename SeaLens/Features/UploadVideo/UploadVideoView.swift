@@ -74,8 +74,8 @@ struct UploadVideoView: View {
                                         
                                         // select a file button
                                         Button("Select a file") {
-                                            if let url = chooseFile() {
-                                                originalFile = url.lastPathComponent
+//                                            if let url = pick() {
+//                                                originalFile = url.lastPathComponent
                                             }
                                         }
                                         .buttonStyle(.glass)
