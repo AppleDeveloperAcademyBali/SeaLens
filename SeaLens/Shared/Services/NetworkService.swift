@@ -104,7 +104,89 @@ class NetworkService: NetworkServiceProtocol    {
     
     
     // MARK: - Upload Video
-//    func 
+    func uploadVideo(
+        fileURL: URL,                                                       // local path of the video to upload
+        progress: @escaping (Double) -> Void,                               // closure to report upload progress
+        completion: @escaping (Result<String, Error>) -> Void               // closeure to report success or failure
+    ){
+        
+        // construct the full API endpoint for uploading videos
+        guard let uploadURL = URL(string: "\(serverURL)/upload") else {
+            completion(.failure(NetworkServiceError.invalidURL))
+            return
+        }
+        
+        // create a POST request to send data to the server
+        var request = URLRequest(url: uploadURL)
+        request.httpMethod = "POST"
+        
+        // generate a random boundary string
+        let boundary = UUID().uuidString
+        
+        // set the content-type header to indicate multipart upload
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // build multipart/form-data request body
+        var body = Data()
+        let fileName = fileURL.lastPathComponent
+        let mimeType = "video/mp4"
+        
+        
+        // start the first boundary line
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+
+        // tell the server this is a file field, with its name and filename
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+
+        // tell the server the file type
+        body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+        
+        // read the file's binary data and append it to the body
+        body.append((try? Data(contentsOf: fileURL)) ?? Data())
+        
+        // add a newline after the file data
+        body.append("\r\n".data(using: .utf8)!)
+        
+        // mark the end of the multipart form data
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        
+        // create the upload task
+        let task = session.uploadTask(with: request, from: body) { data, response, error in
+            
+            // handle network erros
+            if let error = error {
+                completion(.failure(NetworkServiceError.uploadingFailed(error.localizedDescription)))
+                return
+            }
+            
+            // ensure valid HTTP response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NetworkServiceError.invalidResponse))
+                return
+            }
+
+            // check if status code is within the success range
+            guard (200...299).contains(httpResponse.statusCode) else {
+                completion(.failure(NetworkServiceError.httpError(statusCode: httpResponse.statusCode)))
+                return
+            }
+            
+            // completion message
+            completion(.success("Upload successful"))
+            
+            
+        }
+        
+        // observe the progress of the upload and call the progress closure with a fraction (0.0–1.0)
+        let observation = task.progress.observe(\.fractionCompleted)    { progressObj, _ in
+            progress(progressObj.fractionCompleted)
+        }
+
+        // start the upload task
+        task.resume()
+        
+    }
     
     
     

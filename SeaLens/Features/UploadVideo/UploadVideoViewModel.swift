@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import UniformTypeIdentifiers
 
 @MainActor
 final class UploadVideoViewModel: ObservableObject {
     
-    // published properties for the view
+    // MARK: - published properties for the view
     
     // state variables
     @Published var fileName = ""
@@ -24,20 +25,91 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var date = ""
     @Published var fileSize = ""
     
-    private let domain = UploadVideoDomain()
+    @Published var uploadProgress: Double = 0
+    @Published var isUploading: Bool = false
+    @Published var uploadStatusMessage: String = ""
     
-    func selectFile() {
-        Task {
-            if let result = await domain.pickVideoAndExtractMetadata() {
-                originalFileName = result.url.lastPathComponent
-                fileDuration = result.duration
-                date = result.date
-                fileSize = result.fileSize
+    private let domain = UploadVideoDomain()
+    private var selectedFileURL: URL?
+    
+    
+    private func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
+        originalFileName = result.url.lastPathComponent
+        fileDuration = result.duration
+        date = result.date
+        fileSize = result.fileSize
+        selectedFileURL = result.url
+    }
+    
+    
+    
+    // MARK: - Select File
+    func handleFileSelection()  {
+        Task    {
+            if let result = await self.domain.pickVideoAndExtractMetadata() {
+                self.applyMetadata(result)
             }
         }
     }
     
     
+    // MARK: - File Drop
+    func handleFileDrop(providers: [NSItemProvider]) -> Bool {
+        
+        for provider in providers {
+            
+            if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
+                provider.loadItem(forTypeIdentifier: UTType.movie.identifier, options: nil) { item, _ in
+                    if let url = item as? URL {
+                        Task { @MainActor in
+                            if let result = await self.domain.extractMetadata(from: url) {
+                                self.applyMetadata(result)
+                            }
+                        }
+                    }
+                    
+                }
+                return true
+            }
+        }
+        return false
+    }
+    
+    
+    // MARK: - Upload Video
+    func uploadSelectedVideo() {
+        
+        // make sure file is selected
+        guard let fileURL = selectedFileURL else {
+            uploadStatusMessage = "Please select a video"
+            return
+        }
+        
+        
+        isUploading = true                              // triggers progress bar
+        uploadProgress = 0                              // reset progress to 0
+        uploadStatusMessage = "Uploading..."         // update essage shown in UI
+        
+        domain.uploadVideo(fileURL: fileURL, progress: { [weak self] progress in
+            DispatchQueue.main.async {
+                self?.uploadProgress = progress
+            }
+        }, completion: { [weak self] result in
+            DispatchQueue.main.async {
+                self?.isUploading = false
+                switch result {
+                case.success(let message):
+                    self?.uploadStatusMessage = message
+                    
+                case.failure(let error):
+                    self?.uploadStatusMessage = "Upload Failed: \(error.localizedDescription)"
+                }
+            }
+            
+        })
+        
+    }
+
     
     
 }

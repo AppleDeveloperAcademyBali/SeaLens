@@ -9,6 +9,9 @@ import AppKit
 
 struct UploadVideoData {
     
+    private let networkService: NetworkService
+    
+    
     // function to pick video from finder
     @MainActor
     func pickVideoFromFinder() -> URL? {
@@ -24,5 +27,18 @@ struct UploadVideoData {
         return panel.runModal() == .OK ? panel.url : nil
         
     }
+    
+    
+    init(networkService: NetworkService = NetworkService()) {
+        self.networkService = networkService
+    }
+    
+    func upload(fileURL: URL,
+                progress: @escaping (Double) -> Void,
+                completion: @escaping (Result<String, Error>) -> Void) {
+        networkService.uploadVideo(fileURL: fileURL, progress: progress, completion: completion)
+    }
+    
+    
     
 }

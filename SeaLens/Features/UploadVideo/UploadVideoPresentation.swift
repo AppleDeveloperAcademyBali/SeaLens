@@ -49,37 +49,59 @@ struct UploadVideoPresentation: View {
                                     RoundedRectangle(cornerRadius: 10)
                                         .stroke(style: StrokeStyle(lineWidth: 1, dash: [8]))
                                         .foregroundColor(.gray.opacity(0.4))
+                                        .onDrop(of: ["public.movie"], isTargeted: nil)  { providers in
+                                            viewModel.handleFileDrop(providers: providers)
+                                        }
                                     
                                     VStack (spacing: 15) {
                                         
-                                        // upload icon
-                                        Image(systemName: "tray.and.arrow.up.fill")
-                                            .font(.system(size: 30))
-                                            .foregroundColor(.gray)
                                         
-                                        VStack(spacing: 3) {
-                                            Text("Drag & drop or select a file")
-                                                .font(.headline)
-                                            Text("MP4, AVI, MOV, WMV, and MKV formats, up to 50MB")
-                                                .font(.footnote)
-                                                .foregroundStyle(.secondary)
+                                        if viewModel.originalFileName.isEmpty {
+                                            
+                                            // upload icon
+                                            Image(systemName: "tray.and.arrow.up.fill")
+                                                .font(.system(size: 30))
+                                                .foregroundColor(.gray)
+                                            
+                                            VStack(spacing: 3) {
+                                                Text("Drag & drop or select a file")
+                                                    .font(.headline)
+                                                Text("MP4, AVI, MOV, WMV, and MKV formats, up to 50MB")
+                                                    .font(.footnote)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                            
+                                            // select a file button
+                                            Button("Select a file") {
+                                                viewModel.handleFileSelection()
+                                            }
+                                            .buttonStyle(.glass)
+                                            
+                                        } else {
+                                            
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .font(.system(size: 40))
+                                                .foregroundColor(.green)
+                                            
+                                                Text(viewModel.originalFileName)
+                                                    .font(.headline)
+ 
+                                            // select a file button
+                                            Button("Select a different file") {
+                                                viewModel.handleFileSelection()
+                                            }
+                                            .buttonStyle(.glass)
+                                            
                                         }
                                         
-                                        // select a file button
-                                        Button("Select a file") {
-                                            viewModel.selectFile()
-                                        }
-                                        .buttonStyle(.glass)
+                                        
+                                        
+
                                     }
                                     .padding()
                                 }
                                 .padding()
                                 .frame(width: geometry.size.width * 0.5)
-                                
-                                // enables drag-and-drop file handling via ViewModel
-//                                .onDrop(of: ["public.movie"], isTargeted: nil)  {providers in
-//                                    viewModel.onDrop(providers: providers)
-//                                }
                                 
                                 
                                 // RIGHT SIDE: enter information
