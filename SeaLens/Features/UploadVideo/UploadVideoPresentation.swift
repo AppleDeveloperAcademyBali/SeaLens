@@ -76,6 +76,11 @@ struct UploadVideoPresentation: View {
                                 .padding()
                                 .frame(width: geometry.size.width * 0.5)
                                 
+                                // enables drag-and-drop file handling via ViewModel
+//                                .onDrop(of: ["public.movie"], isTargeted: nil)  {providers in
+//                                    viewModel.onDrop(providers: providers)
+//                                }
+                                
                                 
                                 // RIGHT SIDE: enter information
                                 VStack(alignment: .leading, spacing: 8){
@@ -109,35 +114,50 @@ struct UploadVideoPresentation: View {
                                     }
                                     Spacer()
                                     
-                                    Text("Original file name")
-                                    Text(viewModel.originalFileName.isEmpty ? "-" : viewModel.originalFileName)
+                                    // original file name
+                                    Text(viewModel.originalFileName.isEmpty ? "" : "Original file name")
+                                    Text(viewModel.originalFileName.isEmpty ? "" : viewModel.originalFileName)
+                                        .foregroundStyle(.secondary)
+
+                                    // file duration
+                                    Text(viewModel.fileDuration.isEmpty ? "" : "File duration")
+                                    Text(viewModel.fileDuration.isEmpty ? "" : viewModel.fileDuration)
                                         .foregroundStyle(.secondary)
 
                                     
-                                    Text("File duration")
-                                    Text(viewModel.fileDuration.isEmpty ? "-" : viewModel.fileDuration)
+                                    // date taken
+                                    Text(viewModel.date.isEmpty ? "" : "Date taken")
+                                    Text(viewModel.date.isEmpty ? "" : viewModel.date)
                                         .foregroundStyle(.secondary)
-
                                     
-                                    Text("Date taken")
-                                    Text(viewModel.dateTaken.isEmpty ? "-" : viewModel.dateTaken)
+                                    // file size
+                                    Text(viewModel.fileSize.isEmpty ? "" : "File size")
+                                    Text(viewModel.fileSize.isEmpty ? "" : viewModel.fileSize)
                                         .foregroundStyle(.secondary)
 
                                     
                                     Spacer()
+                                    
+                                    // upload and process button
+                                    Button("Upload and process file") {
+                                        
+                                    }
+                                    .buttonStyle(.glass)
+                                    
+                                    
 
                                     
                                 }
-                                .padding(.top, 20)
-                                
+                                .padding([.top, .bottom], 20)
+
                             }
                             .padding()
                         }
                     }
                     Spacer()
                 }
-                .padding(.horizontal, 40)
-                .padding(.vertical, 40)
+                .padding(.horizontal, 60)
+                .padding(.vertical, 60)
             }
         }
     }
@@ -147,5 +167,5 @@ struct UploadVideoPresentation: View {
 
 #Preview {
     UploadVideoPresentation()
-        .frame(width: 1000, height: 700)
+        .frame(width: 1000, height: 800)
 }
