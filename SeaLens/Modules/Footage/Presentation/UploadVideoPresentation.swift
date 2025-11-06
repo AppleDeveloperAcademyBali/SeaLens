@@ -13,30 +13,29 @@ struct UploadVideoPresentation: View {
     @StateObject private var viewModel = UploadVideoViewModel()
     
     var body: some View {
-        VStack (alignment: .leading) {
-            
-            // top text
-            Text("Upload Video")
-                .textstyles(.title1Emphasized)
-            Text("Choose a video file and upload to proceed.")
-                .textstyles(.title3Regular)
-                .foregroundStyle(.secondary)
-                .padding(.bottom, 10)
-            
-            // big box outline
-            GeometryReader { geometry in
+        ScrollView {
+            VStack (alignment: .leading) {
                 
+                // top text
+                Text("Upload Video")
+                    .textstyles(.title1Emphasized)
+                Text("Choose a video file and upload to proceed.")
+                    .textstyles(.title3Regular)
+                    .foregroundStyle(.secondary)
+                    .padding(.bottom, 10)
+                
+                // big box outline
                 HStack(alignment: .top, spacing: 16)  {
                     
                     // LEFT SIDE: drag & drop box
                     FileUploadView(viewModel: viewModel)
-                        .frame(width: geometry.size.width * 0.5)
-                    
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
                     
                     // RIGHT SIDE: enter information
                     FileFormView(viewModel: viewModel)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
                     
-                    Spacer()
+                    
                 }
                 .padding()
                 .fixedSize(horizontal: false, vertical: true)
@@ -47,9 +46,10 @@ struct UploadVideoPresentation: View {
                         .opacity(0.5)
                 }
             }
+            .padding(24)
+            .padding(.horizontal,12)
         }
-        .padding(24)
-        .padding(.horizontal,12)
+        
     }
 }
 

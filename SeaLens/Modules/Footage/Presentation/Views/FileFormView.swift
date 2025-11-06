@@ -54,6 +54,11 @@ struct FileFormView: View {
             }
             .padding(.bottom, 8)
             
+            Text("Custom tags")
+                .textstyles(.caption1Regular)
+            CustomTagsView(viewModel: viewModel)
+                .padding(.bottom, 24)
+            
             if viewModel.originalFileName.isEmpty {
                 EmptyView()
             }else {
@@ -111,6 +116,7 @@ struct FileFormView: View {
                 } label: {
                     Text("Upload and process file")
                         .textstyles(.bodyEmphasized)
+                        .frame(height: 25)
                 }
                 .buttonStyle(.glass)
                 
