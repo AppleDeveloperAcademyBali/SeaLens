@@ -15,23 +15,29 @@ final class UploadVideoViewModel: ObservableObject {
     
     // state variables
     @Published var fileName = ""
+    //
     @Published var location = ""
-    @Published var locationSuggestion = ["Bali", "Sydney", "Jakarta"]
+    @Published var locationSuggestion: [String] = []
     @Published var site = ""
-    @Published var siteSuggestion = ["Bali", "Sydney", "Jakarta"]
+    @Published var siteSuggestion: [String] = []
     @Published var transect = ""
-    @Published var transectSuggestion = ["Bali", "Sydney", "Jakarta"]
+    @Published var transectSuggestion: [String] = []
+    //
     @Published var depth = ""
-    
+    //
+    @Published var addTagPressed: Bool = false
+    @Published var newTag = ""
+    @Published var tags: [String] = []
+    //
     @Published var originalFileName = ""
     @Published var fileDuration = ""
     @Published var date = ""
     @Published var fileSize = ""
-    
+    //
     @Published var uploadProgress: Double = 0
     @Published var isUploading: Bool = false
     @Published var uploadStatusMessage: String = ""
-    
+        
     private let domain = UploadVideoDomain()
     private var selectedFileURL: URL?
     
@@ -111,5 +117,17 @@ final class UploadVideoViewModel: ObservableObject {
             
         })
         
+    }
+    
+    // MARK: - Add Tags
+    func addTag() {
+        tags.append(newTag)
+    }
+    
+    // MARK: - Remove Tags
+    func removeTag(_ removedTag: String) {
+        tags.removeAll { tag in
+            removedTag == tag
+        }
     }
 }
