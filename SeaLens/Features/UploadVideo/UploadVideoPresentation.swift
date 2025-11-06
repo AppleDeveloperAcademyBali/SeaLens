@@ -13,7 +13,7 @@ struct UploadVideoPresentation: View {
     @StateObject private var viewModel = UploadVideoViewModel()
     
     let suggestion = ["Bali", "Sydney", "Jakarta"]
-
+    
     
     var body: some View {
         ZStack  {
@@ -86,9 +86,9 @@ struct UploadVideoPresentation: View {
                                                 .font(.system(size: 40))
                                                 .foregroundColor(.green)
                                             
-                                                Text(viewModel.originalFileName)
+                                            Text(viewModel.originalFileName)
                                                 .textstyles(.title2Regular)
- 
+                                            
                                             // select a file button
                                             Button  {
                                                 viewModel.handleFileSelection()
@@ -102,21 +102,12 @@ struct UploadVideoPresentation: View {
                                         
                                         
                                         
-
+                                        
                                     }
                                     .padding()
                                 }
                                 .padding()
                                 .frame(width: geometry.size.width * 0.5)
-                                
-<<<<<<< HEAD
-=======
-                                // enables drag-and-drop file handling via ViewModel
-//                                .onDrop(of: ["public.movie"], isTargeted: nil)  {providers in
-//                                    viewModel.onDrop(providers: providers)
-//                                }
-                                
->>>>>>> main
                                 
                                 // RIGHT SIDE: enter information
                                 VStack(alignment: .leading, spacing: 8){
@@ -155,27 +146,13 @@ struct UploadVideoPresentation: View {
                                     }
                                     Spacer()
                                     
-<<<<<<< HEAD
-                                    Text("Original file name")
-                                    Text(viewModel.originalFileName.isEmpty ? "-" : viewModel.originalFileName)
-                                        .foregroundStyle(.secondary)
-
-                                    
-                                    Text("File duration")
-                                    Text(viewModel.fileDuration.isEmpty ? "-" : viewModel.fileDuration)
-                                        .foregroundStyle(.secondary)
-
-                                    
-                                    Text("Date taken")
-                                    Text(viewModel.dateTaken.isEmpty ? "-" : viewModel.dateTaken)
-=======
                                     // original file name
                                     Text(viewModel.originalFileName.isEmpty ? "" : "Original file name")
                                         .textstyles(.caption1Regular)
                                     Text(viewModel.originalFileName.isEmpty ? "" : viewModel.originalFileName)
                                         .textstyles(.caption1Regular)
                                         .foregroundStyle(.secondary)
-
+                                    
                                     // file duration
                                     Text(viewModel.fileDuration.isEmpty ? "" : "File duration")
                                         .textstyles(.caption1Regular)
@@ -183,7 +160,7 @@ struct UploadVideoPresentation: View {
                                         .textstyles(.caption1Regular)
                                         .foregroundStyle(.secondary)
                                     
-
+                                    
                                     
                                     // date taken
                                     Text(viewModel.date.isEmpty ? "" : "Date taken")
@@ -198,16 +175,9 @@ struct UploadVideoPresentation: View {
                                     Text(viewModel.fileSize.isEmpty ? "" : viewModel.fileSize)
                                         .textstyles(.caption1Regular)
                                         .foregroundStyle(.secondary)
-
+                                    
                                     
                                     Spacer()
-<<<<<<< HEAD
-
-                                    
-                                }
-                                .padding(.top, 20)
-                                
-=======
                                     
                                     // upload and process button
                                     if viewModel.isUploading {
@@ -228,53 +198,37 @@ struct UploadVideoPresentation: View {
                                             Text("Upload and process file")
                                                 .textstyles(.bodyEmphasized)
                                         }
-                                    .buttonStyle(.glass)
+                                        .buttonStyle(.glass)
                                         
                                         if !viewModel.uploadStatusMessage.isEmpty {
                                             Text(viewModel.uploadStatusMessage)
                                                 .font(.footnote)
                                                 .foregroundColor(viewModel.uploadStatusMessage.contains("failed") ? .red: .green)
                                                 .padding(.top, 8)
-
+                                            
                                         }
-
-                                        
-                                        
                                         
                                     }
-                                    
-                                    
-
-                                    
                                 }
-                                .padding([.top, .bottom], 20)
-
->>>>>>> main
+                                
                             }
-                            .padding()
+                            .padding([.top, .bottom], 20)
                         }
+                        .padding()
                     }
-                    Spacer()
                 }
-<<<<<<< HEAD
-                .padding(.horizontal, 40)
-                .padding(.vertical, 40)
-=======
-                .padding(.horizontal, 60)
-                .padding(.vertical, 60)
->>>>>>> main
+                Spacer()
             }
+            .padding(.horizontal, 60)
+            .padding(.vertical, 60)
         }
     }
 }
 
 
 
+
 #Preview {
     UploadVideoPresentation()
-<<<<<<< HEAD
-        .frame(width: 1000, height: 700)
-=======
         .frame(width: 1000, height: 800)
->>>>>>> main
 }

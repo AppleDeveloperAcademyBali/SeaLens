@@ -11,42 +11,7 @@ import AVFoundation
 struct UploadVideoDomain {
     
     private let dataService = UploadVideoData()
-    
-<<<<<<< HEAD
-    func pickVideoAndExtractMetadata() -> (url: URL, duration: String, dateTaken: String)? {
         
-        guard let url = dataService.pickVideoFromFinder() else { return nil }
-        
-        // calculate duration
-        let asset = AVAsset(url: url)
-        let durationSeconds = CMTimeGetSeconds(asset.duration)
-        let minutes = Int(durationSeconds) / 60
-        let seconds = Int(durationSeconds) % 60
-        let duration = "\(minutes)m \(seconds)s"
-        
-        //
-        let date: String
-        
-        if let creationDate = asset.creationDate?.dateValue {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .short
-            date = formatter.string(from: creationDate)
-            
-        } else {
-            date = "Unknown"
-        }
-        
-        
-        
-        
-        
-        return (url, duration, date)
-        
-        
-   
-    }
-    
     // MARK: - Open Finder Function
     func pickVideoAndExtractMetadata() async -> (url: URL, duration: String, date: String, fileSize: String)? {
         
@@ -124,7 +89,4 @@ struct UploadVideoDomain {
         
     }
 
-    
-    
->>>>>>> main
 }

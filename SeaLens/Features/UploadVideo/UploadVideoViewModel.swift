@@ -8,10 +8,7 @@
 import Foundation
 import UniformTypeIdentifiers
 
-<<<<<<< HEAD
-=======
 @MainActor
->>>>>>> main
 final class UploadVideoViewModel: ObservableObject {
     
     // MARK: - published properties for the view
@@ -25,11 +22,7 @@ final class UploadVideoViewModel: ObservableObject {
     
     @Published var originalFileName = ""
     @Published var fileDuration = ""
-<<<<<<< HEAD
-    @Published var dateTaken = ""
-=======
     @Published var date = ""
->>>>>>> main
     @Published var fileSize = ""
     
     @Published var uploadProgress: Double = 0
@@ -116,8 +109,4 @@ final class UploadVideoViewModel: ObservableObject {
         })
         
     }
-
-    
-    
->>>>>>> main
 }
