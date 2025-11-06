@@ -3,6 +3,7 @@ import SwiftData
 
 @main
 struct SeaLensApp: App {
+<<<<<<< HEAD
     let container: ModelContainer
     
     init () {
@@ -28,13 +29,20 @@ struct SeaLensApp: App {
         }
     }
     
+=======
+
+>>>>>>> main
     var body: some Scene {
         
         
         WindowGroup {
             ContentView()
+<<<<<<< HEAD
                 .frame(minWidth: 1200, minHeight: 700)
                 .modelContext(container.mainContext)
+=======
+                .frame(minWidth: 1400, minHeight: 800)
+>>>>>>> main
         }
     }
 }

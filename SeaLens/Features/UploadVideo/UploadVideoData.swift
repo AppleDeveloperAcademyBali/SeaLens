@@ -10,6 +10,10 @@ import AppKit
 struct UploadVideoData {
     
     // function to pick video from finder
+<<<<<<< HEAD
+=======
+    @MainActor
+>>>>>>> main
     func pickVideoFromFinder() -> URL? {
         
         let panel = NSOpenPanel()
@@ -20,10 +24,14 @@ struct UploadVideoData {
         panel.canChooseDirectories = false          // cannot choose directories
         
 
+<<<<<<< HEAD
         if panel.runModal() == .OK {
             return panel.url
         }
         return nil
+=======
+        return panel.runModal() == .OK ? panel.url : nil
+>>>>>>> main
         
     }
     

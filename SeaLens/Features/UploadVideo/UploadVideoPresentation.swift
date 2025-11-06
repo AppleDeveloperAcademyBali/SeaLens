@@ -76,6 +76,14 @@ struct UploadVideoPresentation: View {
                                 .padding()
                                 .frame(width: geometry.size.width * 0.5)
                                 
+<<<<<<< HEAD
+=======
+                                // enables drag-and-drop file handling via ViewModel
+//                                .onDrop(of: ["public.movie"], isTargeted: nil)  {providers in
+//                                    viewModel.onDrop(providers: providers)
+//                                }
+                                
+>>>>>>> main
                                 
                                 // RIGHT SIDE: enter information
                                 VStack(alignment: .leading, spacing: 8){
@@ -109,6 +117,7 @@ struct UploadVideoPresentation: View {
                                     }
                                     Spacer()
                                     
+<<<<<<< HEAD
                                     Text("Original file name")
                                     Text(viewModel.originalFileName.isEmpty ? "-" : viewModel.originalFileName)
                                         .foregroundStyle(.secondary)
@@ -121,23 +130,65 @@ struct UploadVideoPresentation: View {
                                     
                                     Text("Date taken")
                                     Text(viewModel.dateTaken.isEmpty ? "-" : viewModel.dateTaken)
+=======
+                                    // original file name
+                                    Text(viewModel.originalFileName.isEmpty ? "" : "Original file name")
+                                    Text(viewModel.originalFileName.isEmpty ? "" : viewModel.originalFileName)
+                                        .foregroundStyle(.secondary)
+
+                                    // file duration
+                                    Text(viewModel.fileDuration.isEmpty ? "" : "File duration")
+                                    Text(viewModel.fileDuration.isEmpty ? "" : viewModel.fileDuration)
+                                        .foregroundStyle(.secondary)
+
+                                    
+                                    // date taken
+                                    Text(viewModel.date.isEmpty ? "" : "Date taken")
+                                    Text(viewModel.date.isEmpty ? "" : viewModel.date)
+                                        .foregroundStyle(.secondary)
+                                    
+                                    // file size
+                                    Text(viewModel.fileSize.isEmpty ? "" : "File size")
+                                    Text(viewModel.fileSize.isEmpty ? "" : viewModel.fileSize)
+>>>>>>> main
                                         .foregroundStyle(.secondary)
 
                                     
                                     Spacer()
+<<<<<<< HEAD
 
                                     
                                 }
                                 .padding(.top, 20)
                                 
+=======
+                                    
+                                    // upload and process button
+                                    Button("Upload and process file") {
+                                        
+                                    }
+                                    .buttonStyle(.glass)
+                                    
+                                    
+
+                                    
+                                }
+                                .padding([.top, .bottom], 20)
+
+>>>>>>> main
                             }
                             .padding()
                         }
                     }
                     Spacer()
                 }
+<<<<<<< HEAD
                 .padding(.horizontal, 40)
                 .padding(.vertical, 40)
+=======
+                .padding(.horizontal, 60)
+                .padding(.vertical, 60)
+>>>>>>> main
             }
         }
     }
@@ -147,5 +198,9 @@ struct UploadVideoPresentation: View {
 
 #Preview {
     UploadVideoPresentation()
+<<<<<<< HEAD
         .frame(width: 1000, height: 700)
+=======
+        .frame(width: 1000, height: 800)
+>>>>>>> main
 }

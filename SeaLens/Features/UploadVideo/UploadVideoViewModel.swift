@@ -7,6 +7,10 @@
 
 import Foundation
 
+<<<<<<< HEAD
+=======
+@MainActor
+>>>>>>> main
 final class UploadVideoViewModel: ObservableObject {
     
     // published properties for the view
@@ -20,11 +24,16 @@ final class UploadVideoViewModel: ObservableObject {
     
     @Published var originalFileName = ""
     @Published var fileDuration = ""
+<<<<<<< HEAD
     @Published var dateTaken = ""
+=======
+    @Published var date = ""
+>>>>>>> main
     @Published var fileSize = ""
     
     private let domain = UploadVideoDomain()
     
+<<<<<<< HEAD
     
     func selectFile() {
         
@@ -37,4 +46,20 @@ final class UploadVideoViewModel: ObservableObject {
             
     }
     
+=======
+    func selectFile() {
+        Task {
+            if let result = await domain.pickVideoAndExtractMetadata() {
+                originalFileName = result.url.lastPathComponent
+                fileDuration = result.duration
+                date = result.date
+                fileSize = result.fileSize
+            }
+        }
+    }
+    
+    
+    
+    
+>>>>>>> main
 }
