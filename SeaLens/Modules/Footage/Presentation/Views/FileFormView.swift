@@ -107,7 +107,7 @@ struct FileFormView: View {
                 
             } else {
                 Button {
-                    viewModel.uploadSelectedVideo()
+                    viewModel.handleFileSelection()
                 } label: {
                     Text("Upload and process file")
                         .textstyles(.bodyEmphasized)

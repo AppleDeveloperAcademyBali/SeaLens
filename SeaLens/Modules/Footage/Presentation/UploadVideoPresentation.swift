@@ -25,13 +25,13 @@ struct UploadVideoPresentation: View {
             
             // big box outline
             GeometryReader { geometry in
-        
+                
                 HStack(alignment: .top, spacing: 16)  {
                     
                     // LEFT SIDE: drag & drop box
                     FileUploadView(viewModel: viewModel)
                         .frame(width: geometry.size.width * 0.5)
-                        
+                    
                     
                     // RIGHT SIDE: enter information
                     FileFormView(viewModel: viewModel)
@@ -39,6 +39,7 @@ struct UploadVideoPresentation: View {
                     Spacer()
                 }
                 .padding()
+                .fixedSize(horizontal: false, vertical: true)
                 .overlay {
                     RoundedRectangle(cornerRadius: 10)
                         .stroke(style: StrokeStyle(lineWidth: 1))

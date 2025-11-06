@@ -19,7 +19,7 @@ struct FileUploadView: View {
                 .onDrop(of: ["public.movie"], isTargeted: nil)  { providers in
                     viewModel.handleFileDrop(providers: providers)
                 }
-                .frame(height: 400)
+
             
             VStack (spacing: 15) {
                 
@@ -74,5 +74,5 @@ struct FileUploadView: View {
 }
 
 #Preview {
-    FileUploadView(viewModel: UploadVideoViewModel())
+    FileUploadView(viewModel: UploadVideoViewModel()) 
 }
