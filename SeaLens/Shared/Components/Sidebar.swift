@@ -35,7 +35,7 @@ struct Sidebar: View {
         .listStyle(SidebarListStyle())
         
         // sets sidebar minimum width
-        .frame(minWidth: 100)
+        .frame(minWidth: 175)
     }
     
 }
