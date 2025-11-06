@@ -1,7 +1,7 @@
 import SwiftUI
 
 public struct ContentView: View {
-    
+    @Environment(\.modelContext) var modelContext
     @State private var selection = "Dashboard"
     
     public var body: some View {
@@ -15,7 +15,7 @@ public struct ContentView: View {
                 case "Dashboard":
                     UploadVideoPresentation()
                 case "Recent Uploads":
-                    RecentUploadsView()
+                    RecentUploadsPresentation(modelContext: modelContext)
                 case "Fish Collection":
                     FishCollectionView()
                 default:

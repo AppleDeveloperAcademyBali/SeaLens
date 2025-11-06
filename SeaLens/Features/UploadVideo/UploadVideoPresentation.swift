@@ -13,7 +13,7 @@ struct UploadVideoPresentation: View {
     @StateObject private var viewModel = UploadVideoViewModel()
     
     let suggestion = ["Bali", "Sydney", "Jakarta"]
-
+    
     
     var body: some View {
         ZStack  {
@@ -86,9 +86,9 @@ struct UploadVideoPresentation: View {
                                                 .font(.system(size: 40))
                                                 .foregroundColor(.green)
                                             
-                                                Text(viewModel.originalFileName)
+                                            Text(viewModel.originalFileName)
                                                 .textstyles(.title2Regular)
- 
+                                            
                                             // select a file button
                                             Button  {
                                                 viewModel.handleFileSelection()
@@ -102,13 +102,12 @@ struct UploadVideoPresentation: View {
                                         
                                         
                                         
-
+                                        
                                     }
                                     .padding()
                                 }
                                 .padding()
                                 .frame(width: geometry.size.width * 0.5)
-                                
                                 
                                 // RIGHT SIDE: enter information
                                 VStack(alignment: .leading, spacing: 8){
@@ -153,7 +152,7 @@ struct UploadVideoPresentation: View {
                                     Text(viewModel.originalFileName.isEmpty ? "" : viewModel.originalFileName)
                                         .textstyles(.caption1Regular)
                                         .foregroundStyle(.secondary)
-
+                                    
                                     // file duration
                                     Text(viewModel.fileDuration.isEmpty ? "" : "File duration")
                                         .textstyles(.caption1Regular)
@@ -161,7 +160,7 @@ struct UploadVideoPresentation: View {
                                         .textstyles(.caption1Regular)
                                         .foregroundStyle(.secondary)
                                     
-
+                                    
                                     
                                     // date taken
                                     Text(viewModel.date.isEmpty ? "" : "Date taken")
@@ -176,7 +175,7 @@ struct UploadVideoPresentation: View {
                                     Text(viewModel.fileSize.isEmpty ? "" : viewModel.fileSize)
                                         .textstyles(.caption1Regular)
                                         .foregroundStyle(.secondary)
-
+                                    
                                     
                                     Spacer()
                                     
@@ -199,39 +198,33 @@ struct UploadVideoPresentation: View {
                                             Text("Upload and process file")
                                                 .textstyles(.bodyEmphasized)
                                         }
-                                    .buttonStyle(.glass)
+                                        .buttonStyle(.glass)
                                         
                                         if !viewModel.uploadStatusMessage.isEmpty {
                                             Text(viewModel.uploadStatusMessage)
                                                 .font(.footnote)
                                                 .foregroundColor(viewModel.uploadStatusMessage.contains("failed") ? .red: .green)
                                                 .padding(.top, 8)
-
+                                            
                                         }
-
-                                        
-                                        
                                         
                                     }
-                                    
-                                    
-
-                                    
                                 }
-                                .padding([.top, .bottom], 20)
-
+                                
                             }
-                            .padding()
+                            .padding([.top, .bottom], 20)
                         }
+                        .padding()
                     }
-                    Spacer()
                 }
-                .padding(.horizontal, 60)
-                .padding(.vertical, 60)
+                Spacer()
             }
+            .padding(.horizontal, 60)
+            .padding(.vertical, 60)
         }
     }
 }
+
 
 
 

@@ -23,7 +23,6 @@ struct UploadVideoData {
         panel.canChooseFiles = true                 // allows choosing files
         panel.canChooseDirectories = false          // cannot choose directories
         
-
         return panel.runModal() == .OK ? panel.url : nil
         
     }

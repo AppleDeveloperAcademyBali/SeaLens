@@ -11,8 +11,7 @@ import AVFoundation
 struct UploadVideoDomain {
     
     private let dataService = UploadVideoData()
-    
-    
+        
     // MARK: - Open Finder Function
     func pickVideoAndExtractMetadata() async -> (url: URL, duration: String, date: String, fileSize: String)? {
         
@@ -90,6 +89,4 @@ struct UploadVideoDomain {
         
     }
 
-    
-    
 }
