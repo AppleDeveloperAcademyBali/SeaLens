@@ -88,7 +88,7 @@ final class UploadVideoViewModel: ObservableObject {
         
         isUploading = true                              // triggers progress bar
         uploadProgress = 0                              // reset progress to 0
-        uploadStatusMessage = "Uploading..."         // update essage shown in UI
+        uploadStatusMessage = "Uploading..."            // update essage shown in UI
         
         domain.uploadVideo(fileURL: fileURL, progress: { [weak self] progress in
             DispatchQueue.main.async {

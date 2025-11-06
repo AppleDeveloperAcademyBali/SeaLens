@@ -136,7 +136,7 @@ class NetworkService: NetworkServiceProtocol    {
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
 
         // tell the server this is a file field, with its name and filename
-        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"video\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
 
         // tell the server the file type
         body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
@@ -187,6 +187,70 @@ class NetworkService: NetworkServiceProtocol    {
         task.resume()
         
     }
+    
+    
+    func downloadFile(
+        from urlString : String,
+        progress: @escaping (Double) -> Void,
+        completion: @escaping (Result<URL, Error>) -> Void
+    ) {
+        
+        // convert string to URL
+        guard let downloadURL = URL(string: urlString) else {
+            completion(.failure(NetworkServiceError.invalidURL))
+            return
+        }
+
+        // create a GET request
+        var request = URLRequest(url: downloadURL)
+        request.httpMethod = "GET"
+        request.setValue("true", forHTTPHeaderField: "ngrok-skip-browser-warning")
+
+        // create a download task
+        let task = session.downloadTask(with: request) { tempURL, response, error in
+            // Handle network errors
+            if let error = error {
+                completion(.failure(NetworkServiceError.downloadFailed(error.localizedDescription)))
+                return
+            }
+
+            // validate response
+            guard let httpResponse = response as? HTTPURLResponse else {
+                completion(.failure(NetworkServiceError.invalidResponse))
+                return
+            }
+
+            // check HTTP status
+            guard (200...299).contains(httpResponse.statusCode) else {
+                completion(.failure(NetworkServiceError.httpError(statusCode: httpResponse.statusCode)))
+                return
+            }
+
+            // validate the downloaded file URL
+            guard let tempURL = tempURL else {
+                completion(.failure(NetworkServiceError.noData))
+                return
+            }
+
+            // return the temporary file URL — it’s ready for extraction
+            completion(.success(tempURL))
+        }
+
+        // observe progress updates
+        let observation = task.progress.observe(\.fractionCompleted) { progressObj, _ in
+            DispatchQueue.main.async {
+                progress(progressObj.fractionCompleted)
+            }
+        }
+
+        // start the download
+        task.resume()
+    }
+        
+
+    
+    
+    
     
     
     
