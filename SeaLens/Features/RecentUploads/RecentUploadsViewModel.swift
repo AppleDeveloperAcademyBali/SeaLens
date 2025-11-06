@@ -15,8 +15,8 @@ class RecentUploadsViewModel: ObservableObject {
     
     var recentUploads: [Footage] = []
     
-    init(modelContext: ModelContext) {
-        self.persistence = RecentUploadsPersistence(modelContext: modelContext)
+    init(persistence: RecentUploadsPersistence) {
+        self.persistence = persistence
     }
     
     func fetchRecentUploads() {

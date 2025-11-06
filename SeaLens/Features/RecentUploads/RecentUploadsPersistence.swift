@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-final class RecentUploadsPersistence {
+final class RecentUploadsPersistence: RecentUploadsPersistenceProtocol {
     private var modelContext: ModelContext
     
     init(modelContext: ModelContext) {
