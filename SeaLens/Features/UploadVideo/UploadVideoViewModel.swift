@@ -16,8 +16,11 @@ final class UploadVideoViewModel: ObservableObject {
     // state variables
     @Published var fileName = ""
     @Published var location = ""
+    @Published var locationSuggestion = ["Bali", "Sydney", "Jakarta"]
     @Published var site = ""
+    @Published var siteSuggestion = ["Bali", "Sydney", "Jakarta"]
     @Published var transect = ""
+    @Published var transectSuggestion = ["Bali", "Sydney", "Jakarta"]
     @Published var depth = ""
     
     @Published var originalFileName = ""
