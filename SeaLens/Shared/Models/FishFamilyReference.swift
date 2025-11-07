@@ -14,6 +14,8 @@ final class FishFamilyReference {
     var latinName: String
     var commonName: String
     var imageUrl: String
+    var sourceUrl: String
+    var attribution: String
     
     @Relationship(deleteRule: .cascade, inverse: \FishSpeciesReference.fishFamilyReference)
     var fishSpeciesReferences: [FishSpeciesReference] = []
@@ -24,12 +26,17 @@ final class FishFamilyReference {
         latinName: String,
         commonName: String,
         imageUrl: String,
+        sourceUrl: String,
+        attribution: String,
         fishSpeciesReferences: [FishSpeciesReference] = [])
     {
         self.uid = uid
         self.latinName = latinName
         self.commonName = commonName
         self.imageUrl = imageUrl
+        self.sourceUrl = sourceUrl
+        self.attribution = attribution
+        
         self.fishSpeciesReferences = fishSpeciesReferences
     }
 }

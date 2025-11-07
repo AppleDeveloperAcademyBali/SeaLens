@@ -16,7 +16,9 @@ struct SeaLensApp: App {
                 FishConfidenceScore.self,
                 FishFamilyReference.self,
                 FishSpeciesReference.self,
-                Site.self
+                Site.self,
+                Location.self,
+                Transect.self
             ])
             
             let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -30,8 +32,6 @@ struct SeaLensApp: App {
     }
     
     var body: some Scene {
-        
-        
         WindowGroup {
             ContentView()
                 .frame(minWidth: 1200, minHeight: 800)

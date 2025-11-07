@@ -22,18 +22,18 @@ final class SiteData {
     // Basic CRUD Operations
 
     // RETRIEVE SITE
-    func retrieveAllSite() {
+    func retrieveSites() {
         errorMessage = nil
         
         do {
-            let sortDescriptors = [SortDescriptor(\Site.name, order: .reverse)]
+            let sortDescriptors = [SortDescriptor(\Site.name)]
             sites = try dataService.retrieve(Site.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve sites: \(error.localizedDescription)"
         }
     }
     
-    func retrieveSite(predicate: Predicate<Site>? = nil, sortBy: [SortDescriptor<Site>]?) {
+    func retrieveSites(predicate: Predicate<Site>? = nil, sortBy: [SortDescriptor<Site>]?) {
         errorMessage = nil
         
         do {

@@ -83,5 +83,5 @@ struct FishFamilyCard: View {
 }
 
 #Preview {
-    FishFamilyCard(fishFamilyRef: FishFamilyReference(latinName: "Chaetodondidae", commonName: "Butterflyfish", imageUrl: "samplePicture"), fishFamilyConfidenceValue: 95.0, selectedFishFamily: .constant(nil))
+    FishFamilyCard(fishFamilyRef: FishFamilyReference(latinName: "Chaetodondidae", commonName: "Butterflyfish", imageUrl: "samplePicture", sourceUrl: "https://www.fishbase.org.au/v4/summary/8014", attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"), fishFamilyConfidenceValue: 95.0, selectedFishFamily: .constant(nil))
 }
