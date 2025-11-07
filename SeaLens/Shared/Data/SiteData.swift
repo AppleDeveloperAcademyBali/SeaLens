@@ -33,11 +33,11 @@ final class SiteData {
         }
     }
     
-    func retrieveSite(predicate: Predicate<Site>? = nil, sortBy: [SortDescriptor<Site>]? = nil) {
+    func retrieveSite(predicate: Predicate<Site>? = nil, sortBy: [SortDescriptor<Site>]?) {
         errorMessage = nil
         
         do {
-            sites = try dataService.retrieve(Site.self, predicate: predicate, sortBy: sortBy)
+            sites = try dataService.retrieve(Site.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve sites: \(error.localizedDescription)"
         }
