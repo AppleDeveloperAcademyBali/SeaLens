@@ -83,5 +83,5 @@ struct FishFamilyCard: View {
 }
 
 #Preview {
-    FishFamilyCard(fishFamilyRef: FishFamilyReference(latinName: "Chaetodondidae", commonName: "Butterflyfish"), fishFamilyConfidenceValue: 95.0, selectedFishFamily: .constant(nil))
+    FishFamilyCard(fishFamilyRef: FishFamilyReference(latinName: "Chaetodondidae", commonName: "Butterflyfish", imageUrl: "samplePicture"), fishFamilyConfidenceValue: 95.0, selectedFishFamily: .constant(nil))
 }
