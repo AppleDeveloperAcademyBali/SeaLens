@@ -51,7 +51,6 @@ final class UploadVideoViewModel: ObservableObject {
     }
     
     
-    
     // MARK: - Select File
     func handleFileSelection()  {
         Task    {
@@ -122,6 +121,7 @@ final class UploadVideoViewModel: ObservableObject {
     // MARK: - Add Tags
     func addTag() {
         tags.append(newTag)
+        newTag = ""
     }
     
     // MARK: - Remove Tags
