@@ -1,17 +1,14 @@
 //
-//  UploadVideoData.swift
+//  UploadVideoData+File.swift
 //  SeaLens
 //
-//  Created by Shreyas Venadan on 27/10/2025.
+//  Created by Handy Handy on 08/11/25.
 //
 
+import Foundation
 import AppKit
 
-struct UploadVideoData {
-    
-    private let networkService: NetworkService
-    
-    
+extension UploadVideoData {
     // function to pick video from finder
     @MainActor
     func pickVideoFromFinder() -> URL? {
@@ -26,18 +23,4 @@ struct UploadVideoData {
         return panel.runModal() == .OK ? panel.url : nil
         
     }
-    
-    
-    init(networkService: NetworkService = NetworkService()) {
-        self.networkService = networkService
-    }
-    
-    func upload(fileURL: URL,
-                progress: @escaping (Double) -> Void,
-                completion: @escaping (Result<String, Error>) -> Void) {
-        networkService.uploadVideo(fileURL: fileURL, progress: progress, completion: completion)
-    }
-    
-    
-    
 }

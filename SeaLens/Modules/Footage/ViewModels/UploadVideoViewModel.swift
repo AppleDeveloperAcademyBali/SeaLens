@@ -38,11 +38,11 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var isUploading: Bool = false
     @Published var uploadStatusMessage: String = ""
         
-    private let domain = UploadVideoDomain()
-    private var selectedFileURL: URL?
+    let domain = UploadVideoDomain()
+    var selectedFileURL: URL?
     
     
-    private func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
+    func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
         originalFileName = result.url.lastPathComponent
         fileDuration = result.duration
         date = result.date
@@ -50,39 +50,18 @@ final class UploadVideoViewModel: ObservableObject {
         selectedFileURL = result.url
     }
     
-    
-    // MARK: - Select File
-    func handleFileSelection()  {
-        Task    {
-            if let result = await self.domain.pickVideoAndExtractMetadata() {
-                self.applyMetadata(result)
-            }
-        }
+    // MARK: - Add Tags
+    func addTag() {
+        tags.append(newTag)
+        newTag = ""
     }
     
-    
-    // MARK: - File Drop
-    func handleFileDrop(providers: [NSItemProvider]) -> Bool {
-        
-        for provider in providers {
-            
-            if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-                provider.loadItem(forTypeIdentifier: UTType.movie.identifier, options: nil) { item, _ in
-                    if let url = item as? URL {
-                        Task { @MainActor in
-                            if let result = await self.domain.extractMetadata(from: url) {
-                                self.applyMetadata(result)
-                            }
-                        }
-                    }
-                    
-                }
-                return true
-            }
+    // MARK: - Remove Tags
+    func removeTag(_ removedTag: String) {
+        tags.removeAll { tag in
+            removedTag == tag
         }
-        return false
     }
-    
     
     // MARK: - Upload Video
     func uploadSelectedVideo() {
@@ -118,16 +97,4 @@ final class UploadVideoViewModel: ObservableObject {
         
     }
     
-    // MARK: - Add Tags
-    func addTag() {
-        tags.append(newTag)
-        newTag = ""
-    }
-    
-    // MARK: - Remove Tags
-    func removeTag(_ removedTag: String) {
-        tags.removeAll { tag in
-            removedTag == tag
-        }
-    }
 }
