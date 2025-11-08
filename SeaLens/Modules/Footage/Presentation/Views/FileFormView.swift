@@ -112,7 +112,7 @@ struct FileFormView: View {
                 
             } else {
                 Button {
-                    viewModel.handleFileSelection()
+                    viewModel.uploadSelectedVideo()
                 } label: {
                     Text("Upload and process file")
                         .textstyles(.bodyEmphasized)
@@ -123,7 +123,7 @@ struct FileFormView: View {
                 if !viewModel.uploadStatusMessage.isEmpty {
                     Text(viewModel.uploadStatusMessage)
                         .font(.footnote)
-                        .foregroundColor(viewModel.uploadStatusMessage.contains("failed") ? .red: .green)
+                        .foregroundColor(viewModel.uploadStatusMessage.lowercased().contains("failed") ? .red: .green)
                         .padding(.top, 8)
                     
                 }
