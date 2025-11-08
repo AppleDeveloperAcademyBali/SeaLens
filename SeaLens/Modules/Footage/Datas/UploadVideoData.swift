@@ -18,7 +18,9 @@ struct UploadVideoData {
     func upload(fileURL: URL,
                 progress: @escaping (Double) -> Void,
                 completion: @escaping (Result<String, Error>) -> Void) {
-        networkService.uploadVideo(fileURL: fileURL, progress: progress, completion: completion)
+        DispatchQueue.global().async {
+            self.networkService.uploadVideo(fileURL: fileURL, progress: progress, completion: completion)
+        }
     }
     
 }
