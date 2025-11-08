@@ -63,9 +63,6 @@ final class UploadVideoViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Validate all the data
-    
-    
     // MARK: - Upload Video
     func uploadSelectedVideo() {
         
@@ -80,7 +77,9 @@ final class UploadVideoViewModel: ObservableObject {
         if location.isEmpty { uploadStatusMessage = "Upload Failed: Location is required" ; return }
         if site.isEmpty { uploadStatusMessage = "Upload Failed: Site is required" ; return }
         if transect.isEmpty { uploadStatusMessage = "Upload Failed: Transect is required" ; return }
-        if depth.isEmpty { uploadStatusMessage = "Upload Failed: Depth is required" ; return }
+        if depth.isEmpty {
+            uploadStatusMessage = "Upload Failed: Depth is required" ; return
+        } else if !depth.isNumeric() { uploadStatusMessage = "Upload Failed: Depth should numeric" ; return }
         
         
         isUploading = true                              // triggers progress bar
