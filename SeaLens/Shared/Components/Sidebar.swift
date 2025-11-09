@@ -12,6 +12,9 @@ struct Sidebar: View {
     // a binding to track which sidebar item is currently selected
     @Binding var selection: String
     
+    //TODO: - Need to move to specific view
+    @MainActor var onClick: () -> Void
+    
     // list of sidebar items
     private let items: [(title: String, icon: String)] = [
         ("Dashboard", "chart.xyaxis.line"),
@@ -30,6 +33,12 @@ struct Sidebar: View {
                     .tag(item.title)
             }
             
+            //TODO: - Need to move to specific view
+            Button("Review fish count") {
+                onClick()
+            }
+            .buttonStyle(.glass)
+            
         }
         // macOS sidebar list appearance (collapsible & transparent)
         .listStyle(SidebarListStyle())
@@ -41,5 +50,7 @@ struct Sidebar: View {
 }
 
 #Preview {
-    Sidebar(selection: .constant("Dashboard"))
+    Sidebar(selection: .constant("Dashboard")) {
+        print("Clicked!")
+    }
 }
