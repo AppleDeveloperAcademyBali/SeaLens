@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVFoundation
 import UniformTypeIdentifiers
 
 @MainActor
@@ -38,11 +39,18 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var isUploading: Bool = false
     @Published var uploadStatusMessage: String = ""
         
-    private let domain = UploadVideoDomain()
-    private var selectedFileURL: URL?
+    let domain: UploadVideoDomain
+    var selectedFileURL: URL?
     
+    init(uploadVideoDomain: UploadVideoDomain) {
+        self.domain = uploadVideoDomain
+        self.createLocationSuggestions()
+        self.createSiteSuggestions()
+        self.createTransectSuggestions()
+    }
     
-    private func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
+    // MARK: - Assign Metadata to the view
+    func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
         originalFileName = result.url.lastPathComponent
         fileDuration = result.duration
         date = result.date
@@ -50,54 +58,60 @@ final class UploadVideoViewModel: ObservableObject {
         selectedFileURL = result.url
     }
     
-    
-    
-    // MARK: - Select File
-    func handleFileSelection()  {
-        Task    {
-            if let result = await self.domain.pickVideoAndExtractMetadata() {
-                self.applyMetadata(result)
-            }
-        }
+    // MARK: - Add Tags
+    func addTag() {
+        tags.append(newTag)
+        newTag = ""
     }
     
-    
-    // MARK: - File Drop
-    func handleFileDrop(providers: [NSItemProvider]) -> Bool {
-        
-        for provider in providers {
-            
-            if provider.hasItemConformingToTypeIdentifier(UTType.movie.identifier) {
-                provider.loadItem(forTypeIdentifier: UTType.movie.identifier, options: nil) { item, _ in
-                    if let url = item as? URL {
-                        Task { @MainActor in
-                            if let result = await self.domain.extractMetadata(from: url) {
-                                self.applyMetadata(result)
-                            }
-                        }
-                    }
-                    
-                }
-                return true
-            }
+    // MARK: - Remove Tags
+    func removeTag(_ removedTag: String) {
+        tags.removeAll { tag in
+            removedTag == tag
         }
-        return false
     }
-    
     
     // MARK: - Upload Video
     func uploadSelectedVideo() {
         
         // make sure file is selected
         guard let fileURL = selectedFileURL else {
-            uploadStatusMessage = "Please select a video"
+            uploadStatusMessage = "Upload Failed: Please select a video"
             return
         }
+        
+        // validation of the data
+        if fileName.isEmpty { uploadStatusMessage = "Upload Failed: File name is required" ; return }
+        if location.isEmpty { uploadStatusMessage = "Upload Failed: Location is required" ; return }
+        if site.isEmpty { uploadStatusMessage = "Upload Failed: Site is required" ; return }
+        if transect.isEmpty { uploadStatusMessage = "Upload Failed: Transect is required" ; return }
+        if depth.isEmpty {
+            uploadStatusMessage = "Upload Failed: Depth is required" ; return
+        } else if !depth.isNumeric() { uploadStatusMessage = "Upload Failed: Depth should numeric" ; return }
         
         
         isUploading = true                              // triggers progress bar
         uploadProgress = 0                              // reset progress to 0
         uploadStatusMessage = "Uploading..."            // update essage shown in UI
+        
+        //TODO: Move it to success when testing with Server
+        var timerCount: Int = 5
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+
+            timerCount -= 1
+            Task { @MainActor in
+                self.uploadProgress += 0.25
+            }
+            if timerCount == 0 {
+                timer.invalidate()
+                Task { @MainActor in
+                    self.saveVideoToLocalStorage()
+                    self.isUploading = false
+                    self.uploadStatusMessage = "Upload data successfully"
+                }
+            }
+        }
+        return
         
         domain.uploadVideo(fileURL: fileURL, progress: { [weak self] progress in
             DispatchQueue.main.async {
@@ -109,7 +123,7 @@ final class UploadVideoViewModel: ObservableObject {
                 switch result {
                 case.success(let message):
                     self?.uploadStatusMessage = message
-                    
+                    self?.saveVideoToLocalStorage()
                 case.failure(let error):
                     self?.uploadStatusMessage = "Upload Failed: \(error.localizedDescription)"
                 }
@@ -119,15 +133,11 @@ final class UploadVideoViewModel: ObservableObject {
         
     }
     
-    // MARK: - Add Tags
-    func addTag() {
-        tags.append(newTag)
-    }
-    
-    // MARK: - Remove Tags
-    func removeTag(_ removedTag: String) {
-        tags.removeAll { tag in
-            removedTag == tag
+    //MARK: - Save Footage to Local Storage
+    func saveVideoToLocalStorage() {
+        Task(priority: .utility) {
+            await self.domain.setFootage(footage: createFootage())
         }
     }
+    
 }

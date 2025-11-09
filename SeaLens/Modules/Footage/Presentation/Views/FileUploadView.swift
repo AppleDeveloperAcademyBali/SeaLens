@@ -72,7 +72,3 @@ struct FileUploadView: View {
         }
     }
 }
-
-#Preview {
-    FileUploadView(viewModel: UploadVideoViewModel()) 
-}

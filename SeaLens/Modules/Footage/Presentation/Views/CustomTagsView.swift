@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CustomTagsView: View {
     @ObservedObject var viewModel: UploadVideoViewModel
+    @FocusState private var tagFocus: Bool
+    @State private var isDisabled: Bool = false
     
     var body: some View {
         FlowHStack {
@@ -17,20 +19,47 @@ struct CustomTagsView: View {
                     viewModel.removeTag(tag)
                 }
             }
-                 
+            
             if viewModel.addTagPressed {
-                TextField(text: $viewModel.newTag) {}
-                    .font(.body)
-                    .frame(width: 120)
-                    .padding(.top, 5)
-                    .onSubmit {
+                ZStack (alignment: .trailing) {
+                    TextField("", text: $viewModel.newTag, onEditingChanged: { changed in
+                        isDisabled = changed
+                        if changed {
+                            print("Editing")
+                        } else {
+                            print("not editing")
+                        }
+                    }) {}
+                        .focused($tagFocus)
+                        .font(.body)
+                        .frame(width: 120)
+                        .onSubmit {
+                            viewModel.addTag()
+                        }
+                    
+                    Button {
                         viewModel.addTag()
-                        viewModel.newTag = ""
-                    }
-            }
+                        tagFocus = false
+                        viewModel.addTagPressed = false
+                        isDisabled = false
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .resizable()
+                            .padding(4)
+                            .frame(width: 20, height: 20)
                         
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 4)
+                    
+                }
+                .padding(.top, 5)
+                
+            }
+            
             Button {
                 viewModel.addTagPressed = true
+                isDisabled = true
             } label: {
                 HStack {
                     Image(systemName: "plus")
@@ -39,11 +68,9 @@ struct CustomTagsView: View {
                 }
             }
             .buttonStyle(.glass)
-
+            .disabled(isDisabled)
+            
         }
     }
 }
 
-#Preview {
-    CustomTagsView(viewModel: UploadVideoViewModel())
-}

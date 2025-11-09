@@ -179,7 +179,7 @@ class NetworkService: NetworkServiceProtocol    {
         }
         
         // observe the progress of the upload and call the progress closure with a fraction (0.0–1.0)
-        let observation = task.progress.observe(\.fractionCompleted)    { progressObj, _ in
+        let _ = task.progress.observe(\.fractionCompleted)    { progressObj, _ in
             progress(progressObj.fractionCompleted)
         }
 
@@ -237,7 +237,7 @@ class NetworkService: NetworkServiceProtocol    {
         }
 
         // observe progress updates
-        let observation = task.progress.observe(\.fractionCompleted) { progressObj, _ in
+        let _ = task.progress.observe(\.fractionCompleted) { progressObj, _ in
             DispatchQueue.main.async {
                 progress(progressObj.fractionCompleted)
             }

@@ -16,23 +16,38 @@ final class DummyDataService {
         return [
             FishFamilyReference(
                 latinName: "Acanthuridae",
-                commonName: "Surgeonfish"
+                commonName: "Surgeonfish",
+                imageUrl: "samplePicture",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
             ),
             FishFamilyReference(
                 latinName: "Pomacentridae",
-                commonName: "Damselfish"
+                commonName: "Damselfish",
+                imageUrl: "samplePicture",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
             ),
             FishFamilyReference(
                 latinName: "Labridae",
-                commonName: "Wrasses"
+                commonName: "Wrasses",
+                imageUrl: "samplePicture",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
             ),
             FishFamilyReference(
                 latinName: "Chaetodontidae",
-                commonName: "Butterflyfish"
+                commonName: "Butterflyfish",
+                imageUrl: "samplePicture",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
             ),
             FishFamilyReference(
                 latinName: "Serranidae",
-                commonName: "Groupers"
+                commonName: "Groupers",
+                imageUrl: "samplePicture",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
             )
         ]
     }
@@ -51,6 +66,8 @@ final class DummyDataService {
                 identification: "White body with 5-6 vertical black bars",
                 location: "Indo-Pacific reefs",
                 imageUrl: "https://example.com/convict-surgeonfish.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: surgeonfish
             ))
             
@@ -62,6 +79,8 @@ final class DummyDataService {
                 identification: "Bright yellow body, white tail spine",
                 location: "Hawaiian Islands, Western Pacific",
                 imageUrl: "https://example.com/yellow-tang.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: surgeonfish
             ))
         }
@@ -76,6 +95,8 @@ final class DummyDataService {
                 identification: "Bright blue-green body, forked tail",
                 location: "Indo-Pacific coral reefs",
                 imageUrl: "https://example.com/green-chromis.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: damselfish
             ))
             
@@ -87,6 +108,8 @@ final class DummyDataService {
                 identification: "Orange with three white bars outlined in black",
                 location: "Eastern Indian Ocean, Western Pacific",
                 imageUrl: "https://example.com/clownfish.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: damselfish
             ))
         }
@@ -101,6 +124,8 @@ final class DummyDataService {
                 identification: "Green body with pink-red markings, yellow tail",
                 location: "Indo-Pacific reefs",
                 imageUrl: "https://example.com/moon-wrasse.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: wrasses
             ))
         }
@@ -115,6 +140,8 @@ final class DummyDataService {
                 identification: "White body with chevron pattern, black eyespot",
                 location: "Indo-Pacific coral reefs",
                 imageUrl: "https://example.com/threadfin-butterfly.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: butterflyfish
             ))
         }
@@ -129,6 +156,8 @@ final class DummyDataService {
                 identification: "Red-orange body covered with blue spots",
                 location: "Indo-Pacific reefs",
                 imageUrl: "https://example.com/coral-grouper.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: groupers
             ))
         }
