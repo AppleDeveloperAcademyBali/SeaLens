@@ -36,26 +36,25 @@ public struct RecentUploadsPresentation: View {
                                 
                                 SearchBar(searchText: $searchText)
                                     
-                                
                                 Menu {
                                     Text("Sort By")
                                     Divider()
                                     
                                     Section("Date Taken") {
                                         Button("Newest") {
-                                            applySorting(.dateTakenNewest)
+                                            recentUploadsViewModel.applySorting(sortOption: .dateTakenNewest)
                                         }
                                         Button("Oldest") {
-                                            applySorting(.dateTakenOldest)
+                                            recentUploadsViewModel.applySorting(sortOption: .dateTakenOldest)
                                         }
                                     }
                                     
                                     Section("Filename"){
                                         Button("Alphabetically (A-Z)") {
-                                            applySorting(.filenameAscending)
+                                            recentUploadsViewModel.applySorting(sortOption: .filenameAscending)
                                         }
                                         Button("Alphabetically (Z-A)") {
-                                            applySorting(.filenameDesscending)
+                                            recentUploadsViewModel.applySorting(sortOption: .filenameDesscending)
                                         }
                                     }
                                 } label: {
@@ -71,8 +70,8 @@ public struct RecentUploadsPresentation: View {
                         
                         ScrollView {
                             FlowHStack {
-                                ForEach(filteredFootages) { upload in
-                                    FootageFolder(destination: UploadVideoPresentation(), title: upload.filename)
+                                ForEach(recentUploadsViewModel.footages) { upload in
+                                    FootageFolder(destination: FishCollectionView(), title: upload.filename)
                                         .frame(width: 155, height: 170)
                                 }
                             }
@@ -83,35 +82,10 @@ public struct RecentUploadsPresentation: View {
             }
         }
         .onAppear() {
-            filteredFootages = Footage.sampleData
+            recentUploadsViewModel.loadFootages()
         }
         .onChange(of: searchText) { _ , _ in
-            applySearching()
-        }
-    }
-    
-    func applySearching() {
-        if searchText.isEmpty {
-            filteredFootages = Footage.sampleData
-        } else {
-            filteredFootages = filteredFootages.filter { $0.filename.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
-    
-    func applySorting(_ option: SortOption) {
-        switch option {
-        case .dateTakenNewest:
-            filteredFootages.sort { $0.dateTaken > $1.dateTaken }
-            break
-        case .dateTakenOldest:
-            filteredFootages.sort { $0.dateTaken < $1.dateTaken }
-            break
-        case .filenameAscending:
-            filteredFootages.sort { $0.filename < $1.filename }
-            break
-        case .filenameDesscending:
-            filteredFootages.sort { $0.filename > $1.filename }
-            break
+            recentUploadsViewModel.applySearching(searchText: searchText)
         }
     }
 }

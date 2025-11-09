@@ -34,8 +34,3 @@ struct FootageFolder<Destination: View>: View {
         .buttonStyle(.plain)
     }
 }
-
-
-#Preview {
-    FootageFolder(destination: UploadVideoPresentation(), title: "sample test")
-}
