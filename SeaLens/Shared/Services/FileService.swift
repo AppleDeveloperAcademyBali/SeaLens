@@ -38,8 +38,6 @@ enum FileServiceError: LocalizedError {
 // MARK: - FileService Class
 class FileService {
     
-    
-    
     // MARK: - Extract Zip File
     func extract(from zipURL: String, to destinationURL: String) async throws -> Bool {
         
