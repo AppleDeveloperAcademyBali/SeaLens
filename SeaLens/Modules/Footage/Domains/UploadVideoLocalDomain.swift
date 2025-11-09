@@ -51,7 +51,7 @@ extension UploadVideoDomain: UploadVideoLocalDomainProtocol {
         let _ = await uploadVideoData.setLocation(Location(name: footage.locationName))
         let _ = await uploadVideoData.setSite(Site(name: footage.siteName))
         let _ = await uploadVideoData.setTransect(Transect(name: footage.transect))
-        let customTags = footage.footageTags
+        let _ = await uploadVideoData.setFootageTags(footage.footageTags)
         
     }
     
