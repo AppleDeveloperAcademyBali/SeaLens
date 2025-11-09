@@ -11,21 +11,12 @@ import Observation
 
 @Observable
 class RecentUploadsViewModel: ObservableObject {
-    private let persistence: RecentUploadsPersistence
+    private let modelContext: ModelContext
     
     var recentUploads: [Footage] = []
     
-    init(persistence: RecentUploadsPersistence) {
-        self.persistence = persistence
-    }
-    
-    func fetchRecentUploads() {
-        do {
-            recentUploads = try persistence.fetchAllRecentUploads()
-        }
-        catch {
-            print("Failed to fetch recent uploads: \(error)")
-        }
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
     }
         
 }

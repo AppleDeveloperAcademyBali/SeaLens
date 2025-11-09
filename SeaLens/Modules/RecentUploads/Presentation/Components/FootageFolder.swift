@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Folder<Destination: View>: View {
+struct FootageFolder<Destination: View>: View {
     var destination: Destination
     
     var title: String
@@ -37,5 +37,5 @@ struct Folder<Destination: View>: View {
 
 
 #Preview {
-    Folder(destination: UploadVideoPresentation(), title: "sample test")
+    FootageFolder(destination: UploadVideoPresentation(), title: "sample test")
 }

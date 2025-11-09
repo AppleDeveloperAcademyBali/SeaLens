@@ -1,6 +1,13 @@
+//
+//  SortOption.swift
+//  SeaLens
+//
+//  Created by IP Marry Kusuma on 08/11/25.
+//
+
+import Foundation
+
 enum SortOption: CaseIterable {
-    enum dateTakenOldest
-    enum dateTakenNewest
-    enum fileNameAscending
-    enum fileNameDescending
+    case dateTakenNewest, dateTakenOldest
+    case filenameAscending, filenameDesscending
 }
