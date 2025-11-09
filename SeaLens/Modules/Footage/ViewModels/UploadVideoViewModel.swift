@@ -97,7 +97,7 @@ final class UploadVideoViewModel: ObservableObject {
         //TODO: Move it to success when testing with Server
         var timerCount: Int = 5
         Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-            print("Timer fired!")
+
             timerCount -= 1
             Task { @MainActor in
                 self.uploadProgress += 0.25

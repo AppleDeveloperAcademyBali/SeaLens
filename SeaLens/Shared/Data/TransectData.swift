@@ -32,13 +32,12 @@ final class TransectData {
         }
     }
     
-    func retrieveTransects(predicate: Predicate<Transect>? = nil, sortBy: [SortDescriptor<Transect>]?) async {
-        errorMessage = nil
-        
+    func retrieveTransects(predicate: Predicate<Transect>? = nil, sortBy: [SortDescriptor<Transect>]?) async -> Result<[Transect], any Error> {
         do {
             transects = try await dataService.retrieve(Transect.self, predicate: predicate, sortBy: sortBy!)
+            return .success(transects)
         } catch {
-            errorMessage = "Failed to retrieve transects: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     

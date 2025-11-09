@@ -27,18 +27,18 @@ final class LocationData {
             locations = try await dataService.retrieve(Location.self, predicate: nil, sortBy: sortDescriptors)
             return .success(locations)
         } catch {
-            errorMessage = "Failed to retrieve locations: \(error.localizedDescription)"
             return .failure(error)
         }
     }
     
-    func retrieveLocations(predicate: Predicate<Location>? = nil, sortBy: [SortDescriptor<Location>]?) async {
-        errorMessage = nil
-        
+    func retrieveLocations(
+        predicate: Predicate<Location>? = nil,
+        sortBy: [SortDescriptor<Location>]?) async -> Result<[Location], Error> {
         do {
-            locations = try await dataService.retrieve(Location.self, predicate: predicate, sortBy: sortBy!)
+            locations = try await dataService.retrieve(Location.self, predicate: predicate, sortBy: sortBy ?? [SortDescriptor(\Location.name)])
+            return .success(locations)
         } catch {
-            errorMessage = "Failed to retrieve locations: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     
