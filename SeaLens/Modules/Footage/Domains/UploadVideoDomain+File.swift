@@ -15,7 +15,7 @@ extension UploadVideoDomain {
         
         // run the file picker safely on the main thread
         guard let url = await MainActor.run(body: {
-            dataService.pickVideoFromFinder()
+            uploadVideoData.pickVideoFromFinder()
         }) else { return nil }
         return await extractMetadata(from: url)
     }

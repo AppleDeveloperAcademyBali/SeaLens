@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVFoundation
 import UniformTypeIdentifiers
 
 @MainActor
@@ -38,10 +39,17 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var isUploading: Bool = false
     @Published var uploadStatusMessage: String = ""
         
-    let domain = UploadVideoDomain()
+    let domain: UploadVideoDomain
     var selectedFileURL: URL?
     
+    init(uploadVideoDomain: UploadVideoDomain) {
+        self.domain = uploadVideoDomain
+        self.createLocationSuggestions()
+        self.createSiteSuggestions()
+        self.createTransectSuggestions()
+    }
     
+    // MARK: - Assign Metadata to the view
     func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
         originalFileName = result.url.lastPathComponent
         fileDuration = result.duration
@@ -86,6 +94,25 @@ final class UploadVideoViewModel: ObservableObject {
         uploadProgress = 0                              // reset progress to 0
         uploadStatusMessage = "Uploading..."            // update essage shown in UI
         
+        //TODO: Move it to success when testing with Server
+        var timerCount: Int = 5
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+
+            timerCount -= 1
+            Task { @MainActor in
+                self.uploadProgress += 0.25
+            }
+            if timerCount == 0 {
+                timer.invalidate()
+                Task { @MainActor in
+                    self.saveVideoToLocalStorage()
+                    self.isUploading = false
+                    self.uploadStatusMessage = "Upload data successfully"
+                }
+            }
+        }
+        return
+        
         domain.uploadVideo(fileURL: fileURL, progress: { [weak self] progress in
             DispatchQueue.main.async {
                 self?.uploadProgress = progress
@@ -96,7 +123,7 @@ final class UploadVideoViewModel: ObservableObject {
                 switch result {
                 case.success(let message):
                     self?.uploadStatusMessage = message
-                    
+                    self?.saveVideoToLocalStorage()
                 case.failure(let error):
                     self?.uploadStatusMessage = "Upload Failed: \(error.localizedDescription)"
                 }
@@ -104,6 +131,13 @@ final class UploadVideoViewModel: ObservableObject {
             
         })
         
+    }
+    
+    //MARK: - Save Footage to Local Storage
+    func saveVideoToLocalStorage() {
+        Task(priority: .utility) {
+            await self.domain.setFootage(footage: createFootage())
+        }
     }
     
 }

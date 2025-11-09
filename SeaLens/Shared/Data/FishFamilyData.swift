@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class FishFamilyData {
     private let dataService: DataService
     
@@ -22,54 +21,54 @@ final class FishFamilyData {
     // Basic CRUD Operations
 
     // RETRIEVE FISH FAMILY
-    func retrieveFishFamilies() {
+    func retrieveFishFamilies() async {
         errorMessage = nil
         
         do {
             let sortDescriptors = [SortDescriptor(\FishFamily.numOfFishDetected)]
-            fishFamilies = try dataService.retrieve(FishFamily.self, predicate: nil, sortBy: sortDescriptors)
+            fishFamilies = try await dataService.retrieve(FishFamily.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve fish families: \(error.localizedDescription)"
         }
     }
     
-    func retrieveFishFamilies(predicate: Predicate<FishFamily>? = nil, sortBy: [SortDescriptor<FishFamily>]?) {
+    func retrieveFishFamilies(predicate: Predicate<FishFamily>? = nil, sortBy: [SortDescriptor<FishFamily>]?) async {
         errorMessage = nil
         
         do {
-            fishFamilies = try dataService.retrieve(FishFamily.self, predicate: predicate, sortBy: sortBy!)
+            fishFamilies = try await dataService.retrieve(FishFamily.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve fish families: \(error.localizedDescription)"
         }
     }
     
     // CREATE FISH FAMILY
-    func addFishFamily(fishFamily: FishFamily) {
+    func addFishFamily(fishFamily: FishFamily)async  {
         
-        dataService.insert(fishFamily)
+        await dataService.insert(fishFamily)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add fish family: \(error.localizedDescription)"
         }
     }
     
     // UPDATE FISH FAMILY
-    func updateFishFamily(_ fishFamily: FishFamily) {
+    func updateFishFamily(_ fishFamily: FishFamily)async  {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update fish family: \(error.localizedDescription)"
         }
     }
     
     // DELETE FISH FAMILY
-    func deleteFishFamily(_ fishFamily: FishFamily) {
-        dataService.delete(fishFamily)
+    func deleteFishFamily(_ fishFamily: FishFamily) async {
+        await dataService.delete(fishFamily)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete fish family: \(error.localizedDescription)"
         }

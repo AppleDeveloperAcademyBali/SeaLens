@@ -74,6 +74,3 @@ struct CustomTagsView: View {
     }
 }
 
-#Preview {
-    CustomTagsView(viewModel: UploadVideoViewModel())
-}

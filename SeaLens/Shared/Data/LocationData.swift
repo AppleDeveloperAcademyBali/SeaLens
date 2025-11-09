@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class LocationData {
     private let dataService: DataService
     
@@ -22,54 +21,54 @@ final class LocationData {
     // Basic CRUD Operations
 
     // RETRIEVE LOCATION
-    func retrieveLocations() {
-        errorMessage = nil
-        
+    func retrieveLocations() async -> Result<[Location], Error> {
         do {
             let sortDescriptors = [SortDescriptor(\Location.name)]
-            locations = try dataService.retrieve(Location.self, predicate: nil, sortBy: sortDescriptors)
+            locations = try await dataService.retrieve(Location.self, predicate: nil, sortBy: sortDescriptors)
+            return .success(locations)
         } catch {
-            errorMessage = "Failed to retrieve locations: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     
-    func retrieveLocations(predicate: Predicate<Location>? = nil, sortBy: [SortDescriptor<Location>]?) {
-        errorMessage = nil
-        
+    func retrieveLocations(
+        predicate: Predicate<Location>? = nil,
+        sortBy: [SortDescriptor<Location>]?) async -> Result<[Location], Error> {
         do {
-            locations = try dataService.retrieve(Location.self, predicate: predicate, sortBy: sortBy!)
+            locations = try await dataService.retrieve(Location.self, predicate: predicate, sortBy: sortBy ?? [SortDescriptor(\Location.name)])
+            return .success(locations)
         } catch {
-            errorMessage = "Failed to retrieve locations: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     
     // CREATE LOCATION
-    func addLocation(location: Location) {
+    func addLocation(location: Location) async {
         
-        dataService.insert(location)
+        await dataService.insert(location)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add location: \(error.localizedDescription)"
         }
     }
     
     // UPDATE LOCATION
-    func updateLocation(_ location: Location) {
+    func updateLocation(_ location: Location) async {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update location: \(error.localizedDescription)"
         }
     }
     
     // DELETE LOCATION
-    func deleteLocation(_ location: Location) {
-        dataService.delete(location)
+    func deleteLocation(_ location: Location) async {
+        await dataService.delete(location)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete location: \(error.localizedDescription)"
         }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct UploadVideoPresentation: View {
     
-    @StateObject private var viewModel = UploadVideoViewModel()
+    @ObservedObject var viewModel: UploadVideoViewModel
     
     var body: some View {
         ScrollView {
@@ -46,14 +46,10 @@ struct UploadVideoPresentation: View {
                         .opacity(0.5)
                 }
             }
+            .disabled(viewModel.isUploading)
             .padding(24)
             .padding(.horizontal,12)
         }
         
     }
-}
-
-#Preview {
-    UploadVideoPresentation()
-        .frame(width: 1000, height: 800)
 }

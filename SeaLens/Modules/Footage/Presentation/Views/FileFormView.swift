@@ -133,6 +133,3 @@ struct FileFormView: View {
     }
 }
 
-#Preview {
-    FileFormView(viewModel: UploadVideoViewModel())
-}

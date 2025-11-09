@@ -10,9 +10,14 @@ import Foundation
 struct UploadVideoData {
     
     let networkService: NetworkService
+    let dataService: DataService
 
-    init(networkService: NetworkService = NetworkService()) {
+    init(
+        networkService: NetworkService = NetworkService(),
+        dataService: DataService
+    ) {
         self.networkService = networkService
+        self.dataService = dataService
     }
     
     func upload(fileURL: URL,

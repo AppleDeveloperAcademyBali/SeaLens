@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class FishFamilyReferenceData {
     private let dataService: DataService
     
@@ -22,54 +21,54 @@ final class FishFamilyReferenceData {
     // Basic CRUD Operations
 
     // RETRIEVE FISH FAMILY REFERENCE
-    func retrieveFishFamilyReferences() {
+    func retrieveFishFamilyReferences() async {
         errorMessage = nil
         
         do {
             let sortDescriptors = [SortDescriptor(\FishFamilyReference.latinName)]
-            fishFamilyReferences = try dataService.retrieve(FishFamilyReference.self, predicate: nil, sortBy: sortDescriptors)
+            fishFamilyReferences = try await dataService.retrieve(FishFamilyReference.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve fish family references: \(error.localizedDescription)"
         }
     }
     
-    func retrieveFishFamilyReferences(predicate: Predicate<FishFamilyReference>? = nil, sortBy: [SortDescriptor<FishFamilyReference>]?) {
+    func retrieveFishFamilyReferences(predicate: Predicate<FishFamilyReference>? = nil, sortBy: [SortDescriptor<FishFamilyReference>]?) async {
         errorMessage = nil
         
         do {
-            fishFamilyReferences = try dataService.retrieve(FishFamilyReference.self, predicate: predicate, sortBy: sortBy!)
+            fishFamilyReferences = try await dataService.retrieve(FishFamilyReference.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve fish family references: \(error.localizedDescription)"
         }
     }
     
     // CREATE FISH FAMILY REFERENCE
-    func addFishFamilyReference(fishFamilyReference: FishFamilyReference) {
+    func addFishFamilyReference(fishFamilyReference: FishFamilyReference) async {
         
-        dataService.insert(fishFamilyReference)
+        await dataService.insert(fishFamilyReference)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add fish family references: \(error.localizedDescription)"
         }
     }
     
     // UPDATE FISH FAMILY REFERENCE
-    func updateFishFamilyReference(_ fishFamilyReference: FishFamilyReference) {
+    func updateFishFamilyReference(_ fishFamilyReference: FishFamilyReference) async {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update fish family references: \(error.localizedDescription)"
         }
     }
     
     // DELETE FISH FAMILY REFERENCE
-    func deleteFishFamilyReference(_ fishFamilyReference: FishFamilyReference) {
-        dataService.delete(fishFamilyReference)
+    func deleteFishFamilyReference(_ fishFamilyReference: FishFamilyReference) async {
+        await dataService.delete(fishFamilyReference)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete fish family references: \(error.localizedDescription)"
         }

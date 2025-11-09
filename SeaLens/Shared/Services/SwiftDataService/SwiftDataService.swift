@@ -29,7 +29,7 @@ public final class SwiftDataService {
                 Transect.self
             ])
             
-            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             
             self.container = try ModelContainer(for: schema, configurations: [config])
         }
