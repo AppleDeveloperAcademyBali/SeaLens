@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class FootageData {
     private let dataService: DataService
     
@@ -22,54 +21,54 @@ final class FootageData {
     // Basic CRUD Operations
 
     // RETRIEVE FOOTAGE
-    func retrieveFootages() {
+    func retrieveFootages() async {
         errorMessage = nil
         
         do {
             let sortDescriptors = [SortDescriptor(\Footage.dateTaken, order: .reverse)]
-            footages = try dataService.retrieve(Footage.self, predicate: nil, sortBy: sortDescriptors)
+            footages = try await dataService.retrieve(Footage.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve footages: \(error.localizedDescription)"
         }
     }
     
-    func retrieveFootages(predicate: Predicate<Footage>? = nil, sortBy: [SortDescriptor<Footage>]?) {
+    func retrieveFootages(predicate: Predicate<Footage>? = nil, sortBy: [SortDescriptor<Footage>]?) async {
         errorMessage = nil
         
         do {
-            footages = try dataService.retrieve(Footage.self, predicate: predicate, sortBy: sortBy!)
+            footages = try await dataService.retrieve(Footage.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve footages: \(error.localizedDescription)"
         }
     }
     
     // CREATE FOOTAGE
-    func addSite(footage: Footage) {
+    func addFootage(footage: Footage) async {
         
-        dataService.insert(footage)
+        await dataService.insert(footage)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add footage: \(error.localizedDescription)"
         }
     }
     
     // UPDATE FOOTAGE
-    func updateFootage(_ footage: Footage) {
+    func updateFootage(_ footage: Footage) async {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update footage: \(error.localizedDescription)"
         }
     }
     
     // DELETE FOOTAGE
-    func deleteFootage(_ footage: Footage) {
-        dataService.delete(footage)
+    func deleteFootage(_ footage: Footage) async {
+        await dataService.delete(footage)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete footage: \(error.localizedDescription)"
         }

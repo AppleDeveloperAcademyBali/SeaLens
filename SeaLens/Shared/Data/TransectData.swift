@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class TransectData {
     private let dataService: DataService
     
@@ -22,54 +21,54 @@ final class TransectData {
     // Basic CRUD Operations
 
     // RETRIEVE TRANSECT
-    func retrieveTransects() {
-        errorMessage = nil
-        
+    func retrieveTransects() async -> Result<[Transect], any Error> {
         do {
             let sortDescriptors = [SortDescriptor(\Transect.name)]
-            transects = try dataService.retrieve(Transect.self, predicate: nil, sortBy: sortDescriptors)
+            transects = try await dataService.retrieve(Transect.self, predicate: nil, sortBy: sortDescriptors)
+            return .success(transects)
         } catch {
             errorMessage = "Failed to retrieve transects: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     
-    func retrieveTransects(predicate: Predicate<Transect>? = nil, sortBy: [SortDescriptor<Transect>]?) {
+    func retrieveTransects(predicate: Predicate<Transect>? = nil, sortBy: [SortDescriptor<Transect>]?) async {
         errorMessage = nil
         
         do {
-            transects = try dataService.retrieve(Transect.self, predicate: predicate, sortBy: sortBy!)
+            transects = try await dataService.retrieve(Transect.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve transects: \(error.localizedDescription)"
         }
     }
     
     // CREATE TRANSECT
-    func addTransect(transect: Transect) {
+    func addTransect(transect: Transect) async {
         
-        dataService.insert(transect)
+        await dataService.insert(transect)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add transect: \(error.localizedDescription)"
         }
     }
     
     // UPDATE TRANSECT
-    func updateTransect(_ transect: Transect) {
+    func updateTransect(_ transect: Transect) async {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update transect: \(error.localizedDescription)"
         }
     }
     
     // DELETE TRANSECT
-    func deleteTransect(_ transect: Transect) {
-        dataService.delete(transect)
+    func deleteTransect(_ transect: Transect) async {
+        await dataService.delete(transect)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete transect: \(error.localizedDescription)"
         }

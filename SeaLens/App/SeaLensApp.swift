@@ -8,7 +8,7 @@ struct SeaLensApp: App {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 1200, minHeight: 800)
-                .modelContext(SwiftDataService.shared.container.mainContext)
+                .modelContainer(SwiftDataService.shared.container)
         }
     }
 }

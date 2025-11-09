@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class FishConfidenceScoreData {
     private let dataService: DataService
     
@@ -22,54 +21,54 @@ final class FishConfidenceScoreData {
     // Basic CRUD Operations
 
     // RETRIEVE FISH CONFIDENCE SCORE
-    func retrieveFishConfidenceScores() {
+    func retrieveFishConfidenceScores() async {
         errorMessage = nil
         
         do {
             let sortDescriptors = [SortDescriptor(\FishConfidenceScore.confidenceValue, order: .reverse)]
-            fishConfidenceScores = try dataService.retrieve(FishConfidenceScore.self, predicate: nil, sortBy: sortDescriptors)
+            fishConfidenceScores = try await dataService.retrieve(FishConfidenceScore.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve fish confidence scores: \(error.localizedDescription)"
         }
     }
     
-    func retrieveFishConfidenceScores(predicate: Predicate<FishConfidenceScore>? = nil, sortBy: [SortDescriptor<FishConfidenceScore>]?) {
+    func retrieveFishConfidenceScores(predicate: Predicate<FishConfidenceScore>? = nil, sortBy: [SortDescriptor<FishConfidenceScore>]?) async {
         errorMessage = nil
         
         do {
-            fishConfidenceScores = try dataService.retrieve(FishConfidenceScore.self, predicate: predicate, sortBy: sortBy!)
+            fishConfidenceScores = try await dataService.retrieve(FishConfidenceScore.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve fish confidence scores: \(error.localizedDescription)"
         }
     }
     
     // CREATE FISH CONFIDENCE SCORE
-    func addFishConfidenceScore(fishConfidenceScore: FishConfidenceScore) {
+    func addFishConfidenceScore(fishConfidenceScore: FishConfidenceScore) async {
         
-        dataService.insert(fishConfidenceScore)
+        await dataService.insert(fishConfidenceScore)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add fish confidence score: \(error.localizedDescription)"
         }
     }
     
     // UPDATE FISH CONFIDENCE SCORE
-    func updateFishConfidenceScore(_ fishConfidenceScore: FishConfidenceScore) {
+    func updateFishConfidenceScore(_ fishConfidenceScore: FishConfidenceScore) async {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update fish confidence score: \(error.localizedDescription)"
         }
     }
     
     // DELETE FISH CONFIDENCE SCORE
-    func deleteFishConfidenceScore(_ fishConfidenceScore: FishConfidenceScore) {
-        dataService.delete(fishConfidenceScore)
+    func deleteFishConfidenceScore(_ fishConfidenceScore: FishConfidenceScore) async {
+        await dataService.delete(fishConfidenceScore)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete fish confidence score: \(error.localizedDescription)"
         }

@@ -8,7 +8,6 @@
 import SwiftData
 import Foundation
 
-@Observable
 final class SiteData {
     private let dataService: DataService
     
@@ -22,54 +21,53 @@ final class SiteData {
     // Basic CRUD Operations
 
     // RETRIEVE SITE
-    func retrieveSites() {
-        errorMessage = nil
-        
+    func retrieveSites() async -> Result<[Site], any Error> {
         do {
             let sortDescriptors = [SortDescriptor(\Site.name)]
-            sites = try dataService.retrieve(Site.self, predicate: nil, sortBy: sortDescriptors)
+            sites = try await dataService.retrieve(Site.self, predicate: nil, sortBy: sortDescriptors)
+            return .success(sites)
         } catch {
-            errorMessage = "Failed to retrieve sites: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     
-    func retrieveSites(predicate: Predicate<Site>? = nil, sortBy: [SortDescriptor<Site>]?) {
+    func retrieveSites(predicate: Predicate<Site>? = nil, sortBy: [SortDescriptor<Site>]?) async {
         errorMessage = nil
         
         do {
-            sites = try dataService.retrieve(Site.self, predicate: predicate, sortBy: sortBy!)
+            sites = try await dataService.retrieve(Site.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve sites: \(error.localizedDescription)"
         }
     }
     
     // CREATE SITE
-    func addSite(site: Site) {
+    func addSite(site: Site) async {
         
-        dataService.insert(site)
+        await dataService.insert(site)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to add site: \(error.localizedDescription)"
         }
     }
     
     // UPDATE SITE
-    func updateSite(_ site: Site) {
+    func updateSite(_ site: Site) async {
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to update site: \(error.localizedDescription)"
         }
     }
     
     // DELETE SITE
-    func deleteSite(_ site: Site) {
-        dataService.delete(site)
+    func deleteSite(_ site: Site) async {
+        await dataService.delete(site)
         
         do {
-            try dataService.save()
+            try await dataService.save()
         } catch {
             errorMessage = "Failed to delete site: \(error.localizedDescription)"
         }

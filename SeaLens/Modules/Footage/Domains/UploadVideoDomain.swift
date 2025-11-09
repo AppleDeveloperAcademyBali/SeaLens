@@ -9,14 +9,16 @@ import Foundation
 
 struct UploadVideoDomain {
     
-    let dataService = UploadVideoData()
+    let uploadVideoData: UploadVideoData
+    
+    init(uploadVideoData: UploadVideoData) {
+        self.uploadVideoData = uploadVideoData
+    }
         
     // MARK: - Upload Video
     func uploadVideo(fileURL: URL,
                      progress: @escaping (Double) -> Void,
                      completion: @escaping (Result<String, Error>) -> Void) {
-        dataService.upload(fileURL: fileURL, progress: progress, completion: completion)
-        
+        uploadVideoData.upload(fileURL: fileURL, progress: progress, completion: completion)
     }
-
 }
