@@ -3,6 +3,9 @@ import SwiftData
 
 @main
 struct SeaLensApp: App {
+    
+    @StateObject var viewModel = UploadVideoViewModel()
+
 
     let container: ModelContainer
     
@@ -33,7 +36,7 @@ struct SeaLensApp: App {
         
         
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: viewModel)
                 .frame(minWidth: 1200, minHeight: 800)
                 .modelContext(container.mainContext)
         }

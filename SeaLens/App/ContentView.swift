@@ -4,6 +4,10 @@ public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State private var selection = "Dashboard"
     
+    @ObservedObject var viewModel: UploadVideoViewModel
+
+
+    
     public var body: some View {
         
         NavigationSplitView (
@@ -17,7 +21,7 @@ public struct ContentView: View {
                 case "Recent Uploads":
                     RecentUploadsPresentation(modelContext: modelContext)
                 case "Fish Collection":
-                    FishCollectionView()
+                    UploadCompletePresentation(viewModel: viewModel)
                 default:
                     Text("Unknown Section")
                 }
@@ -29,6 +33,6 @@ public struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    ContentView(viewModel: UploadVideoViewModel())
 }
 
