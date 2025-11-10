@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@Observable
 class RecentUploadsDomain: ObservableObject {
     let modelContext: ModelContext
     let footageData: FootageData
@@ -15,13 +16,10 @@ class RecentUploadsDomain: ObservableObject {
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         footageData = FootageData(dataService: DataService(modelContainer: modelContext.container))
-        
-        Task {
-            await footageData.retrieveFootages()
-        }
     }
  
-    func retrieveFootages() -> [Footage] {
+    func retrieveFootages() async -> [Footage] {
+        await footageData.retrieveFootages()
         return footageData.footages
     }
     

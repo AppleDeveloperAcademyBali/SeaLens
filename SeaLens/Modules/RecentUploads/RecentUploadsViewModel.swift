@@ -9,26 +9,24 @@ import Foundation
 import SwiftData
 import Observation
 
-@Observable
+@MainActor
 class RecentUploadsViewModel: ObservableObject {
     private let modelContext: ModelContext
     private let recentuploadDomain: RecentUploadsDomain
     
-    var footages: [Footage] = []
+    @Published var footages: [Footage] = []
+    
+    private var allFootages: [Footage] = []
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         self.recentuploadDomain = RecentUploadsDomain(modelContext: modelContext)
     }
-        
-    // Retrieve All Footages
-    func retrieveFootages() -> [Footage] {
-        return recentuploadDomain.retrieveFootages()
-    }
     
-    func loadFootages()
+    func loadFootages() async
     {
-        footages = recentuploadDomain.retrieveFootages()
+        allFootages = await recentuploadDomain.retrieveFootages()
+        footages = allFootages
     }
     
     // Apply Sorting for the Presentation
@@ -53,10 +51,10 @@ class RecentUploadsViewModel: ObservableObject {
     // Apply Searching for the Presentation
     func applySearching(searchText: String)
     {
-        footages = retrieveFootages()
-        
-        if !searchText.isEmpty {
-            footages = footages.filter { $0.filename.localizedCaseInsensitiveContains(searchText) }
+        if searchText.isEmpty {
+            footages = allFootages
+        } else {
+            footages = allFootages.filter { $0.filename.localizedCaseInsensitiveContains(searchText) }
         }
     }
 }

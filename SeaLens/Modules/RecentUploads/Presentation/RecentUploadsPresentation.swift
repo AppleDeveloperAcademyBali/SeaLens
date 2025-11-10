@@ -12,13 +12,13 @@ import AppKit
 
 public struct RecentUploadsPresentation: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var recentUploadsViewModel: RecentUploadsViewModel
+    @StateObject private var recentUploadsViewModel: RecentUploadsViewModel
     
     @State private var searchText: String = ""
     @State private var filteredFootages: [Footage] = []
     
     init(modelContext: ModelContext) {
-        self.recentUploadsViewModel = RecentUploadsViewModel(modelContext: modelContext)
+        _recentUploadsViewModel = StateObject(wrappedValue: RecentUploadsViewModel(modelContext: modelContext))
     }
     
     public var body: some View  {
@@ -81,8 +81,8 @@ public struct RecentUploadsPresentation: View {
                 }
             }
         }
-        .onAppear() {
-            recentUploadsViewModel.loadFootages()
+        .task {
+            await recentUploadsViewModel.loadFootages()
         }
         .onChange(of: searchText) { _ , _ in
             recentUploadsViewModel.applySearching(searchText: searchText)

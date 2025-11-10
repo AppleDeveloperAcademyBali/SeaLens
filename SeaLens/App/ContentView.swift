@@ -13,11 +13,12 @@ public struct ContentView: View {
             detail: {
                 switch selection {
                 case "Dashboard":
-                    UploadVideoPresentation(viewModel: createUploadVideoViewModel())
+                    DashboardPresentation(modelContext: modelContext)
                 case "Recent Uploads":
                     RecentUploadsPresentation(modelContext: modelContext)
                 case "Fish Collection":
-                    FishCollectionView()
+                    UploadVideoPresentation(viewModel: createUploadVideoViewModel())
+                    //FishCollectionView()
                 default:
                     Text("Unknown Section")
                 }
