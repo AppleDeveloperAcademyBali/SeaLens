@@ -14,7 +14,7 @@ public struct ContentView: View {
                 switch selection {
                 case "Dashboard":
                     DashboardPresentation(modelContext: modelContext)
-                case "Recent Uploads":
+                case "Recent Observations":
                     RecentUploadsPresentation(modelContext: modelContext)
                 case "Fish Collection":
                     UploadVideoPresentation(viewModel: createUploadVideoViewModel())

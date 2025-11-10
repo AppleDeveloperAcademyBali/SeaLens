@@ -15,21 +15,21 @@ struct FootageFolder<Destination: View>: View {
     
     var body: some View {
         NavigationLink(destination: destination) {
-            ZStack(alignment: .center) {
-                Image("folder")
+            ZStack {
+                Image("observationCard")
                     .renderingMode(.original)
                 
-                VStack(alignment: .leading) {
+                VStack {
                     Spacer()
                     Text(title)
                         .textstyles(.title2Regular)
-                        .lineLimit(3)
+                        .lineLimit(2)
                         .padding()
                 }
-                .frame(width: 155, height: 160)
+                .frame(width: 285, height: 155, alignment: .leading)
             }
             .padding()
-            .frame(width: 155, height: 160)
+            .frame(width: 285, height: 155)
         }
         .buttonStyle(.plain)
     }

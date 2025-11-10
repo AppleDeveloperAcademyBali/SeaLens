@@ -23,6 +23,9 @@ final class FishSpeciesReference {
     //0..Many fishSpeciesReference belong to one fishFamilyReference
     var fishFamilyReference: FishFamilyReference?
     
+    @Relationship(inverse: \Fish.fishSpeciesReference)
+    var fish: [Fish] = []
+    
     init(
         uid: UUID,
         latinName: String,

@@ -24,61 +24,69 @@ public struct RecentUploadsPresentation: View {
     public var body: some View  {
         NavigationStack {
             GeometryReader{ geometry in
-                ZStack {
-                    VStack(alignment: .leading) {
-                        HStack() {
-                            Text("Recent Uploads")
+                VStack(alignment: .leading) {
+                    HStack {
+                        VStack(alignment: .leading){
+                            Text("Recent Observations")
                                 .textstyles(.title1Emphasized)
-                            
-                            Spacer()
-                            
-                            HStack() {
-                                
-                                SearchBar(searchText: $searchText)
-                                    
-                                Menu {
-                                    Text("Sort By")
-                                    Divider()
-                                    
-                                    Section("Date Taken") {
-                                        Button("Newest") {
-                                            recentUploadsViewModel.applySorting(sortOption: .dateTakenNewest)
-                                        }
-                                        Button("Oldest") {
-                                            recentUploadsViewModel.applySorting(sortOption: .dateTakenOldest)
-                                        }
-                                    }
-                                    
-                                    Section("Filename"){
-                                        Button("Alphabetically (A-Z)") {
-                                            recentUploadsViewModel.applySorting(sortOption: .filenameAscending)
-                                        }
-                                        Button("Alphabetically (Z-A)") {
-                                            recentUploadsViewModel.applySorting(sortOption: .filenameDesscending)
-                                        }
-                                    }
-                                } label: {
-                                    Image("iconSort")
-                                        .clipShape(.circle)
-                                        .frame(width: 50, height: 50)
-                                        
-                                }
-                                .buttonStyle(.plain)
-
-                            }
+                                .padding(.bottom, 2)
+                            Text("􀉁 \(recentUploadsViewModel.footages.count) observations")
+                                .textstyles(.title3Regular)
+                                .foregroundColor(.secondary)
+                                .italic()
                         }
+                        .padding(.bottom, 10)
                         
-                        ScrollView {
-                            FlowHStack {
-                                ForEach(recentUploadsViewModel.footages) { upload in
-                                    FootageFolder(destination: FishCollectionView(), title: upload.filename)
-                                        .frame(width: 155, height: 170)
+                        Spacer()
+                        
+                        HStack() {
+                            
+                            SearchBar(searchText: $searchText)
+                                
+                            Menu {
+                                Text("Sort By")
+                                Divider()
+                                
+                                Section("Date Taken") {
+                                    Button("Newest") {
+                                        recentUploadsViewModel.applySorting(sortOption: .dateTakenNewest)
+                                    }
+                                    Button("Oldest") {
+                                        recentUploadsViewModel.applySorting(sortOption: .dateTakenOldest)
+                                    }
                                 }
+                                
+                                Section("Filename"){
+                                    Button("Alphabetically (A-Z)") {
+                                        recentUploadsViewModel.applySorting(sortOption: .filenameAscending)
+                                    }
+                                    Button("Alphabetically (Z-A)") {
+                                        recentUploadsViewModel.applySorting(sortOption: .filenameDesscending)
+                                    }
+                                }
+                            } label: {
+                                Image("iconSort")
+                                    .clipShape(.circle)
+                                    .frame(width: 50, height: 50)
+                                    
                             }
+                            .buttonStyle(.plain)
+
                         }
                     }
                     .padding()
+                    
+                    ScrollView {
+                        FlowHStack {
+                            ForEach(recentUploadsViewModel.footages) { upload in
+                                FootageFolder(destination: FishCollectionView(), title: upload.filename)
+                                    .frame(width: 285, height: 170)
+                            }
+                        }
+                    }
                 }
+                .padding()
+                
             }
         }
         .task {

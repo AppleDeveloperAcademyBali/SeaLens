@@ -22,7 +22,7 @@ public struct DashboardPresentation: View {
 
     public var body: some View  {
         VStack(alignment: .leading) {
-            //#if DEBUG
+            #if DEBUG
             HStack {
                 Button("Generate Dummy Data") {
                     DummyDataService.generateDummyData(context: modelContext)
@@ -32,7 +32,7 @@ public struct DashboardPresentation: View {
                     DummyDataService.deleteAllData(context: modelContext)
                 }
             }
-            //#endif
+            #endif
             
             Text("Dashboard")
                 .textstyles(.title1Emphasized)
@@ -86,10 +86,11 @@ public struct DashboardPresentation: View {
                     .opacity(0.5)
             }
         }
+        .padding()
         .onAppear() {
             seriesChart = dashboardViewModel.convertToChartData(source: Footage.sampleData)
         }
-        .padding()
+        
     }
 }
 
