@@ -18,7 +18,7 @@ struct Sidebar: View {
     // list of sidebar items
     private let items: [(title: String, icon: String)] = [
         ("Dashboard", "chart.xyaxis.line"),
-        ("Recent Uploads", "clock"),
+        ("Recent Observations", "clock"),
         ("Fish Collection", "rectangle.grid.3x1")
     ]
     
@@ -44,7 +44,7 @@ struct Sidebar: View {
         .listStyle(SidebarListStyle())
         
         // sets sidebar minimum width
-        .frame(minWidth: 175)
+        .frame(minWidth: 200)
     }
     
 }
