@@ -1,23 +1,21 @@
 //
-//  UploadVideoDomain.swift
+//  UploadVideoDomain+File.swift
 //  SeaLens
 //
-//  Created by Shreyas Venadan on 27/10/2025.
+//  Created by Handy Handy on 08/11/25.
 //
 
 import Foundation
 import AVFoundation
 
-struct UploadVideoDomain {
+extension UploadVideoDomain {
     
-    private let dataService = UploadVideoData()
-        
     // MARK: - Open Finder Function
     func pickVideoAndExtractMetadata() async -> (url: URL, duration: String, date: String, fileSize: String)? {
         
         // run the file picker safely on the main thread
         guard let url = await MainActor.run(body: {
-            dataService.pickVideoFromFinder()
+            uploadVideoData.pickVideoFromFinder()
         }) else { return nil }
         return await extractMetadata(from: url)
     }
@@ -78,15 +76,4 @@ struct UploadVideoDomain {
         let megaBytes = bytes / (1024 * 1024)
         return String(format: "%.1f MB", megaBytes)
     }
-    
-    
-    
-    // MARK: - Upload Video
-    func uploadVideo(fileURL: URL,
-                     progress: @escaping (Double) -> Void,
-                     completion: @escaping (Result<String, Error>) -> Void) {
-        dataService.upload(fileURL: fileURL, progress: progress, completion: completion)
-        
-    }
-
 }
