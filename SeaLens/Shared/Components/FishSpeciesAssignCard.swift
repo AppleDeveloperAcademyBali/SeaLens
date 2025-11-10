@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FishSpeciesCard: View {
+struct FishSpeciesAssignCard: View {
     let fishSpecies: FishSpeciesReference
     
     let inchMultiplier: Double = 0.393701
@@ -66,5 +66,5 @@ struct FishSpeciesCard: View {
 }
 
 #Preview {
-    FishSpeciesCard(fishSpecies: FishSpeciesReference.sampleData[0])
+    FishSpeciesAssignCard(fishSpecies: FishSpeciesReference.sampleData[0])
 }
