@@ -305,6 +305,9 @@ final class DummyDataService {
             try context.delete(model: FootageTags.self)
             try context.delete(model: FishSpeciesReference.self)
             try context.delete(model: FishFamilyReference.self)
+            try context.delete(model: Location.self)
+            try context.delete(model: Site.self)
+            try context.delete(model: Transect.self)
             
             try context.save()
             print("✅ All data deleted successfully!")
