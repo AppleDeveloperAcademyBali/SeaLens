@@ -20,6 +20,8 @@ final class FishFamilyReference {
     @Relationship(deleteRule: .cascade, inverse: \FishSpeciesReference.fishFamilyReference)
     var fishSpeciesReferences: [FishSpeciesReference] = []
     
+    @Relationship(inverse: \FishFamily.fishFamilyReference)
+    var fishFamilies: [FishFamily] = []
     
     init(
         uid: UUID = .init(),

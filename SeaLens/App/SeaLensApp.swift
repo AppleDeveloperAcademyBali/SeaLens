@@ -3,6 +3,8 @@ import SwiftData
 
 @main
 struct SeaLensApp: App {
+    
+
 
     var body: some Scene {
         WindowGroup {

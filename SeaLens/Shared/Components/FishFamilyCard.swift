@@ -1,87 +1,75 @@
 //
-//  FishFamilyCard.swift
+//  FishCard.swift
 //  SeaLens
 //
-//  Created by IP Marry Kusuma on 03/11/25.
+//  Created by Shreyas Venadan on 8/11/2025.
 //
 
 import SwiftUI
 
 struct FishFamilyCard: View {
-    let fishFamilyRef: FishFamilyReference
-    let fishFamilyConfidenceValue: Double
-
-    @Binding var selectedFishFamily: FishFamilyReference?
+    
+    var familyName: String
+    var latinName: String
+    var fishCount: Int
+    var imageURL: String
     
     var body: some View {
-        HStack {
-            Rectangle()
-                .foregroundStyle(.gray.opacity(0.1))
-                .cornerRadius(20)
-                .overlay {
-                    
-                    Image(getImageUrl(fishFamilyRef: fishFamilyRef))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 144, height: 144)
-
-                }
-                .frame(width: 178, height: 178)
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(fishFamilyRef.commonName)
-                        .font(.title2)
-                        .bold()
-                    Text("(\(fishFamilyRef.latinName))")
+        
+        GeometryReader { geometry in
+            ZStack(alignment: .topLeading)  {
+                
+                // fish image
+                Image(imageURL)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geometry.size.width)
+                    .clipped()
+                    .cornerRadius(30)
+                
+                // text overlay
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(familyName)
+                        .textstyles(.title2EmphasizedRounded)
+                    Text(latinName)
                         .font(.caption)
-                        .italic()
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "arrow.right")
-                    }
+                    
                 }
+                .padding(25)
                 
-                Text("\(fishFamilyRef.fishSpeciesReferences.count) species")
-                    .font(.subheadline)
-                
-                Text("")
-                
-                Text("\(String(format: "%.2f", fishFamilyConfidenceValue))% match")
-                    .foregroundColor(.green)
-                    .font(.headline)
+                VStack {
+                    Spacer()
+                    HStack (spacing: 4){
+                        Text("\(fishCount) fish detected")
+                            .textstyles(.bodyMedium)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(Color(.white))
+                            .foregroundColor(.blue)
+                            .clipShape(Capsule())
+                        
+                        Spacer()
+                    }
+                    .padding(25)
+                    
+                }
             }
-            .padding()
-            
-            Spacer()
-            
-            Button("Assign to this family") {
-                selectedFishFamily = fishFamilyRef
-            }
-            .foregroundStyle(.blue)
-            .buttonStyle(.glass)
-            .cornerRadius(100)
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .shadow(radius: 3)
         }
-        .frame(width: 1000, height: 178)
-    }
-    
-    func getImageUrl(fishFamilyRef: FishFamilyReference) -> String {
-        var imageUrl: String = "noImage"
+        .aspectRatio(1.2, contentMode: .fit)
         
-        if let firstSpecies = fishFamilyRef.fishSpeciesReferences.first {
-            imageUrl = firstSpecies.imageUrl
-        } else {
-            imageUrl = "noImage"
-        }
-        
-        return imageUrl
     }
 }
+
 
 #Preview {
-    FishFamilyCard(fishFamilyRef: FishFamilyReference(latinName: "Chaetodondidae", commonName: "Butterflyfish", imageUrl: "samplePicture", sourceUrl: "https://www.fishbase.org.au/v4/summary/8014", attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"), fishFamilyConfidenceValue: 95.0, selectedFishFamily: .constant(nil))
+    FishFamilyCard(
+        familyName: "Surgeonfish",
+        latinName: "Acanthuridae",
+        fishCount: 20,
+        imageURL: "samplePicture",
+    )
+    .frame(width: 240, height: 200)
 }
+

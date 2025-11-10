@@ -8,6 +8,9 @@ public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State private var selection = "Dashboard"
     
+
+
+    
     public var body: some View {
         GeometryReader { geometry in
             NavigationSplitView (
@@ -19,11 +22,13 @@ public struct ContentView: View {
                 detail: {
                     switch selection {
                     case "Dashboard":
-                        UploadVideoPresentation(viewModel: createUploadVideoViewModel())
-                    case "Recent Uploads":
+                        DashboardPresentation(modelContext: modelContext)
+                    case "Recent Observations":
                         RecentUploadsPresentation(modelContext: modelContext)
                     case "Fish Collection":
                         FishCollectionView()
+                    case "Upload Video":
+                        UploadVideoPresentation(viewModel: createUploadVideoViewModel())
                     default:
                         Text("Unknown Section")
                     }
