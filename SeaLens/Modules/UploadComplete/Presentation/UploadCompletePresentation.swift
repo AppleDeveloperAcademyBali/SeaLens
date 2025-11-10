@@ -85,7 +85,7 @@ struct UploadCompletePresentation: View {
 
 
 
-#Preview {
-    UploadCompletePresentation(viewModel: UploadVideoViewModel())
-        .frame(width: 1200, height: 800)
-}
+//#Preview {
+//    UploadCompletePresentation(viewModel: UploadVideoViewModel())
+//        .frame(width: 1200, height: 800)
+//}
