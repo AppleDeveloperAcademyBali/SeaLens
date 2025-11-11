@@ -16,6 +16,7 @@ final class UploadVideoViewModel: ObservableObject {
     
     // state variables
     @Published var fileName = ""
+    @Published var uploadedFootageUID: UUID?
     //
     @Published var location = ""
     @Published var locationSuggestion: [String] = []
@@ -38,6 +39,9 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var uploadProgress: Double = 0
     @Published var isUploading: Bool = false
     @Published var uploadStatusMessage: String = ""
+    @Published var uploadSucceded = false
+    //
+    
         
     let domain: UploadVideoDomain
     var selectedFileURL: URL?
@@ -106,38 +110,57 @@ final class UploadVideoViewModel: ObservableObject {
                 timer.invalidate()
                 Task { @MainActor in
                     self.saveVideoToLocalStorage()
-                    self.isUploading = false
-                    self.uploadStatusMessage = "Upload data successfully"
                 }
             }
         }
         return
         
-        domain.uploadVideo(fileURL: fileURL, progress: { [weak self] progress in
-            DispatchQueue.main.async {
-                self?.uploadProgress = progress
-            }
-        }, completion: { [weak self] result in
-            DispatchQueue.main.async {
-                self?.isUploading = false
-                switch result {
-                case.success(let message):
-                    self?.uploadStatusMessage = message
-                    self?.saveVideoToLocalStorage()
-                case.failure(let error):
-                    self?.uploadStatusMessage = "Upload Failed: \(error.localizedDescription)"
-                }
-            }
-            
-        })
+//        domain.uploadVideo(fileURL: fileURL, progress: { [weak self] progress in
+//            DispatchQueue.main.async {
+//                self?.uploadProgress = progress
+//            }
+//        }, completion: { [weak self] result in
+//            DispatchQueue.main.async {
+//                self?.isUploading = false
+//                switch result {
+//                case.success(let message):
+//                    self?.uploadStatusMessage = message
+//                    Task { @MainActor in
+//                        await self?.saveVideoToLocalStorage()
+//                    }
+//                case.failure(let error):
+//                    self?.uploadStatusMessage = "Upload Failed: \(error.localizedDescription)"
+//                }
+//            }
+//            
+//        })
         
     }
     
-    //MARK: - Save Footage to Local Storage
+//    //MARK: - Save Footage to Local Storage
+//    func saveVideoToLocalStorage() {
+//        Task(priority: .utility) {
+//            await self.domain.setFootage(footage: createFootage())
+//            
+//        }
+//    }
+    
+    // MARK: - Save Footage to Local Storage
     func saveVideoToLocalStorage() {
-        Task(priority: .utility) {
-            await self.domain.setFootage(footage: createFootage())
+        Task { @MainActor in
+            let footage = createFootage()
+            await self.domain.setFootage(footage: footage)
+            
+            // Store the UUID of the created footage (it's already saved)
+            self.uploadedFootageUID = footage.uid
+            
+            self.isUploading = false
+            self.uploadStatusMessage = "Upload data successfully"
+            self.uploadSucceded = true
         }
     }
+    
+    
+
     
 }

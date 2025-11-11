@@ -7,13 +7,25 @@
 
 
 import SwiftUI
+import SwiftData
 
 
 
 struct UploadCompletePresentation: View {
-    
-    @ObservedObject var viewModel: UploadVideoViewModel
 
+//    @Environment(\.modelContext) private var modelContext
+//    @StateObject private var viewModel: UploadCompleteViewModel
+//    
+//    init(footageUID: UUID, context: ModelContext) {
+//        let domain = UploadCompleteDomain(context: context)
+//        _viewModel = StateObject(wrappedValue: UploadCompleteViewModel(
+//            footageUID: footageUID,
+//            domain: domain
+//        ))
+//    }
+    @StateObject var viewModel: UploadCompleteViewModel
+
+    
         
     var body: some View {
         
@@ -25,7 +37,9 @@ struct UploadCompletePresentation: View {
                     .textstyles(.title1Emphasized)
                 
                 // video tag component
-                VideoTag(fileName: viewModel.fileName)
+                if let name = viewModel.footage?.originalFilename  {
+                    VideoTag(fileName: name)
+                }
 
             }
             
@@ -68,7 +82,8 @@ struct UploadCompletePresentation: View {
                 
             }
             
-            FishFamilyGrid()
+            // Use the view model's array to avoid relationship materialization during render.
+            FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
             
             Spacer()
             
@@ -78,14 +93,17 @@ struct UploadCompletePresentation: View {
         }
         .padding(.horizontal, 30)
         .padding(.vertical, 30)
-        
+        .onAppear {
+            viewModel.loadFootage()
+        }
         
     }
 }
 
 
-
+//
 //#Preview {
-//    UploadCompletePresentation(viewModel: UploadVideoViewModel())
+//    UploadCompletePresentation(footageUID: 001, context: ModelContext())
 //        .frame(width: 1200, height: 800)
 //}
+

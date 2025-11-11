@@ -340,3 +340,53 @@ final class DummyDataService {
  }
  #endif
  */
+
+
+extension DummyDataService {
+    static func generateSampleFishFamilies(for footage: Footage, context: ModelContext) {
+        //  Get or create the family reference data first
+        let familyReferences = createFishFamilyReferences()
+        familyReferences.forEach { context.insert($0) }
+
+        // For this one footage, create a few random fish families
+        let baseDate = Date()
+        let numFamilies = Int.random(in: 2...4)
+
+        for _ in 0..<numFamilies {
+            guard let randomFamilyRef = familyReferences.randomElement() else { continue }
+
+            // Create a FishFamily linked to this footage
+            let fishFamily = FishFamily(
+                uid: UUID(),
+                numOfFishDetected: Int32.random(in: 5...20),
+                dateCreated: baseDate,
+                dateUpdated: baseDate,
+                footage: footage,
+                fishFamilyReference: randomFamilyRef
+            )
+            context.insert(fishFamily)
+
+            // Add some random Fish for the family
+            let numFish = Int.random(in: 2...5)
+            for _ in 0..<numFish {
+                let fish = Fish(
+                    uid: UUID(),
+                    imageUrl: "samplePicture",
+                    objectRecognitionConf: Double.random(in: 0.7...0.99),
+                    isFavorites: Bool.random(),
+                    dateCreated: baseDate,
+                    dateUpdated: baseDate,
+                    fishFamily: fishFamily
+                )
+                context.insert(fish)
+            }
+        }
+
+        do {
+            try context.save()
+            print("Added sample FishFamilies for footage: \(footage.filename)")
+        } catch {
+            print("Failed to save sample FishFamilies: \(error)")
+        }
+    }
+}

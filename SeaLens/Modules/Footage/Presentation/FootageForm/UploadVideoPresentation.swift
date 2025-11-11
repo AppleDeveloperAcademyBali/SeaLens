@@ -11,6 +11,9 @@ import SwiftUI
 struct UploadVideoPresentation: View {
     
     @ObservedObject var viewModel: UploadVideoViewModel
+    @Environment(\.modelContext) private var modelContext
+    @State private var navigateToComplete = false
+
     
     var body: some View {
         ScrollView {
@@ -49,7 +52,31 @@ struct UploadVideoPresentation: View {
             .disabled(viewModel.isUploading)
             .padding(24)
             .padding(.horizontal,12)
+            .onChange(of: viewModel.uploadSucceded) { _, newValue in
+                if newValue {
+                    navigateToComplete = true
+                }
+            }
         }
-        
+        .navigationDestination(isPresented: $navigateToComplete) {
+            if let footageUID = viewModel.uploadedFootageUID {
+                UploadCompletePresentation(
+                    viewModel: createUploadCompleteViewModel(for: footageUID)
+                )
+            }
+        }
+
+
     }
+    
+    private func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
+        let dataService = DataService(modelContainer: modelContext.container)
+        let footageData = FootageData(dataService: dataService)
+        let domain = UploadCompleteDomain(footageData: footageData)
+        return UploadCompleteViewModel(footageUID: footageUID, domain: domain)
+    }
+
+
+    
+    
 }
