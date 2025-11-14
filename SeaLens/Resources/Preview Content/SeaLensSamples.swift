@@ -139,7 +139,8 @@ extension Footage {
             transect: "T1",
             depthInMeter: 12.5,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage1.footageTags = [
             FootageTags(uid: UUID(), name: "coral", footage: footage1),
@@ -185,7 +186,8 @@ extension Footage {
             transect: "T2",
             depthInMeter: 15.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage2.footageTags = [
             FootageTags(uid: UUID(), name: "reef", footage: footage2),
@@ -230,7 +232,8 @@ extension Footage {
             transect: "T1",
             depthInMeter: 18.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage3.footageTags = [
             FootageTags(uid: UUID(), name: "biodiversity-hotspot", footage: footage3)
@@ -274,7 +277,8 @@ extension Footage {
             transect: "T3",
             depthInMeter: 20.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage4.footageTags = [
             FootageTags(uid: UUID(), name: "wall-dive", footage: footage4),
@@ -320,7 +324,8 @@ extension Footage {
             transect: "T2",
             depthInMeter: 22.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage5.footageTags = [
             FootageTags(uid: UUID(), name: "shark-present", footage: footage5),
@@ -365,7 +370,8 @@ extension Footage {
             transect: "T1",
             depthInMeter: 16.5,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage6.footageTags = [
             FootageTags(uid: UUID(), name: "pinnacle", footage: footage6)
@@ -410,7 +416,8 @@ extension Footage {
             transect: "T4",
             depthInMeter: 14.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage7.footageTags = [
             FootageTags(uid: UUID(), name: "soft-coral", footage: footage7),
@@ -455,7 +462,8 @@ extension Footage {
             transect: "T1",
             depthInMeter: 25.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage8.footageTags = [
             FootageTags(uid: UUID(), name: "deep-dive", footage: footage8),
@@ -500,7 +508,8 @@ extension Footage {
             transect: "T2",
             depthInMeter: 11.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage9.footageTags = [
             FootageTags(uid: UUID(), name: "turtle-present", footage: footage9),
@@ -546,7 +555,8 @@ extension Footage {
             transect: "T3",
             depthInMeter: 19.0,
             dateCreated: baseDate,
-            dateUpdated: baseDate
+            dateUpdated: baseDate,
+            footageTags: []
         )
         footage10.footageTags = [
             FootageTags(uid: UUID(), name: "whale-shark-site", footage: footage10),

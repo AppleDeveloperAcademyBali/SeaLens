@@ -187,7 +187,8 @@ final class DummyDataService {
                 transect: "T\(i + 1)",
                 depthInMeter: Double.random(in: 5...30),
                 dateCreated: baseDate,
-                dateUpdated: baseDate
+                dateUpdated: baseDate,
+                footageTags: []
             )
             context.insert(footage)
             

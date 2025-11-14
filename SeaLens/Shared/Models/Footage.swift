@@ -42,7 +42,8 @@ final class Footage {
         transect: String,
         depthInMeter: Double,
         dateCreated: Date,
-        dateUpdated: Date)
+        dateUpdated: Date,
+        footageTags: [FootageTags])
     {
         self.uid = uid
         self.filename = filename
@@ -56,5 +57,6 @@ final class Footage {
         self.depthInMeter = depthInMeter
         self.dateCreated = dateCreated
         self.dateUpdated = dateUpdated
+        self.footageTags = footageTags
     }
 }
