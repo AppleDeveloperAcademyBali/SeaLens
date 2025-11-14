@@ -18,15 +18,11 @@ final class Fish {
     var dateCreated: Date
     var dateUpdated: Date
     
-    //0..Many fish belong to one fishFamily
-    var fishFamily: FishFamily?
-    
     //0..Many fish belong to one fishSpeciesReference
-    var fishSpeciesReference: FishSpeciesReference?
+    var individualFish: IndividualFish
     
     @Relationship(deleteRule: .cascade, inverse: \FishConfidenceScore.fish)
     var fishConfidenceScores: [FishConfidenceScore] = []
-    
     
     init(
         uid: UUID = .init(),
@@ -36,8 +32,7 @@ final class Fish {
         isFavorites: Bool,
         dateCreated: Date,
         dateUpdated: Date,
-        fishFamily: FishFamily? = nil,
-        fishSpeciesReference: FishSpeciesReference? = nil,
+        individualFish: IndividualFish,
         fishConfidenceScore: [FishConfidenceScore] = [])
     {
         self.uid = uid
@@ -47,8 +42,8 @@ final class Fish {
         self.isFavorites = isFavorites
         self.dateCreated = dateCreated
         self.dateUpdated = dateUpdated
-        self.fishFamily = fishFamily
-        self.fishSpeciesReference = fishSpeciesReference
+        
+        self.individualFish = individualFish
         self.fishConfidenceScores = fishConfidenceScore
     }
     

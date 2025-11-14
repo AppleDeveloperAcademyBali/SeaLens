@@ -30,7 +30,7 @@ class DashboardDomain: ObservableObject {
             
             let formattedDate = dateFormatter.string(from: footage.dateTaken)
             
-            for fishFamily in footage.fishFamily {
+            for fishFamily in footage.fishFamily ?? [] {
                 var commonName = "Unidentified"
                 if let reference = fishFamily.fishFamilyReference {
                     commonName = reference.commonName

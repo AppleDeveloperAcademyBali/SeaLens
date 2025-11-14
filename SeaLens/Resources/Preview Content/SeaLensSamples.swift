@@ -148,7 +148,7 @@ extension FishSpeciesReference {
     }()
 }
 
-//Footage, FishFamily, Fish, FishConfidenceScore, FootageTags
+//Footage, FishFamily, IndividualFish, Fish, FishConfidenceScore, FootageTags
 extension Footage {
     static var sampleData: [Footage] = {
         let baseDate = Date()
@@ -184,6 +184,15 @@ extension Footage {
             fishFamilyReference: familyRefs[0]
         )
         
+        let individualFish1 = IndividualFish(
+            fishId: "FISH-001",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[0],
+            fish: []
+        )
+    
         let fish1 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_001.jpg",
             objectRecognitionConf: 0.92,
@@ -191,15 +200,15 @@ extension Footage {
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily1,
-            fishSpeciesReference: speciesRefs[0]
+            individualFish: individualFish1
         )
         fish1.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Acanthuridae", confidenceValue: 0.92, fish: fish1),
             FishConfidenceScore(familyLatinName: "Labridae", confidenceValue: 0.05, fish: fish1)
         ]
         
-        fishFamily1.fish = [fish1]
+        individualFish1.fish = [fish1]
+        fishFamily1.individualFishes = [individualFish1]
         footage1.fishFamily = [fishFamily1]
         
         // Footage 2
@@ -231,6 +240,15 @@ extension Footage {
             fishFamilyReference: familyRefs[1]
         )
         
+        let individualFish2 = IndividualFish(
+            fishId: "FISH-002",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily2,
+            fishSpeciesReference: speciesRefs[2],
+            fish: []
+        )
+        
         let fish2 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_002.jpg",
             objectRecognitionConf: 0.88,
@@ -238,14 +256,14 @@ extension Footage {
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily2,
-            fishSpeciesReference: speciesRefs[2]
+            individualFish: individualFish2
         )
         fish2.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Pomacentridae", confidenceValue: 0.88, fish: fish2)
         ]
         
-        fishFamily2.fish = [fish2]
+        individualFish2.fish = [fish2]
+        fishFamily2.individualFishes = [individualFish2]
         footage2.fishFamily = [fishFamily2]
         
         // Footage 3
@@ -276,6 +294,15 @@ extension Footage {
             fishFamilyReference: familyRefs[2]
         )
         
+        let individualFish3 = IndividualFish(
+            fishId: "FISH-003",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily3,
+            fishSpeciesReference: speciesRefs[4],
+            fish: []
+        )
+        
         let fish3 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_003.jpg",
             objectRecognitionConf: 0.95,
@@ -283,14 +310,14 @@ extension Footage {
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily3,
-            fishSpeciesReference: speciesRefs[4]
+            individualFish: individualFish3
         )
         fish3.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Labridae", confidenceValue: 0.95, fish: fish3)
         ]
         
-        fishFamily3.fish = [fish3]
+        individualFish3.fish = [fish3]
+        fishFamily3.individualFishes = [individualFish3]
         footage3.fishFamily = [fishFamily3]
         
         // Footage 4
@@ -322,6 +349,15 @@ extension Footage {
             fishFamilyReference: familyRefs[3]
         )
         
+        let individualFish4 = IndividualFish(
+            fishId: "FISH-004",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily4,
+            fishSpeciesReference: speciesRefs[5],
+            fish: []
+        )
+        
         let fish4 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_004.jpg",
             objectRecognitionConf: 0.87,
@@ -329,15 +365,15 @@ extension Footage {
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily4,
-            fishSpeciesReference: speciesRefs[5]
+            individualFish: individualFish4
         )
         fish4.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Serranidae", confidenceValue: 0.87, fish: fish4),
             FishConfidenceScore(familyLatinName: "Labridae", confidenceValue: 0.08, fish: fish4)
         ]
         
-        fishFamily4.fish = [fish4]
+        individualFish4.fish = [fish4]
+        fishFamily4.individualFishes = [individualFish4]
         footage4.fishFamily = [fishFamily4]
         
         // Footage 5
@@ -369,6 +405,15 @@ extension Footage {
             fishFamilyReference: familyRefs[1]
         )
         
+        let individualFish5 = IndividualFish(
+            fishId: "FISH-005",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily5,
+            fishSpeciesReference: speciesRefs[3],
+            fish: []
+        )
+        
         let fish5 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_005.jpg",
             objectRecognitionConf: 0.91,
@@ -376,14 +421,14 @@ extension Footage {
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily5,
-            fishSpeciesReference: speciesRefs[3]
+            individualFish: individualFish5
         )
         fish5.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Pomacentridae", confidenceValue: 0.91, fish: fish5)
         ]
         
-        fishFamily5.fish = [fish5]
+        individualFish5.fish = [fish5]
+        fishFamily5.individualFishes = [individualFish5]
         footage5.fishFamily = [fishFamily5]
         
         // Footage 6
@@ -414,6 +459,15 @@ extension Footage {
             fishFamilyReference: familyRefs[4]
         )
         
+        let individualFish6 = IndividualFish(
+            fishId: "FISH-006",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily6,
+            fishSpeciesReference: speciesRefs[6],
+            fish: []
+        )
+        
         let fish6 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_006.jpg",
             objectRecognitionConf: 0.89,
@@ -421,15 +475,15 @@ extension Footage {
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily6,
-            fishSpeciesReference: speciesRefs[6]
+            individualFish: individualFish6
         )
         fish6.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Chaetodontidae", confidenceValue: 0.89, fish: fish6),
             FishConfidenceScore(familyLatinName: "Pomacentridae", confidenceValue: 0.07, fish: fish6)
         ]
         
-        fishFamily6.fish = [fish6]
+        individualFish6.fish = [fish6]
+        fishFamily6.individualFishes = [individualFish6]
         footage6.fishFamily = [fishFamily6]
         
         // Footage 7
@@ -461,6 +515,15 @@ extension Footage {
             fishFamilyReference: familyRefs[0]
         )
         
+        let individualFish7 = IndividualFish(
+            fishId: "FISH-007",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily7,
+            fishSpeciesReference: speciesRefs[1],
+            fish: []
+        )
+        
         let fish7 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_007.jpg",
             objectRecognitionConf: 0.93,
@@ -468,14 +531,14 @@ extension Footage {
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily7,
-            fishSpeciesReference: speciesRefs[1]
+            individualFish: individualFish7
         )
         fish7.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Acanthuridae", confidenceValue: 0.93, fish: fish7)
         ]
         
-        fishFamily7.fish = [fish7]
+        individualFish7.fish = [fish7]
+        fishFamily7.individualFishes = [individualFish7]
         footage7.fishFamily = [fishFamily7]
         
         // Footage 8
@@ -507,6 +570,15 @@ extension Footage {
             fishFamilyReference: familyRefs[3]
         )
         
+        let individualFish8 = IndividualFish(
+            fishId: "FISH-008",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily8,
+            fishSpeciesReference: speciesRefs[5],
+            fish: []
+        )
+        
         let fish8 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_008.jpg",
             objectRecognitionConf: 0.85,
@@ -514,14 +586,14 @@ extension Footage {
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily8,
-            fishSpeciesReference: speciesRefs[5]
+            individualFish: individualFish8
         )
         fish8.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Serranidae", confidenceValue: 0.85, fish: fish8)
         ]
         
-        fishFamily8.fish = [fish8]
+        individualFish8.fish = [fish8]
+        fishFamily8.individualFishes = [individualFish8]
         footage8.fishFamily = [fishFamily8]
         
         // Footage 9
@@ -553,6 +625,15 @@ extension Footage {
             fishFamilyReference: familyRefs[2]
         )
         
+        let individualFish9 = IndividualFish(
+            fishId: "FISH-009",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily9,
+            fishSpeciesReference: speciesRefs[4],
+            fish: []
+        )
+        
         let fish9 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_009.jpg",
             objectRecognitionConf: 0.94,
@@ -560,15 +641,15 @@ extension Footage {
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily9,
-            fishSpeciesReference: speciesRefs[4]
+            individualFish: individualFish9
         )
         fish9.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Labridae", confidenceValue: 0.94, fish: fish9),
             FishConfidenceScore(familyLatinName: "Acanthuridae", confidenceValue: 0.04, fish: fish9)
         ]
         
-        fishFamily9.fish = [fish9]
+        individualFish9.fish = [fish9]
+        fishFamily9.individualFishes = [individualFish9]
         footage9.fishFamily = [fishFamily9]
         
         // Footage 10
@@ -600,6 +681,15 @@ extension Footage {
             fishFamilyReference: familyRefs[1]
         )
         
+        let individualFish10 = IndividualFish(
+            fishId: "FISH-010",
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily10,
+            fishSpeciesReference: speciesRefs[2],
+            fish: []
+        )
+        
         let fish10 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_010.jpg",
             objectRecognitionConf: 0.90,
@@ -607,14 +697,14 @@ extension Footage {
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily10,
-            fishSpeciesReference: speciesRefs[2]
+            individualFish: individualFish10
         )
         fish10.fishConfidenceScores = [
             FishConfidenceScore(familyLatinName: "Pomacentridae", confidenceValue: 0.90, fish: fish10)
         ]
         
-        fishFamily10.fish = [fish10]
+        individualFish10.fish = [fish10]
+        fishFamily10.individualFishes = [individualFish10]
         footage10.fishFamily = [fishFamily10]
         
         return [

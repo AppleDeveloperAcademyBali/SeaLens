@@ -18,10 +18,10 @@ final class FishFamilyReference {
     var attribution: String
     
     @Relationship(deleteRule: .cascade, inverse: \FishSpeciesReference.fishFamilyReference)
-    var fishSpeciesReferences: [FishSpeciesReference] = []
+    var fishSpeciesReferences: [FishSpeciesReference]?
     
-    @Relationship(inverse: \FishFamily.fishFamilyReference)
-    var fishFamilies: [FishFamily] = []
+    @Relationship(deleteRule:.nullify, inverse: \FishFamily.fishFamilyReference)
+    var fishFamilies: [FishFamily]?
     
     init(
         uid: UUID = .init(),
@@ -30,7 +30,8 @@ final class FishFamilyReference {
         imageUrl: String,
         sourceUrl: String,
         attribution: String,
-        fishSpeciesReferences: [FishSpeciesReference] = [])
+        fishSpeciesReferences: [FishSpeciesReference] = [],
+        fishFamilies: [FishFamily] = [])
     {
         self.uid = uid
         self.latinName = latinName
@@ -40,5 +41,6 @@ final class FishFamilyReference {
         self.attribution = attribution
         
         self.fishSpeciesReferences = fishSpeciesReferences
+        self.fishFamilies = fishFamilies
     }
 }

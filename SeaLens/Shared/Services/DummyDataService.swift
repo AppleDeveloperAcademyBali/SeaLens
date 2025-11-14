@@ -5,6 +5,12 @@
 //  Created by IP Marry Kusuma on 28/10/25.
 //
 
+//
+//  DummyDataService.swift
+//  SeaLens
+//
+//  Created by IP Marry Kusuma on 28/10/25.
+//
 
 import SwiftData
 import Foundation
@@ -202,8 +208,9 @@ final class DummyDataService {
         ]
         
         let baseDate = Date()
+        var individualFishCounter = 1
         
-        for i in 0..<10 {
+        for i in 0..<30 {
             let footage = Footage(
                 uid: UUID(),
                 filename: "footage_\(String(format: "%03d", i + 1)).mp4",
@@ -211,8 +218,8 @@ final class DummyDataService {
                 footageUrl: "https://storage.example.com/footage_\(i + 1).mp4",
                 durationInSeconds: Int32.random(in: 120...600),
                 dateTaken: Calendar.current.date(byAdding: .day, value: -i * 3, to: baseDate)!,
-                location: locations[i],
-                siteName: siteNames[i],
+                location: locations[abs(i/3)],
+                siteName: siteNames[abs(i/3)],
                 transect: "T\(i + 1)",
                 depthInMeter: Double.random(in: 5...30),
                 dateCreated: baseDate,
@@ -248,42 +255,62 @@ final class DummyDataService {
                 )
                 context.insert(fishFamily)
                 
-                // Create 3-8 fish per family
-                let numFish = Int.random(in: 3...8)
-                for _ in 0..<numFish {
-                    let randomSpecies = speciesReferences
-                        .filter { $0.fishFamilyReference?.latinName == randomFamilyRef.latinName }
-                        .randomElement()
+                // Create 2-5 individual fish per family
+                let numIndividualFish = Int.random(in: 2...5)
+                for _ in 0..<numIndividualFish {
+                    // Get a random species from this family
+                    let speciesForFamily = speciesReferences.filter {
+                        $0.fishFamilyReference?.latinName == randomFamilyRef.latinName
+                    }
+                    guard let randomSpecies = speciesForFamily.randomElement() else { continue }
                     
-                    let fish = Fish(
+                    // Create IndividualFish with temporary empty fish array
+                    let individualFish = IndividualFish(
                         uid: UUID(),
-                        imageUrl: "https://storage.example.com/fish_\(UUID().uuidString).jpg",
-                        objectRecognitionConf: Double.random(in: 0.75...0.99),
-                        timestamp: "00:01:15:40",
-                        isFavorites: Bool.random(),
+                        fishId: "FISH-\(String(format: "%04d", individualFishCounter))",
                         dateCreated: baseDate,
                         dateUpdated: baseDate,
                         fishFamily: fishFamily,
-                        fishSpeciesReference: randomSpecies
+                        fishSpeciesReference: randomSpecies,
+                        fish: []
                     )
-                    context.insert(fish)
+                    context.insert(individualFish)
+                    individualFishCounter += 1
                     
-                    // Add 2-5 confidence scores per fish
-                    let numScores = Int.random(in: 2...5)
-                    let selectedFamilies = familyReferences.shuffled().prefix(numScores)
-                    
-                    for (index, family) in selectedFamilies.enumerated() {
-                        let confidence = index == 0 
-                            ? Double.random(in: 0.70...0.95)  // Highest for first
-                            : Double.random(in: 0.10...0.60)  // Lower for others
-                        
-                        let score = FishConfidenceScore(
+                    // Create 2-5 fish detections for this individual fish
+                    let numFishDetections = Int.random(in: 2...5)
+                    for _ in 0..<numFishDetections {
+                        let fish = Fish(
                             uid: UUID(),
-                            familyLatinName: family.latinName,
-                            confidenceValue: confidence,
-                            fish: fish
+                            imageUrl: "https://storage.example.com/fish_\(UUID().uuidString).jpg",
+                            objectRecognitionConf: Double.random(in: 0.75...0.99),
+                            timestamp: String(format: "00:%02d:%02d:00",
+                                            Int.random(in: 0...5),
+                                            Int.random(in: 0...59)),
+                            isFavorites: Bool.random(),
+                            dateCreated: baseDate,
+                            dateUpdated: baseDate,
+                            individualFish: individualFish
                         )
-                        context.insert(score)
+                        context.insert(fish)
+                        
+                        // Add 2-5 confidence scores per fish
+                        let numScores = Int.random(in: 2...5)
+                        let selectedFamilies = familyReferences.shuffled().prefix(numScores)
+                        
+                        for (index, family) in selectedFamilies.enumerated() {
+                            let confidence = index == 0
+                                ? Double.random(in: 0.70...0.95)  // Highest for first (most likely family)
+                                : Double.random(in: 0.10...0.60)  // Lower for others
+                            
+                            let score = FishConfidenceScore(
+                                uid: UUID(),
+                                familyLatinName: family.latinName,
+                                confidenceValue: confidence,
+                                fish: fish
+                            )
+                            context.insert(score)
+                        }
                     }
                 }
             }
@@ -293,6 +320,7 @@ final class DummyDataService {
         do {
             try context.save()
             print("✅ Dummy data generated successfully!")
+            print("📊 Generated \(individualFishCounter - 1) individual fish across 10 footage items")
         } catch {
             print("❌ Error saving dummy data: \(error)")
         }
@@ -303,11 +331,12 @@ final class DummyDataService {
         do {
             try context.delete(model: Footage.self)
             try context.delete(model: FishFamily.self)
+            try context.delete(model: IndividualFish.self)
             try context.delete(model: Fish.self)
             try context.delete(model: FishConfidenceScore.self)
             try context.delete(model: FootageTags.self)
-            try context.delete(model: FishSpeciesReference.self)
             try context.delete(model: FishFamilyReference.self)
+            try context.delete(model: FishSpeciesReference.self)
             try context.delete(model: Location.self)
             try context.delete(model: Site.self)
             try context.delete(model: Transect.self)

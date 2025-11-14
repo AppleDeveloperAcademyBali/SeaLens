@@ -23,8 +23,8 @@ final class FishSpeciesReference {
     //0..Many fishSpeciesReference belong to one fishFamilyReference
     var fishFamilyReference: FishFamilyReference?
     
-    @Relationship(inverse: \Fish.fishSpeciesReference)
-    var fish: [Fish] = []
+    @Relationship(deleteRule: .nullify, inverse: \IndividualFish.fishSpeciesReference)
+    var individualFishes: [IndividualFish]?
     
     init(
         uid: UUID,
@@ -36,7 +36,8 @@ final class FishSpeciesReference {
         imageUrl: String,
         sourceUrl: String,
         attribution: String,
-        fishFamilyReference: FishFamilyReference? = nil)
+        fishFamilyReference: FishFamilyReference,
+        individualFishes: [IndividualFish] = [])
     {
         self.uid = uid
         self.latinName = latinName
@@ -47,6 +48,8 @@ final class FishSpeciesReference {
         self.imageUrl = imageUrl
         self.sourceUrl = sourceUrl
         self.attribution = attribution
+        
         self.fishFamilyReference = fishFamilyReference
+        self.individualFishes = individualFishes
     }
 }
