@@ -21,6 +21,7 @@ final class Footage {
     var transect: String
     var depthInMeter: Double
     var dateCreated: Date
+    var dateUpdated: Date
     
     @Relationship(deleteRule: .cascade, inverse: \FishFamily.footage)
     var fishFamily: [FishFamily] = []
@@ -40,7 +41,8 @@ final class Footage {
         siteName: String,
         transect: String,
         depthInMeter: Double,
-        dateCreated: Date)
+        dateCreated: Date,
+        dateUpdated: Date)
     {
         self.uid = uid
         self.filename = filename
@@ -53,5 +55,6 @@ final class Footage {
         self.transect = transect
         self.depthInMeter = depthInMeter
         self.dateCreated = dateCreated
+        self.dateUpdated = dateUpdated
     }
 }

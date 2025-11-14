@@ -186,7 +186,8 @@ final class DummyDataService {
                 siteName: siteNames[i],
                 transect: "T\(i + 1)",
                 depthInMeter: Double.random(in: 5...30),
-                dateCreated: baseDate
+                dateCreated: baseDate,
+                dateUpdated: baseDate
             )
             context.insert(footage)
             
@@ -228,6 +229,7 @@ final class DummyDataService {
                         uid: UUID(),
                         imageUrl: "https://storage.example.com/fish_\(UUID().uuidString).jpg",
                         objectRecognitionConf: Double.random(in: 0.75...0.99),
+                        timestamp: "00:01:15:40",
                         isFavorites: Bool.random(),
                         dateCreated: baseDate,
                         dateUpdated: baseDate,

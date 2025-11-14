@@ -13,6 +13,7 @@ final class Fish {
     @Attribute(.unique) var uid: UUID
     var imageUrl: String
     var objectRecognitionConf: Double
+    var timestamp: String
     var isFavorites: Bool
     var dateCreated: Date
     var dateUpdated: Date
@@ -31,6 +32,7 @@ final class Fish {
         uid: UUID = .init(),
         imageUrl: String,
         objectRecognitionConf: Double,
+        timestamp: String,
         isFavorites: Bool,
         dateCreated: Date,
         dateUpdated: Date,
@@ -41,6 +43,7 @@ final class Fish {
         self.uid = uid
         self.imageUrl = imageUrl
         self.objectRecognitionConf = objectRecognitionConf
+        self.timestamp = timestamp
         self.isFavorites = isFavorites
         self.dateCreated = dateCreated
         self.dateUpdated = dateUpdated

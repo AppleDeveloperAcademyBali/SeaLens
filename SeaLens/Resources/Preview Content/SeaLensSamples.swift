@@ -138,7 +138,8 @@ extension Footage {
             siteName: "Agincourt Reef",
             transect: "T1",
             depthInMeter: 12.5,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage1.footageTags = [
             FootageTags(uid: UUID(), name: "coral", footage: footage1),
@@ -156,6 +157,7 @@ extension Footage {
         let fish1 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_001.jpg",
             objectRecognitionConf: 0.92,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -182,7 +184,8 @@ extension Footage {
             siteName: "Banana Reef",
             transect: "T2",
             depthInMeter: 15.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage2.footageTags = [
             FootageTags(uid: UUID(), name: "reef", footage: footage2),
@@ -200,6 +203,7 @@ extension Footage {
         let fish2 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_002.jpg",
             objectRecognitionConf: 0.88,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -225,7 +229,8 @@ extension Footage {
             siteName: "Cape Kri",
             transect: "T1",
             depthInMeter: 18.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage3.footageTags = [
             FootageTags(uid: UUID(), name: "biodiversity-hotspot", footage: footage3)
@@ -242,6 +247,7 @@ extension Footage {
         let fish3 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_003.jpg",
             objectRecognitionConf: 0.95,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -267,7 +273,8 @@ extension Footage {
             siteName: "Ras Mohammed",
             transect: "T3",
             depthInMeter: 20.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage4.footageTags = [
             FootageTags(uid: UUID(), name: "wall-dive", footage: footage4),
@@ -285,6 +292,7 @@ extension Footage {
         let fish4 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_004.jpg",
             objectRecognitionConf: 0.87,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -311,7 +319,8 @@ extension Footage {
             siteName: "Blue Corner",
             transect: "T2",
             depthInMeter: 22.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage5.footageTags = [
             FootageTags(uid: UUID(), name: "shark-present", footage: footage5),
@@ -329,6 +338,7 @@ extension Footage {
         let fish5 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_005.jpg",
             objectRecognitionConf: 0.91,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -354,7 +364,8 @@ extension Footage {
             siteName: "Batu Bolong",
             transect: "T1",
             depthInMeter: 16.5,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage6.footageTags = [
             FootageTags(uid: UUID(), name: "pinnacle", footage: footage6)
@@ -371,6 +382,7 @@ extension Footage {
         let fish6 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_006.jpg",
             objectRecognitionConf: 0.89,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -397,7 +409,8 @@ extension Footage {
             siteName: "Rainbow Reef",
             transect: "T4",
             depthInMeter: 14.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage7.footageTags = [
             FootageTags(uid: UUID(), name: "soft-coral", footage: footage7),
@@ -415,6 +428,7 @@ extension Footage {
         let fish7 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_007.jpg",
             objectRecognitionConf: 0.93,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -440,7 +454,8 @@ extension Footage {
             siteName: "Blue Hole",
             transect: "T1",
             depthInMeter: 25.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage8.footageTags = [
             FootageTags(uid: UUID(), name: "deep-dive", footage: footage8),
@@ -458,6 +473,7 @@ extension Footage {
         let fish8 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_008.jpg",
             objectRecognitionConf: 0.85,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -483,7 +499,8 @@ extension Footage {
             siteName: "Apo Island",
             transect: "T2",
             depthInMeter: 11.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage9.footageTags = [
             FootageTags(uid: UUID(), name: "turtle-present", footage: footage9),
@@ -501,6 +518,7 @@ extension Footage {
         let fish9 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_009.jpg",
             objectRecognitionConf: 0.94,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
@@ -527,7 +545,8 @@ extension Footage {
             siteName: "Richelieu Rock",
             transect: "T3",
             depthInMeter: 19.0,
-            dateCreated: baseDate
+            dateCreated: baseDate,
+            dateUpdated: baseDate
         )
         footage10.footageTags = [
             FootageTags(uid: UUID(), name: "whale-shark-site", footage: footage10),
@@ -545,6 +564,7 @@ extension Footage {
         let fish10 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_010.jpg",
             objectRecognitionConf: 0.90,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
