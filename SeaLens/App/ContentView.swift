@@ -26,6 +26,8 @@ public struct ContentView: View {
                     case "Recent Observations":
                         RecentUploadsPresentation(modelContext: modelContext)
                     case "Fish Collection":
+                        FishCollectionView()
+                    case "Upload Video":
                         UploadVideoPresentation(viewModel: createUploadVideoViewModel())
                     default:
                         Text("Unknown Section")
