@@ -69,12 +69,14 @@ private struct FishFamilyGridContent: View {
     let cardWidth: CGFloat
     let spacing: CGFloat
     
+    private let cardAspectRatio: CGFloat = 274.0 / 258.0
+    
     var body: some View {
         
         FlowHStack(horizontalSpacing: spacing, verticalSpacing: spacing) {
             // Use explicit id to avoid identity issues across contexts.
             ForEach(families, id: \.uid) { family in
-                NavigationLink(value: family) {
+                NavigationLink(value: family.uid) {
                     FishFamilyCard(
                         familyName: family.fishFamilyReference?.commonName ?? "",
                         latinName: family.fishFamilyReference?.latinName ?? "",
@@ -82,14 +84,13 @@ private struct FishFamilyGridContent: View {
                         fishCount: Int(family.numOfFishDetected),
                         imageURL: "samplePicture"
                     )
-                    // Increase height to show more content per card
                     .frame(width: cardWidth, height: 280)
                 }
                 .buttonStyle(.plain)
             }
         }
         .navigationDestination(for: FishFamily.self) { family in
-            FishFamilyDetailPresentation(fishFamily: family)
+            FishFamilyDetailView(familyUID: familyUID)
         }
         
     }

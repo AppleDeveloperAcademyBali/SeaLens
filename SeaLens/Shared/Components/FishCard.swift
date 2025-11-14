@@ -22,7 +22,7 @@ struct FishCard: View {
                 .clipShape(RoundedRectangle(cornerRadius: 30))
                 .shadow(radius: 3)
         }
-        .aspectRatio(1.2, contentMode: .fit)
+        .aspectRatio(1.3, contentMode: .fit)
         
     }
 }

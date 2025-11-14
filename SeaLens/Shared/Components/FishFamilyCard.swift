@@ -32,12 +32,10 @@ struct FishFamilyCard: View {
                     Text(familyName)
                         .textstyles(.title2Regular)
                         .bold(true)
-                        .foregroundColor(.black)
                     
                     Text(latinName)
                         .textstyles(.bodyRegular)
                         .italic()
-                        .foregroundColor(.black)
                 }
                 
                 // Icons row
@@ -75,7 +73,6 @@ struct FishFamilyCard: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background(Color.white)
                 
         }
         .clipShape(RoundedRectangle(cornerRadius: 16))

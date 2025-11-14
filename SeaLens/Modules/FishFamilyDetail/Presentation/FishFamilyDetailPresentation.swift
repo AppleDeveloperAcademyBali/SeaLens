@@ -13,19 +13,22 @@ struct FishFamilyDetailPresentation: View {
     
     var body: some View {
         
-        VStack (alignment: .leading, spacing: 1) {
+        VStack (alignment: .leading, spacing: 20) {
             
-            HStack  {
-                Text(fishFamily.fishFamilyReference?.commonName ?? "")
-                    .textstyles(.largeTitleEmphasized)
+            VStack (alignment: .leading, spacing: 5) {
+                HStack  {
+                    Text(fishFamily.fishFamilyReference?.commonName ?? "")
+                        .textstyles(.largeTitleEmphasized)
+                    
+                    Text("(\(fishFamily.fishFamilyReference?.latinName ?? ""))")
+                        .textstyles(.bodyRegular)
+                    
+                }
                 
-                Text("(\(fishFamily.fishFamilyReference?.latinName ?? ""))")
-                    .textstyles(.bodyRegular)
-                
+                Text("\(fishFamily.numOfFishDetected) photos")
+                    .textstyles(.title3Regular)
             }
             
-            Text("\(fishFamily.numOfFishDetected) photos")
-                .textstyles(.title3Regular)
             
                 
             FishFamilyDetailGrid(fish: fishFamily.fish)
