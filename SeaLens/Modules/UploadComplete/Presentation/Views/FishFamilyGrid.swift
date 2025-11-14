@@ -35,9 +35,9 @@ struct FishFamilyGrid: View {
                 let availableWidth = geometry.size.width - (outerPadding * 2)
                 
                 // Allow smaller cards so more fit per row
-                let minCardWidth: CGFloat = 200
+                let minCardWidth: CGFloat = 258
                 // Slightly tighter spacing
-                let spacing: CGFloat = 12
+                let spacing: CGFloat = 25
                 
                 // calculate how many cards can fit per row
                 let cardsPerRow = max(3, Int((availableWidth + spacing) / (minCardWidth + spacing)))
@@ -51,7 +51,7 @@ struct FishFamilyGrid: View {
                         spacing: spacing
                     )
                     .padding(.horizontal, outerPadding)
-                    .padding(.vertical, 24)
+                    .padding(.vertical, 32)
                 
                 }
                 .scrollIndicators(.hidden)
@@ -78,6 +78,7 @@ private struct FishFamilyGridContent: View {
                     FishFamilyCard(
                         familyName: family.fishFamilyReference?.commonName ?? "",
                         latinName: family.fishFamilyReference?.latinName ?? "",
+                        photoCount: family.fish.count,
                         fishCount: Int(family.numOfFishDetected),
                         imageURL: "samplePicture"
                     )
