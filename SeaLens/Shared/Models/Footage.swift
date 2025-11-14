@@ -16,7 +16,7 @@ final class Footage {
     var footageUrl: String
     var durationInSeconds: Int32
     var dateTaken: Date
-    var location: String
+    var locationName: String
     var siteName: String
     var transect: String
     var depthInMeter: Double
@@ -51,7 +51,7 @@ final class Footage {
         self.footageUrl = footageUrl
         self.durationInSeconds = durationInSeconds
         self.dateTaken = dateTaken
-        self.location = location
+        self.locationName = location
         self.siteName = siteName
         self.transect = transect
         self.depthInMeter = depthInMeter

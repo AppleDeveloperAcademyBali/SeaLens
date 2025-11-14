@@ -12,23 +12,38 @@ extension FishFamilyReference {
     static var sampleData: [FishFamilyReference] = [
         FishFamilyReference(
             latinName: "Acanthuridae",
-            commonName: "Surgeonfish"
+            commonName: "Surgeonfish",
+            imageUrl: "samplePicture",
+            sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+            attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
         ),
         FishFamilyReference(
             latinName: "Pomacentridae",
-            commonName: "Damselfish"
+            commonName: "Damselfish",
+            imageUrl: "samplePicture",
+            sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+            attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
         ),
         FishFamilyReference(
             latinName: "Labridae",
-            commonName: "Wrasse"
+            commonName: "Wrasse",
+            imageUrl: "samplePicture",
+            sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+            attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
         ),
         FishFamilyReference(
             latinName: "Serranidae",
-            commonName: "Grouper"
+            commonName: "Grouper",
+            imageUrl: "samplePicture",
+            sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+            attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
         ),
         FishFamilyReference(
             latinName: "Chaetodontidae",
-            commonName: "Butterflyfish"
+            commonName: "Butterflyfish",
+            imageUrl: "samplePicture",
+            sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+            attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"
         )
     ]
 }
@@ -49,6 +64,8 @@ extension FishSpeciesReference {
                 identification: "Blue body with yellow dorsal fin and white chin",
                 location: "Indo-Pacific",
                 imageUrl: "samplePicture",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[0]
             ),
             FishSpeciesReference(
@@ -59,6 +76,8 @@ extension FishSpeciesReference {
                 identification: "Bright yellow body, oval shape",
                 location: "Hawaii, Pacific Ocean",
                 imageUrl: "https://example.com/yellow-tang.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[0]
             ),
             // Pomacentridae species
@@ -70,6 +89,8 @@ extension FishSpeciesReference {
                 identification: "Orange with white bands outlined in black",
                 location: "Indo-Pacific, Great Barrier Reef",
                 imageUrl: "https://example.com/clownfish.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[1]
             ),
             FishSpeciesReference(
@@ -80,6 +101,8 @@ extension FishSpeciesReference {
                 identification: "Blue-green body, forked tail",
                 location: "Indo-Pacific",
                 imageUrl: "https://example.com/chromis.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[1]
             ),
             // Labridae species
@@ -91,6 +114,8 @@ extension FishSpeciesReference {
                 identification: "Green body with pink and blue markings",
                 location: "Indo-Pacific",
                 imageUrl: "https://example.com/moon-wrasse.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[2]
             ),
             // Serranidae species
@@ -102,6 +127,8 @@ extension FishSpeciesReference {
                 identification: "Red body covered with blue spots",
                 location: "Indo-Pacific",
                 imageUrl: "https://example.com/coral-grouper.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[3]
             ),
             // Chaetodontidae species
@@ -113,6 +140,8 @@ extension FishSpeciesReference {
                 identification: "Yellow with vertical stripes and eye spot",
                 location: "Pacific Ocean",
                 imageUrl: "https://example.com/butterflyfish.jpg",
+                sourceUrl: "https://www.fishbase.org.au/v4/summary/8014",
+                attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)",
                 fishFamilyReference: familyRefs[4]
             )
         ]

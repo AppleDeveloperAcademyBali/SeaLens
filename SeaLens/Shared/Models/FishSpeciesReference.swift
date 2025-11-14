@@ -17,9 +17,14 @@ final class FishSpeciesReference {
     var identification: String
     var location: String
     var imageUrl: String
+    var sourceUrl: String
+    var attribution: String
     
     //0..Many fishSpeciesReference belong to one fishFamilyReference
     var fishFamilyReference: FishFamilyReference?
+    
+    @Relationship(inverse: \Fish.fishSpeciesReference)
+    var fish: [Fish] = []
     
     init(
         uid: UUID,
@@ -29,6 +34,8 @@ final class FishSpeciesReference {
         identification: String,
         location: String,
         imageUrl: String,
+        sourceUrl: String,
+        attribution: String,
         fishFamilyReference: FishFamilyReference? = nil)
     {
         self.uid = uid
@@ -38,6 +45,8 @@ final class FishSpeciesReference {
         self.identification = identification
         self.location = location
         self.imageUrl = imageUrl
+        self.sourceUrl = sourceUrl
+        self.attribution = attribution
         self.fishFamilyReference = fishFamilyReference
     }
 }
