@@ -8,24 +8,18 @@
 import SwiftUI
 
 struct FishCard: View {
-    
     var imageURL: String
-    
+
     var body: some View {
-        
-        GeometryReader { geometry in
-            Image(imageURL)
-                .resizable()
-                .scaledToFill()
-                .frame(width: geometry.size.width)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 30))
-                .shadow(radius: 3)
-        }
-        .aspectRatio(1.3, contentMode: .fit)
-        
+        Image(imageURL)
+            .resizable()
+            .scaledToFill()
+            .clipShape(RoundedRectangle(cornerRadius: 30))
+            .shadow(radius: 3)
+            .clipped()
     }
 }
+
 
 #Preview {
     FishCard(imageURL: "samplePicture")

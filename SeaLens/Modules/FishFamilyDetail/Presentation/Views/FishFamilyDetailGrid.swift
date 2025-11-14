@@ -8,55 +8,47 @@
 import SwiftUI
 
 struct FishFamilyDetailGrid: View {
-    
     var fish: [Fish]
     
+    private let cardWidth: CGFloat = 200
+    private let spacing: CGFloat = 12
+
     var body: some View {
-        
         ZStack {
-            
-            // gray rectangle background
             RoundedRectangle(cornerRadius: 40)
                 .fill(Color.gray.opacity(0.06))
                 .overlay(
                     RoundedRectangle(cornerRadius: 40)
                         .stroke(Color.black.opacity(0.08), lineWidth: 0.5)
                 )
-            
-            
-            GeometryReader { geometry in
-                 let outerPadding: CGFloat = 32
-                 let availableWidth = geometry.size.width - (outerPadding * 2)
-                 
-                 let minCardWidth: CGFloat = 200
-                 let spacing: CGFloat = 12
-                 
-                 let cardsPerRow = max(3, Int((availableWidth + spacing) / (minCardWidth + spacing)))
-                 let cardWidth = (availableWidth - spacing * CGFloat(cardsPerRow - 1)) / CGFloat(cardsPerRow)
-                 
-                 ScrollView {
-                     if fish.isEmpty    {
-                         Text("No fish photos")
-                             .font(.title3)
-                             .foregroundStyle(.secondary)
+
+            ScrollView {
+                if fish.isEmpty {
+                    Text("No fish photos")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    let columns = [
+                        GridItem(.adaptive(minimum: cardWidth), spacing: spacing)
+                    ]
                     
-                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                         .padding()
-                     } else {
-                         FishFamilyDetailGridContent(
-                             fish: fish,
-                             cardWidth: cardWidth,
-                             spacing: spacing
-                         )
-                         .padding(.horizontal, outerPadding)
-                         .padding(.vertical, 24)
-                     }
-                 }
-                 .scrollIndicators(.hidden)
-             }
-         }
-     }
- }
+                    LazyVGrid(columns: columns, spacing: spacing) {
+                        ForEach(fish, id: \.uid) { fish in
+                            FishCard(imageURL: fish.imageUrl)
+                                .frame(width: cardWidth, height: cardWidth / 1.2)
+                        }
+                    }
+                    .padding(.horizontal, 32)
+                    .padding(.vertical, 24)
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
+    }
+}
+
 
 private struct FishFamilyDetailGridContent: View {
     let fish: [Fish]

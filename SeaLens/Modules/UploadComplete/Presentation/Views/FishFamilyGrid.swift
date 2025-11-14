@@ -42,8 +42,7 @@ struct FishFamilyGrid: View {
 
                     FishFamilyGridContent(
                         families: fishFamilies,
-                        cardWidth: cardWidth,
-                        spacing: spacing
+
                     )
                     .padding(.horizontal, outerPadding)
                     .padding(.vertical, 32)
@@ -59,15 +58,17 @@ struct FishFamilyGrid: View {
 
 private struct FishFamilyGridContent: View {
     let families: [FishFamily]
-    let cardWidth: CGFloat
-    let spacing: CGFloat
     
+    private let cardWidth: CGFloat = 258
+    private let spacing: CGFloat = 25
     private let cardAspectRatio: CGFloat = 274.0 / 258.0
-    
+
     var body: some View {
-        
-        FlowHStack(horizontalSpacing: spacing, verticalSpacing: spacing) {
-            // Use explicit id to avoid identity issues across contexts.
+        let columns = [
+            GridItem(.adaptive(minimum: cardWidth), spacing: spacing)
+        ]
+
+        LazyVGrid(columns: columns, spacing: spacing) {
             ForEach(families, id: \.uid) { family in
                 NavigationLink(value: family.uid) {
                     FishFamilyCard(
@@ -77,19 +78,13 @@ private struct FishFamilyGridContent: View {
                         fishCount: Int(family.numOfFishDetected),
                         imageURL: "samplePicture"
                     )
-                    // Increase height to show more content per card
                     .frame(width: cardWidth, height: cardWidth + cardAspectRatio)
                 }
                 .buttonStyle(.plain)
             }
         }
-        .navigationDestination(for: UUID.self) { familyID in
-            FishFamilyDetailPresentation(fishFamilyID: familyID)
-        }
-        
     }
 }
-
 #Preview {
     
     let sampleFootage = Footage.sampleData[9]
