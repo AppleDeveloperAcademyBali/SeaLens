@@ -4,12 +4,7 @@
 //
 //  Created by Shreyas Venadan on 9/11/2025.
 //
-
-
-
 import SwiftUI
-
-
 
 struct FishFamilyGrid: View {
     
@@ -62,8 +57,6 @@ struct FishFamilyGrid: View {
     }
 }
 
-
-
 private struct FishFamilyGridContent: View {
     let families: [FishFamily]
     let cardWidth: CGFloat
@@ -84,24 +77,18 @@ private struct FishFamilyGridContent: View {
                         fishCount: Int(family.numOfFishDetected),
                         imageURL: "samplePicture"
                     )
-                    .frame(width: cardWidth, height: 280)
+                    // Increase height to show more content per card
+                    .frame(width: cardWidth, height: cardWidth + cardAspectRatio)
                 }
                 .buttonStyle(.plain)
             }
         }
-        .navigationDestination(for: FishFamily.self) { family in
-            FishFamilyDetailView(familyUID: familyUID)
+        .navigationDestination(for: UUID.self) { familyID in
+            FishFamilyDetailPresentation(fishFamilyID: familyID)
         }
         
     }
 }
-
-
-
-
-
-
-
 
 #Preview {
     

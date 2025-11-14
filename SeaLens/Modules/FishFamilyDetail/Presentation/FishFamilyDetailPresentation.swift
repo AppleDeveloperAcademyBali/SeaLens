@@ -5,44 +5,71 @@
 //  Created by Shreyas Venadan on 14/11/2025.
 //
 
+
 import SwiftUI
+import SwiftData
 
 struct FishFamilyDetailPresentation: View {
     
-    let fishFamily: FishFamily
+    @StateObject private var viewModel: FishFamilyDetailViewModel
+    @Environment(\.modelContext) private var modelContext
+    
+    init(fishFamilyID: UUID) {
+        _viewModel = StateObject(
+            wrappedValue: FishFamilyDetailViewModel(
+                fishFamilyID: fishFamilyID,
+                domain: nil
+            )
+        )
+    }
     
     var body: some View {
-        
-        VStack (alignment: .leading, spacing: 20) {
-            
-            VStack (alignment: .leading, spacing: 5) {
-                HStack  {
-                    Text(fishFamily.fishFamilyReference?.commonName ?? "")
-                        .textstyles(.largeTitleEmphasized)
+        Group {
+            if viewModel.isLoading {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let fishFamily = viewModel.fishFamily {
+                
+                VStack(alignment: .leading, spacing: 20) {
                     
-                    Text("(\(fishFamily.fishFamilyReference?.latinName ?? ""))")
-                        .textstyles(.bodyRegular)
+                    VStack(alignment: .leading, spacing: 5) {
+                        HStack {
+                            Text(fishFamily.fishFamilyReference?.commonName ?? "")
+                                .textstyles(.largeTitleEmphasized)
+                            
+                            Text("(\(fishFamily.fishFamilyReference?.latinName ?? ""))")
+                                .textstyles(.bodyRegular)
+                        }
+                        
+                        Text("\(fishFamily.numOfFishDetected) photos")
+                            .textstyles(.title3Regular)
+                    }
                     
+                    FishFamilyDetailGrid(fish: fishFamily.fish)
                 }
+                .padding(.horizontal, 30)
+                .padding(.vertical, 30)
                 
-                Text("\(fishFamily.numOfFishDetected) photos")
-                    .textstyles(.title3Regular)
+            } else {
+                VStack(spacing: 12) {
+                    Text("Fish family not found")
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            
-            
-                
-            FishFamilyDetailGrid(fish: fishFamily.fish)
-
-        
-            
         }
-        .padding(.horizontal, 30)
-        .padding(.vertical, 30)
+        .onAppear {
+            if viewModel.domain == nil {
+                viewModel.domain = FishFamilyDetailDomain(modelContext: modelContext)
+            }
+            viewModel.load()
+        }
     }
 }
-    
+
 
 #Preview {
-    FishFamilyDetailPresentation(fishFamily: Footage.sampleData[9].fishFamily.first!)
+    FishFamilyDetailPresentation(fishFamilyID: Footage.sampleData[9].fishFamily.first!.uid)
         .frame(width: 1200, height: 800)
 }
