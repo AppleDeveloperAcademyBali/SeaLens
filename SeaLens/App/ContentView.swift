@@ -22,11 +22,11 @@ public struct ContentView: View {
                 detail: {
                     switch selection {
                     case "Dashboard":
-                        UploadVideoPresentation(viewModel: createUploadVideoViewModel())
-                    case "Recent Uploads":
+                        DashboardPresentation(modelContext: modelContext)
+                    case "Recent Observations":
                         RecentUploadsPresentation(modelContext: modelContext)
                     case "Fish Collection":
-                        FishCollectionView()
+                        UploadVideoPresentation(viewModel: createUploadVideoViewModel())
                     default:
                         Text("Unknown Section")
                     }
