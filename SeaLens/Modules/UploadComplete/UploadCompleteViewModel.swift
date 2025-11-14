@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import SwiftData
 
 
 @MainActor
@@ -34,5 +35,23 @@ final class UploadCompleteViewModel: ObservableObject {
                 self.fishFamilies = []
             }
         }
+    }
+}
+
+
+
+extension UploadCompleteViewModel {
+    // convenience initializer for previews that doesn't require domain/data layer
+    convenience init(footage: Footage) {
+        // create a dummy domain - won't be used in preview
+        let dataService = DataService(modelContainer: try! ModelContainer(for: Footage.self))
+        let footageData = FootageData(dataService: dataService)
+        let domain = UploadCompleteDomain(footageData: footageData)
+        
+        self.init(footageUID: footage.uid, domain: domain)
+        
+        // directly set the data for preview
+        self.footage = footage
+        self.fishFamilies = footage.fishFamily
     }
 }

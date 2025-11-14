@@ -182,6 +182,7 @@ extension Footage {
             fishFamilyReference: familyRefs[0]
         )
         
+        // After creating fish1, create more fish for the same family
         let fish1 = Fish(
             imageUrl: "https://storage.example.com/fish/fish_001.jpg",
             objectRecognitionConf: 0.92,
@@ -195,8 +196,50 @@ extension Footage {
             FishConfidenceScore(familyLatinName: "Acanthuridae", confidenceValue: 0.92, fish: fish1),
             FishConfidenceScore(familyLatinName: "Labridae", confidenceValue: 0.05, fish: fish1)
         ]
-        
-        fishFamily1.fish = [fish1]
+
+        // Add more fish to the same family
+        let fish1b = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.89,
+            isFavorites: false,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[0]
+        )
+
+        let fish1c = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.91,
+            isFavorites: true,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[1]
+        )
+
+        let fish1d = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.88,
+            isFavorites: false,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[0]
+        )
+
+        let fish1e = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.90,
+            isFavorites: false,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[1]
+        )
+
+        // Update the fish array
+        fishFamily1.fish = [fish1, fish1b, fish1c, fish1d, fish1e]
         footage1.fishFamily = [fishFamily1]
         
         // Footage 2
@@ -585,7 +628,7 @@ extension Footage {
         ]
         
         fishFamily10.fish = [fish10]
-        footage10.fishFamily = [fishFamily10]
+        footage10.fishFamily = [fishFamily10, fishFamily1, fishFamily2, fishFamily3, fishFamily4, fishFamily9, fishFamily5, fishFamily8, fishFamily7, fishFamily6]
         
         return [
             footage1, footage2, footage3, footage4, footage5,

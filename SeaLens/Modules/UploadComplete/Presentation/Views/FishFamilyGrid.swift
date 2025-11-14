@@ -44,29 +44,15 @@ struct FishFamilyGrid: View {
                 let cardWidth = (availableWidth - spacing * CGFloat(cardsPerRow - 1)) / CGFloat(cardsPerRow)
                 
                 ScrollView {
-                    if fishFamilies.isEmpty {
-                        VStack(spacing: 12) {
-                            Image(systemName: "fish")
-                                .font(.system(size: 48))
-                                .foregroundStyle(.secondary)
-                            Text("No fish detected")
-                                .font(.title3)
-                                .foregroundStyle(.secondary)
-                            Text("Fish data will appear here once processing is complete")
-                                .font(.caption)
-                                .foregroundStyle(.tertiary)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding()
-                    } else {
-                        FishFamilyGridContent(
-                            families: fishFamilies,
-                            cardWidth: cardWidth,
-                            spacing: spacing
-                        )
-                        .padding(.horizontal, outerPadding)
-                        .padding(.vertical, 24)
-                    }
+
+                    FishFamilyGridContent(
+                        families: fishFamilies,
+                        cardWidth: cardWidth,
+                        spacing: spacing
+                    )
+                    .padding(.horizontal, outerPadding)
+                    .padding(.vertical, 24)
+                
                 }
                 .scrollIndicators(.hidden)
             }
@@ -88,15 +74,21 @@ private struct FishFamilyGridContent: View {
         FlowHStack(horizontalSpacing: spacing, verticalSpacing: spacing) {
             // Use explicit id to avoid identity issues across contexts.
             ForEach(families, id: \.uid) { family in
-                FishFamilyCard(
-                    familyName: family.fishFamilyReference?.commonName ?? "Unknown",
-                    latinName: family.fishFamilyReference?.latinName ?? "",
-                    fishCount: Int(family.numOfFishDetected),
-                    imageURL: "samplePicture"
-                )
-                // Increase height to show more content per card
-                .frame(width: cardWidth, height: 280)
+                NavigationLink(value: family) {
+                    FishFamilyCard(
+                        familyName: family.fishFamilyReference?.commonName ?? "",
+                        latinName: family.fishFamilyReference?.latinName ?? "",
+                        fishCount: Int(family.numOfFishDetected),
+                        imageURL: "samplePicture"
+                    )
+                    // Increase height to show more content per card
+                    .frame(width: cardWidth, height: 280)
+                }
+                .buttonStyle(.plain)
             }
+        }
+        .navigationDestination(for: FishFamily.self) { family in
+            FishFamilyDetailPresentation(fishFamily: family)
         }
         
     }
@@ -106,10 +98,13 @@ private struct FishFamilyGridContent: View {
 
 
 
+
+
+
 #Preview {
-    FishFamilyGrid(fishFamilies: Footage.sampleData.first?.fishFamily ?? [])
+    
+    let sampleFootage = Footage.sampleData[9]
+    return FishFamilyGrid(fishFamilies: sampleFootage.fishFamily)
         .frame(width: 1200, height: 800)
         .padding()
-        .previewLayout(.sizeThatFits)
 }
-
