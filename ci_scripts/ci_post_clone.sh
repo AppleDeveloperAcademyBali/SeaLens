@@ -7,10 +7,8 @@
 #
 
 #!/bin/bash
-set -euxo pipefail
-
 # Install Tuist
-brew install --formula tuist@x.y.z
+brew install --formula tuist
 
 # Check version (optional)
 tuist version
