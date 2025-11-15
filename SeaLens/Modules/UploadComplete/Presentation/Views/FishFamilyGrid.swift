@@ -93,7 +93,7 @@ private struct FishFamilyGridContent: View {
                     FishFamilyCard(
                         familyName: family.fishFamilyReference?.commonName ?? "",
                         latinName: family.fishFamilyReference?.latinName ?? "",
-                        photoCount: family.individualFishes.count,
+                        photoCount: family.fishes.count,
                         fishCount: Int(family.numOfFishDetected),
                         imageURL: "samplePicture"
                     )
@@ -103,11 +103,4 @@ private struct FishFamilyGridContent: View {
             }
         }
     }
-}
-#Preview {
-    
-    let sampleFootage = Footage.sampleData[9]
-    return FishFamilyGrid(fishFamilies: sampleFootage.fishFamily)
-        .frame(width: 1200, height: 800)
-        .padding()
 }

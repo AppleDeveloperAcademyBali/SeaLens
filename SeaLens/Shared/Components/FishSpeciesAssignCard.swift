@@ -65,6 +65,3 @@ struct FishSpeciesAssignCard: View {
     }
 }
 
-#Preview {
-    FishSpeciesAssignCard(fishSpecies: FishSpeciesReference.sampleData[0])
-}

@@ -14,7 +14,7 @@ extension UploadVideoViewModel {
             filename: self.fileName,
             originalFilename: self.originalFileName,
             //TODO: What kind of url is it?
-            footageUrl: self.selectedFileURL?.absoluteString ?? "",
+            url: self.selectedFileURL?.absoluteString ?? "",
             durationInSeconds: parseTimeToSeconds(self.fileDuration) ?? 0,
             dateTaken: parseDate(self.date) ?? Date(),
             location: self.location,
@@ -25,7 +25,7 @@ extension UploadVideoViewModel {
             dateUpdated: Date()
         )
         let customTags = self.tags.map { tag in
-            FootageTags(uid: UUID(), name: tag, footage: footage)
+            FootageTag(uid: UUID(), name: tag, footage: footage)
         }
         footage.footageTags = customTags
         return footage

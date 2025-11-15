@@ -21,9 +21,7 @@ public struct DashboardPresentation: View {
     }
 
     public var body: some View  {
-        VStack(alignment: .leading) {
-            debugButtons
-            
+        VStack(alignment: .leading) {            
             headerSection
             
             chartCardView
@@ -45,21 +43,6 @@ public struct DashboardPresentation: View {
             }
         }
         
-    }
-    
-    @ViewBuilder
-    private var debugButtons: some View {
-        #if DEBUG
-        HStack {
-            Button("Generate Dummy Data") {
-                DummyDataService.generateDummyData(context: modelContext)
-            }
-            
-            Button("Delete All Data") {
-                DummyDataService.deleteAllData(context: modelContext)
-            }
-        }
-        #endif
     }
     
     private var headerSection: some View {

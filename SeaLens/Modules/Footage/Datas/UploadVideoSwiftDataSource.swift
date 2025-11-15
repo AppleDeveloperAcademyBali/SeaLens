@@ -15,7 +15,7 @@ protocol UploadVideoSwiftDataSourceProtocol {
     func retrieveTransects() async -> (Result<[Transect], Error>)
     func setTransect(_ transect: Transect) async -> (Result<Transect, Error>)
     func setFootage(_ footage: Footage) async -> (Result<Footage, Error>)
-    func setFootageTags( _ tags: [FootageTags]) async -> (Result<[FootageTags], Error>)
+    func setFootageTags( _ tags: [FootageTag]) async -> (Result<[FootageTag], Error>)
 }
 
 extension UploadVideoData: UploadVideoSwiftDataSourceProtocol {
@@ -102,7 +102,7 @@ extension UploadVideoData: UploadVideoSwiftDataSourceProtocol {
     }
     
     //TODO: - All footage tags that created always new, do we need to validate existing custom tags?
-    func setFootageTags(_ tags: [FootageTags]) async -> Result<[FootageTags], any Error> {
+    func setFootageTags(_ tags: [FootageTag]) async -> Result<[FootageTag], any Error> {
         let footageTagsData = FootageTagsData(dataService: dataService)
         for tag in tags {
             await footageTagsData.addFootageTag(footageTag: tag)

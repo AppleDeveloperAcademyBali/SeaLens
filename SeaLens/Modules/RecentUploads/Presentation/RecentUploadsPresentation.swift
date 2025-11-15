@@ -96,10 +96,3 @@ public struct RecentUploadsPresentation: View {
         }
     }
 }
-
-#Preview {
-    let preview = Preview()
-    preview.addExamples(Footage.sampleData)
-    return RecentUploadsPresentation(
-        modelContext: preview.container.mainContext)
-}
