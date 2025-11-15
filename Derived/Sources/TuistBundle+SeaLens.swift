@@ -16,7 +16,7 @@ extension Foundation.Bundle {
 }
 // MARK: - Objective-C Bundle Accessor
 @objc
-public class SeaLensResources: NSObject {
+public final class SeaLensResources: NSObject {
 @objc public class var bundle: Bundle {
     return .module
 }
