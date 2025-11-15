@@ -15,14 +15,14 @@ final class FishConfidenceScore {
     var confidenceValue: Double
     
     //0..Many fishConfidenceScore belong to one Fish
-    var fish: Fish?
+    var fish: Fish
     
     
     init(
         uid: UUID = .init(),
         familyLatinName: String,
         confidenceValue: Double,
-        fish: Fish? = nil)
+        fish: Fish)
     {
         self.uid = uid
         self.familyLatinName = familyLatinName

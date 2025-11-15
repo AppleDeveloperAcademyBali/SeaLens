@@ -14,13 +14,13 @@ final class FootageTags {
     var name: String
     
     //0..many footageTags belong to one footage
-    var footage: Footage?
+    var footage: Footage
     
     
     init(
         uid: UUID,
         name: String,
-        footage: Footage? = nil)
+        footage: Footage)
     {
         self.uid = uid
         self.name = name

@@ -21,7 +21,7 @@ struct AnnotatedVideoView: View {
                     .opacity(0.5)
                 
                 VideoPlayer(player: player)
-                    .frame(height: geometry.size.height * 0.55)
+                    .frame(height: geometry.size.width * (9/16))
                     .clipShape(RoundedRectangle(cornerRadius: 16))
                     .onAppear {
                         let url = URL(string: "https://embed-ssl.wistia.com/deliveries/cc8402e8c16cc8f36d3f63bd29eb82f99f4b5f88/accudvh5jy.mp4")!

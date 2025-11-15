@@ -47,6 +47,23 @@ struct FishFamilyGrid: View {
                     .padding(.horizontal, outerPadding)
                     .padding(.vertical, 32)
                 
+                    FlowHStack(horizontalSpacing: spacing, verticalSpacing: spacing) {
+                        ForEach(Footage.sampleData) { footage in
+                            ForEach(footage.fishFamily ?? []) { family in
+                                FishFamilyCard(
+                                    familyName: family.fishFamilyReference?.commonName ?? "Unknown",
+                                    latinName: family.fishFamilyReference?.latinName ?? "",
+                                    fishCount: Int(family.numOfFishDetected),
+                                    imageURL: "samplePicture"
+                                )
+                                .frame(width: cardWidth, height: 240)
+                            }
+                        }
+                        
+                    }
+                    .frame(maxWidth: .infinity) 
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 24)
                 }
                 .scrollIndicators(.hidden)
             }

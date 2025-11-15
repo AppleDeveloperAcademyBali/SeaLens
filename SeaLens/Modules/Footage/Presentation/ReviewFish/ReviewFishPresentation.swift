@@ -19,7 +19,7 @@ struct ReviewFishPresentation: View {
                 FishFamiliesListView()
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .frame(maxWidth: 400, maxHeight: .infinity)
+            .frame(maxWidth: 360, maxHeight: .infinity)
             .glassEffect(in: .rect(cornerRadius: 16.0))
             .padding()
             

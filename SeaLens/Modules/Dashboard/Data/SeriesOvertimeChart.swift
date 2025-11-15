@@ -9,7 +9,7 @@ import Foundation
 
 struct SeriesOvertimeChart: Identifiable {
     var seriesName: String
-    var chartData: [DateChart]
+    var chartData: [DateDataPoint]
     
     var id : String { seriesName }
 }

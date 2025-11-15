@@ -43,6 +43,19 @@ final class FootageData {
         }
     }
     
+    func retrieveFootages(predicate: Predicate<Footage>? = nil, sortBy: [SortDescriptor<Footage>]) async -> [Footage] {
+        errorMessage = nil
+        var footageList: [Footage] = []
+        
+        do {
+            footageList = try await dataService.retrieve(Footage.self, predicate: predicate, sortBy: sortBy)
+        } catch {
+            errorMessage = "Failed to retrieve footages: \(error.localizedDescription)"
+        }
+        
+        return footageList
+    }
+    
     // CREATE FOOTAGE
     func addFootage(footage: Footage) async {
         

@@ -16,13 +16,13 @@ final class FishFamily {
     var dateUpdated: Date
     
     //0..Many fishFamily belong to one footage
-    var footage: Footage?
+    var footage: Footage
     
     //0..Many fishFamily belong to 0..one FishFamilyReference
     var fishFamilyReference: FishFamilyReference?
     
-    @Relationship(deleteRule: .cascade, inverse: \Fish.fishFamily)
-    var fish: [Fish] = []
+    @Relationship(deleteRule: .cascade, inverse: \IndividualFish.fishFamily)
+    var individualFishes: [IndividualFish] = []
     
     
     init(
@@ -30,9 +30,9 @@ final class FishFamily {
         numOfFishDetected: Int32,
         dateCreated: Date,
         dateUpdated: Date,
-        footage: Footage? = nil,
+        footage: Footage,
         fishFamilyReference: FishFamilyReference? = nil,
-        fish: [Fish] = [])
+        individualFishes: [IndividualFish] = [])
     {
         self.uid = uid
         self.numOfFishDetected = numOfFishDetected
@@ -40,7 +40,7 @@ final class FishFamily {
         self.dateUpdated = dateUpdated
         self.footage = footage
         self.fishFamilyReference = fishFamilyReference
-        self.fish = fish
+        self.individualFishes = individualFishes
     }
     
 }
