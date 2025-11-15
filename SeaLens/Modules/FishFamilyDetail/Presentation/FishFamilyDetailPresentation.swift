@@ -14,12 +14,9 @@ struct FishFamilyDetailPresentation: View {
     @StateObject private var viewModel: FishFamilyDetailViewModel
     @Environment(\.modelContext) private var modelContext
     
-    init(fishFamilyID: UUID) {
+    init(viewModel: FishFamilyDetailViewModel) {
         _viewModel = StateObject(
-            wrappedValue: FishFamilyDetailViewModel(
-                fishFamilyID: fishFamilyID,
-                domain: nil
-            )
+            wrappedValue: viewModel
         )
     }
     
@@ -69,7 +66,7 @@ struct FishFamilyDetailPresentation: View {
 }
 
 
-#Preview {
-    FishFamilyDetailPresentation(fishFamilyID: Footage.sampleData[9].fishFamily.first!.uid)
-        .frame(width: 1200, height: 800)
-}
+//#Preview {
+//    FishFamilyDetailPresentation(fishFamilyID: Footage.sampleData[9].fishFamily.first!.uid)
+//        .frame(width: 1200, height: 800)
+//}

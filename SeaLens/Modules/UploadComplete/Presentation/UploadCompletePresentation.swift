@@ -13,6 +13,8 @@ import SwiftData
 
 struct UploadCompletePresentation: View {
     @StateObject var viewModel: UploadCompleteViewModel
+    @Environment(\.modelContext) private var modelContext
+    
     
     var body: some View {
 
@@ -58,15 +60,21 @@ struct UploadCompletePresentation: View {
 
             Spacer()
         }
+//        .navigationDestination(for: UUID.self) { familyID in
+//            FishFamilyDetailPresentation(
+//                viewModel: createFishFamilyDetailViewModel(for: familyID))
+//            
+//        }
+        
         .padding(.horizontal, 30)
         .padding(.vertical, 30)
         .onAppear {
             viewModel.loadFootage()
         }
-        .navigationDestination(for: UUID.self) { familyID in
-            FishFamilyDetailPresentation(fishFamilyID: familyID)
-        }
+
     }
+    
+
 }
 
 

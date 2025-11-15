@@ -30,7 +30,7 @@ final class FishFamilyDetailViewModel: ObservableObject {
             return
         }
         
-        Task {
+        Task { @MainActor in
             isLoading = true
             defer { isLoading = false }
             self.fishFamily = await domain.fetchFishFamily(by: fishFamilyID)
