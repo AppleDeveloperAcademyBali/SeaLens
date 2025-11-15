@@ -28,7 +28,10 @@ public struct ContentView: View {
                     case "Fish Collection":
                         FishCollectionView()
                     case "Upload Video":
-                        UploadVideoPresentation(viewModel: createUploadVideoViewModel())
+                        NavigationStack {
+                            UploadVideoPresentation(viewModel: createUploadVideoViewModel())
+                        }
+
                     default:
                         Text("Unknown Section")
                     }
@@ -54,6 +57,13 @@ public struct ContentView: View {
         let uploadVideoData = UploadVideoData(dataService: dataService)
         let uploadVideoDomain = UploadVideoDomain(uploadVideoData: uploadVideoData)
         return UploadVideoViewModel(uploadVideoDomain: uploadVideoDomain)
+    }
+    
+    func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
+        let dataService = DataService(modelContainer: modelContext.container)
+        let footageData = FootageData(dataService: dataService)
+        let domain = UploadCompleteDomain(footageData: footageData)
+        return UploadCompleteViewModel(footageUID: footageUID, domain: domain)
     }
 }
 

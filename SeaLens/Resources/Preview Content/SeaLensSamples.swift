@@ -184,6 +184,7 @@ extension Footage {
             fishFamilyReference: familyRefs[0]
         )
         
+        // After creating fish1, create more fish for the same family
         let individualFish1 = IndividualFish(
             fishId: "FISH-001",
             dateCreated: baseDate,
@@ -206,6 +207,50 @@ extension Footage {
             FishConfidenceScore(familyLatinName: "Acanthuridae", confidenceValue: 0.92, fish: fish1),
             FishConfidenceScore(familyLatinName: "Labridae", confidenceValue: 0.05, fish: fish1)
         ]
+
+        // Add more fish to the same family
+        let fish1b = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.89,
+            isFavorites: false,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[0]
+        )
+
+        let fish1c = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.91,
+            isFavorites: true,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[1]
+        )
+
+        let fish1d = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.88,
+            isFavorites: false,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[0]
+        )
+
+        let fish1e = Fish(
+            imageUrl: "samplePicture",
+            objectRecognitionConf: 0.90,
+            isFavorites: false,
+            dateCreated: baseDate,
+            dateUpdated: baseDate,
+            fishFamily: fishFamily1,
+            fishSpeciesReference: speciesRefs[1]
+        )
+
+        // Update the fish array
+        fishFamily1.fish = [fish1, fish1b, fish1c, fish1d, fish1e]
         
         individualFish1.fish = [fish1]
         fishFamily1.individualFishes = [individualFish1]

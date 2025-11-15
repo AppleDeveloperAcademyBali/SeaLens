@@ -7,85 +7,74 @@
 
 
 import SwiftUI
+import SwiftData
 
 
 
 struct UploadCompletePresentation: View {
+    @StateObject var viewModel: UploadCompleteViewModel
     
-    @ObservedObject var viewModel: UploadVideoViewModel
-
-        
     var body: some View {
-        
-        VStack (alignment: .leading, spacing: 1) {
+
+        VStack(alignment: .leading, spacing: 1) {
             
             HStack {
-                
                 Text("Upload Complete")
                     .textstyles(.title1Emphasized)
-                
-                // video tag component
-                VideoTag(fileName: viewModel.fileName)
 
+                if let name = viewModel.footage?.filename  {
+                    VideoTag(fileName: name)
+                }
             }
-            
-            HStack  {
-                
-                Spacer()
-                
-                Button {
 
-                } label: {
+            HStack {
+                Spacer()
+                Button { } label: {
                     Text("Review fish count")
                         .foregroundColor(.blue)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
-
                 }
-                .cornerRadius(16)
                 .buttonStyle(.glass)
-                .shadow(radius: 2)
 
-                Button {
-
-                } label: {
+                Button { } label: {
                     Image("iconSort")
                         .resizable()
                         .frame(width: 70, height: 70)
                         .clipShape(.circle)
                 }
                 .buttonStyle(.plain)
-                
-                Button {
-                    
-                } label: {
+
+                Button { } label: {
                     Image("iconFilter")
                         .resizable()
                         .frame(width: 70, height: 70)
                         .clipShape(.circle)
                 }
                 .buttonStyle(.plain)
-                
             }
-            
-            FishFamilyGrid()
-            
+
+            FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
+
             Spacer()
-            
-            
-            
-            
         }
         .padding(.horizontal, 30)
         .padding(.vertical, 30)
-        
-        
+        .onAppear {
+            viewModel.loadFootage()
+        }
+        .navigationDestination(for: UUID.self) { familyID in
+            FishFamilyDetailPresentation(fishFamilyID: familyID)
+        }
     }
 }
 
 
-
-//#Preview {
-//    UploadCompletePresentation(viewModel: UploadVideoViewModel())
-//        .frame(width: 1200, height: 800)
-//}
+#Preview {
+    UploadCompletePresentation(
+        viewModel: UploadCompleteViewModel(
+            footage: Footage.sampleData[9]
+        )
+    )
+    .frame(width: 1200, height: 800)
+}

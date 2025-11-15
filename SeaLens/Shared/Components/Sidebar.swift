@@ -19,7 +19,9 @@ struct Sidebar: View {
     private let items: [(title: String, icon: String)] = [
         ("Dashboard", "chart.xyaxis.line"),
         ("Recent Observations", "clock"),
-        ("Fish Collection", "rectangle.grid.3x1")
+        ("Fish Collection", "rectangle.grid.3x1"),
+        ("Upload Video", "tray.and.arrow.up.fill")
+
     ]
     
     var body: some View {
