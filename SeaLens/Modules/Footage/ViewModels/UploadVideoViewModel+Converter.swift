@@ -21,7 +21,8 @@ extension UploadVideoViewModel {
             siteName: self.site,
             transect: self.transect,
             depthInMeter: Double(self.depth) ?? 0,
-            dateCreated: Date()
+            dateCreated: Date(),
+            dateUpdated: Date()
         )
         let customTags = self.tags.map { tag in
             FootageTags(uid: UUID(), name: tag, footage: footage)

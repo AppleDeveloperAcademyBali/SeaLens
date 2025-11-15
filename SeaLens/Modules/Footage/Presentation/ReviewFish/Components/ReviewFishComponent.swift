@@ -11,35 +11,42 @@ struct ReviewFishComponent: View {
     @State private var totalFish: String = "1.201"
     
     var body: some View {
-        ZStack (alignment: .topLeading) {
+        VStack (spacing: 0) {
             Image("samplePicture")
                 .resizable()
-                .frame(width: 340, height: 200)
-                .clipShape(
-                    RoundedRectangle(cornerRadius: 16)
-                )
-            VStack (alignment: .leading) {
+                .scaledToFill()
+                .frame(width: 300, height: 145)
+                .clipped()
+            HStack {
                 VStack (alignment: .leading) {
                     Text("Surgeonfish")
-                        .textstyles(.title3Regular)
+                        .textstyles(.title2Regular)
+                        .padding(.bottom, 2)
                     Text("Acanthuridae")
                         .textstyles(.bodyRegular)
                 }
-                .padding(10)
-                .background(Color.black.opacity(0.3))
-                .cornerRadius(16)
                 
                 Spacer()
                 
-                //TODO: - Why do we need to xmark on the TextField
-                TextField(text: $totalFish) {
+                VStack (alignment: .trailing) {
+                    Text("Fish count")
+                        .textstyles(.caption1Regular)
+                        .opacity(0.6)
+                    
+                    TextField(text: $totalFish) {
+                    }
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 80)
                 }
-                .multilineTextAlignment(.trailing)
-                .frame(width: 80)
             }
-            .padding(20)
+            .padding()
         }
-        .frame(width: 340, height: 200)
+        .frame(width: 300)
+        .roundedCorners(radius: 16, corners: .allCorners)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color("borderColor"), lineWidth: 1)
+        )
     }
 }
 

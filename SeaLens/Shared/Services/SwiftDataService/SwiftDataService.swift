@@ -24,6 +24,7 @@ public final class SwiftDataService {
                 FishConfidenceScore.self,
                 FishFamilyReference.self,
                 FishSpeciesReference.self,
+                IndividualFish.self,
                 Site.self,
                 Location.self,
                 Transect.self

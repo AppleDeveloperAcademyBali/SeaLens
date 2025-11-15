@@ -43,7 +43,7 @@ struct FishFamilyAssignCard: View {
                     }
                 }
                 
-                Text("\(fishFamilyRef.fishSpeciesReferences.count) species")
+                Text("\(fishFamilyRef.fishSpeciesReferences?.count) species")
                     .font(.subheadline)
                 
                 Text("")
@@ -72,7 +72,7 @@ struct FishFamilyAssignCard: View {
     func getImageUrl(fishFamilyRef: FishFamilyReference) -> String {
         var imageUrl: String = "noImage"
         
-        if let firstSpecies = fishFamilyRef.fishSpeciesReferences.first {
+        if let firstSpecies = fishFamilyRef.fishSpeciesReferences?.first {
             imageUrl = firstSpecies.imageUrl
         } else {
             imageUrl = "noImage"
