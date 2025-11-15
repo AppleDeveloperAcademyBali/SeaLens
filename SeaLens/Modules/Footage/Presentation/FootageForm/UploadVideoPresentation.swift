@@ -40,11 +40,13 @@ struct UploadVideoPresentation: View {
                     
                     // LEFT SIDE: drag & drop box
                     FileUploadView(viewModel: viewModel)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        .frame(maxWidth: .infinity, alignment: .center)
                     
                     // RIGHT SIDE: enter information
-                    FileFormView(viewModel: viewModel)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                    if viewModel.selectedFileURL != nil {
+                        FileFormView(viewModel: viewModel)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                    }
                     
                     
                 }
@@ -66,13 +68,13 @@ struct UploadVideoPresentation: View {
                 }
             }
         }
-        .navigationDestination(isPresented: $navigateToComplete) {
-            if let footageUID = viewModel.uploadedFootageUID {
-                UploadCompletePresentation(
-                    viewModel: createUploadCompleteViewModel(for: footageUID)
-                )
-            }
-        }
+//        .navigationDestination(isPresented: $navigateToComplete) {
+//            if let footageUID = viewModel.uploadedFootageUID {
+//                UploadCompletePresentation(
+//                    viewModel: createUploadCompleteViewModel(for: footageUID)
+//                )
+//            }
+//        }
 
 
     }
@@ -83,8 +85,5 @@ struct UploadVideoPresentation: View {
         let domain = UploadCompleteDomain(footageData: footageData)
         return UploadCompleteViewModel(footageUID: footageUID, domain: domain)
     }
-
-
-    
     
 }
