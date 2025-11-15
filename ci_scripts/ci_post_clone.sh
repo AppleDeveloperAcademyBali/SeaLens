@@ -10,6 +10,8 @@
 echo "👉 Start CI Script"
 set -e
 echo "1️⃣ set -e done"
+BASEDIR=$(dirname $0)
+echo "Script location: ${BASEDIR}"
 cd ..
 echo "2️⃣ cd.."
 
