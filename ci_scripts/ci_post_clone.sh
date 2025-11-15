@@ -1,38 +1,38 @@
-#!/bin/sh
+#!/bin/zsh
 
 #  ci_post_clone.sh
 #  SeaLens
 #
-#  Created by Handy Handy on 15/11/25.
+#  Run by Xcode Cloud in Post-clone phase
 #
 
-#!/bin/sh
+set -euxo pipefail
+
 echo "👉 Start CI Script"
-set -e
-echo "1️⃣ set -e done"
-BASEDIR=$(dirname $0)
-echo "Script location: ${BASEDIR}"
-cd ..
-echo "2️⃣ cd.."
 
-curl https://mise.run | sh
-echo "👉 curl https://mise.run | sh done"
+# 1. Move from ci_scripts to repo root: /Volumes/workspace/repository
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR/.."
+echo "📂 Working directory: $(pwd)"
+
+# 2. Install mise
+curl -fsSL https://mise.run | sh
+echo "✅ mise installer done"
+
+# 3. Add mise to PATH & activate for this shell
 export PATH="$HOME/.local/bin:$PATH"
-echo "1️⃣ PATH HOME done"
+eval "$("$HOME/.local/bin/mise" activate zsh --shims)"
+echo "✅ mise activated"
+
+# 4. Install tuist (based on your .mise.toml, if any)
 mise install tuist
-echo "2️⃣ install tuist done"
-eval "$(mise activate bash --shims)" # Addds the activated tools to $PATH
-echo "👉 Setting mise globally:"
-mise use -g tuist
-echo "1️⃣ mise use -g tuist done"
+echo "✅ mise install tuist done"
 
-# Runs the version of Tuist indicated in the .mise.toml file {#runs-the-version-of-tuist-indicated-in-the-misetoml-file}
-mise exec -- tuist install --path ../ # `--path` needed as this is run from within the `ci_scripts` directory
-echo "1️⃣ tuist install done"
+# 5. Run Tuist from the repo root (NO ../ here)
+mise exec -- tuist fetch
+echo "✅ tuist fetch done"
 
-BASEDIR=$(dirname $0)
-echo "Script location: ${BASEDIR}"
+mise exec -- tuist generate --no-open
+echo "✅ tuist generate done"
 
-mise exec -- tuist generate -p ../ --no-open # `-p` needed as this is run from within the `ci_scripts` directory
-echo "1️⃣ tuist generate done"
-
+echo "🎉 CI post-clone script finished successfully"
