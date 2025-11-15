@@ -53,7 +53,7 @@ xcuserdata/
 # Generated Xcode project and workspace files
 .tuist-generated/
 DerivedData/
-*.xcworkspace
+#*.xcworkspace
 *.xcodeproj
 
 # Tuist Cache & Build
