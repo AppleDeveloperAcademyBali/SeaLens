@@ -21,3 +21,12 @@ final class Site {
         self.name = name
     }
 }
+
+// MARK: - Mock Data
+extension Site {
+    static var mockArray: [Site] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            Site(name: "Site \(Int.random(in: 1...10))")
+        }
+    }
+}

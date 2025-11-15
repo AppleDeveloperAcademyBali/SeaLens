@@ -45,7 +45,7 @@ struct FishFamilyDetailPresentation: View {
                             .textstyles(.title3Regular)
                     }
                     
-                    FishFamilyDetailGrid(fish: fishFamily.fish)
+//                    FishFamilyDetailGrid(fish: fishFamily.fish)
                 }
                 .padding(.horizontal, 30)
                 .padding(.vertical, 30)
@@ -68,8 +68,3 @@ struct FishFamilyDetailPresentation: View {
     }
 }
 
-
-#Preview {
-    FishFamilyDetailPresentation(fishFamilyID: Footage.sampleData[9].fishFamily.first!.uid)
-        .frame(width: 1200, height: 800)
-}
