@@ -6,15 +6,23 @@
 //
 
 import SwiftUI
-
+import SwiftData
 
 struct UploadVideoPresentation: View {
     
-    @ObservedObject var viewModel: UploadVideoViewModel
+    @StateObject var viewModel: UploadVideoViewModel
     @Environment(\.modelContext) private var modelContext
+    @Binding var isPresented: Bool
     @State private var navigateToComplete = false
-
     
+    init(modelContext: ModelContext, isPresented: Binding<Bool>) {
+        let dataService = DataService(modelContainer: modelContext.container)
+        let uploadVideoData = UploadVideoData(dataService: dataService)
+        let uploadVideoDomain = UploadVideoDomain(uploadVideoData: uploadVideoData)
+        _viewModel = StateObject(wrappedValue: UploadVideoViewModel(uploadVideoDomain: uploadVideoDomain))
+        _isPresented = isPresented
+    }
+
     var body: some View {
         ScrollView {
             VStack (alignment: .leading) {
