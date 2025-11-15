@@ -3,10 +3,10 @@ import SwiftUI
 public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     
-    @State private var selection = SidebarType.dashboard.rawValue
+    @State private var selection = SidebarType.recents.rawValue
     
     //TODO: - Need to move to specific view
-    @State private var isShowingSheet = false
+    @State private var isShowingUploadFootage = false
     
     public var body: some View {
         GeometryReader { geometry in
@@ -19,7 +19,8 @@ public struct ContentView: View {
                     case SidebarType.dashboard.rawValue:
                         DashboardPresentation(modelContext: modelContext)
                     case SidebarType.recents.rawValue:
-                        RecentUploadsPresentation(modelContext: modelContext)
+                        RecentUploadsPresentation(modelContext: modelContext,
+                                                  isUploadFormPresented: $isShowingUploadFootage)
                     case SidebarType.mock.rawValue:
                         MockDataView()
                     default:
@@ -28,8 +29,8 @@ public struct ContentView: View {
                 }
                 
             )
-            .sheet(isPresented: $isShowingSheet, onDismiss: didDismiss) {
-                ReviewFishPresentation(isShowingSheet: $isShowingSheet)
+            .sheet(isPresented: $isShowingUploadFootage, onDismiss: didDismiss) {
+                UploadVideoPresentation(modelContext: modelContext, isPresented: $isShowingUploadFootage)
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
@@ -41,13 +42,6 @@ public struct ContentView: View {
     func didDismiss() {
         // Handle the dismissing action.
     }
-    
-//    func createUploadVideoViewModel() -> UploadVideoViewModel {
-//        let dataService = DataService(modelContainer: modelContext.container)
-//        let uploadVideoData = UploadVideoData(dataService: dataService)
-//        let uploadVideoDomain = UploadVideoDomain(uploadVideoData: uploadVideoData)
-//        return UploadVideoViewModel(uploadVideoDomain: uploadVideoDomain)
-//    }
     
 //    func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
 //        let dataService = DataService(modelContainer: modelContext.container)
