@@ -21,8 +21,8 @@ final class FishFamily {
     //0..Many fishFamily belong to 0..one FishFamilyReference
     var fishFamilyReference: FishFamilyReference?
     
-    @Relationship(deleteRule: .cascade, inverse: \IndividualFish.fishFamily)
-    var individualFishes: [IndividualFish] = []
+    @Relationship(deleteRule: .cascade, inverse: \Fish.fishFamily)
+    var fishes: [Fish] = []
     
     
     init(
@@ -32,7 +32,7 @@ final class FishFamily {
         dateUpdated: Date,
         footage: Footage,
         fishFamilyReference: FishFamilyReference? = nil,
-        individualFishes: [IndividualFish] = [])
+        fishes: [Fish] = [])
     {
         self.uid = uid
         self.numOfFishDetected = numOfFishDetected
@@ -40,7 +40,33 @@ final class FishFamily {
         self.dateUpdated = dateUpdated
         self.footage = footage
         self.fishFamilyReference = fishFamilyReference
-        self.individualFishes = individualFishes
+        self.fishes = fishes
     }
     
+}
+
+// MARK: - Mock Data
+extension FishFamily {
+
+    static let mock: FishFamily = FishFamily(
+        numOfFishDetected: 10,
+        dateCreated: .randomDaysAgo(10),
+        dateUpdated: .randomDaysAgo(1),
+        footage: Footage.mock,
+        fishFamilyReference: FishFamilyReference.mock,
+        fishes: []
+    )
+
+    static var mockArray: [FishFamily] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            FishFamily(
+                numOfFishDetected: Int32.random(in: 1...80),
+                dateCreated: .randomDaysAgo(Int.random(in: 5...50)),
+                dateUpdated: .randomDaysAgo(1),
+                footage: Footage.mockArray.randomElement() ?? Footage.mock,
+                fishFamilyReference: FishFamilyReference.mockArray.randomElement() ?? FishFamilyReference.mock,
+                fishes: []
+            )
+        }
+    }
 }

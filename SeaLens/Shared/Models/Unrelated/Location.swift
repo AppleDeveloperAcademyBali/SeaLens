@@ -22,3 +22,11 @@ final class Location {
     }
 }
 
+// MARK: - Mock Data
+extension Location {
+    static var mockArray: [Location] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            Location(name: ["Nusa Dua","Menjangan","Tulamben","Amed"].randomElement()!)
+        }
+    }
+}

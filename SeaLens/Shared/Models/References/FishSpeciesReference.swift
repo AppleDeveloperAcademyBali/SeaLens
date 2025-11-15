@@ -23,8 +23,8 @@ final class FishSpeciesReference {
     //0..Many fishSpeciesReference belong to one fishFamilyReference
     var fishFamilyReference: FishFamilyReference?
     
-    @Relationship(deleteRule: .nullify, inverse: \IndividualFish.fishSpeciesReference)
-    var individualFishes: [IndividualFish]?
+    @Relationship(deleteRule: .nullify, inverse: \Fish.fishSpeciesReference)
+    var fishes: [Fish]?
     
     init(
         uid: UUID,
@@ -37,7 +37,7 @@ final class FishSpeciesReference {
         sourceUrl: String,
         attribution: String,
         fishFamilyReference: FishFamilyReference,
-        individualFishes: [IndividualFish] = [])
+        fishes: [Fish] = [])
     {
         self.uid = uid
         self.latinName = latinName
@@ -50,6 +50,42 @@ final class FishSpeciesReference {
         self.attribution = attribution
         
         self.fishFamilyReference = fishFamilyReference
-        self.individualFishes = individualFishes
+        self.fishes = fishes
+    }
+}
+
+// MARK: - Mock Data
+extension FishSpeciesReference {
+
+    static let mock: FishSpeciesReference = FishSpeciesReference(
+        uid: UUID(),
+        latinName: "Chromis viridis",
+        commonName: "Blue-green chromis",
+        maxSizeInCm: 8,
+        identification: "Small planktivorous damselfish.",
+        location: "Indo-Pacific",
+        imageUrl: "https://example.com/chromis.jpg",
+        sourceUrl: "https://example.com/chromis-viridis",
+        attribution: "Allen, 2000",
+        fishFamilyReference: FishFamilyReference.mock,
+        fishes: []
+    )
+
+    static var mockArray: [FishSpeciesReference] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            FishSpeciesReference(
+                uid: UUID(),
+                latinName: ["Thalassoma lunare","Chromis atripectoralis","Chaetodon lunula"].randomElement()!,
+                commonName: ["Wrasse","Chromis","Butterflyfish"].randomElement()!,
+                maxSizeInCm: Double.random(in: 6...40),
+                identification: "A reef fish commonly seen in shallow waters.",
+                location: ["Nusa Dua","Menjangan","Komodo","Raja Ampat"].randomElement()!,
+                imageUrl: "https://example.com/\(UUID.randomString()).jpg",
+                sourceUrl: "https://example.com/species/\(UUID.randomString())",
+                attribution: ["Allen (2000)","Randall (1997)"].randomElement()!,
+                fishFamilyReference: FishFamilyReference.mockArray.randomElement() ?? FishFamilyReference.mock,
+                fishes: []
+            )
+        }
     }
 }

@@ -21,3 +21,12 @@ final class Transect {
         self.name = name
     }
 }
+
+// MARK: - Mock Data
+extension Transect {
+    static var mockArray: [Transect] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            Transect(name: "Transect \(Int.random(in: 1...10))")
+        }
+    }
+}
