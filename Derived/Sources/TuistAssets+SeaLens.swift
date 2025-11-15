@@ -4,15 +4,28 @@
 // swiftformat:disable all
 // Generated using tuist — https://github.com/tuist/tuist
 
+
+
 #if os(macOS)
-  import AppKit
-#elseif os(iOS)
-  import UIKit
-#elseif os(tvOS) || os(watchOS)
-  import UIKit
+#if hasFeature(InternalImportsByDefault)
+public import AppKit
+#else
+import AppKit
 #endif
+#else
+#if hasFeature(InternalImportsByDefault)
+public import UIKit
+#else
+import UIKit
+#endif
+#endif
+
 #if canImport(SwiftUI)
-  import SwiftUI
+#if hasFeature(InternalImportsByDefault)
+public import SwiftUI
+#else
+import SwiftUI
+#endif
 #endif
 
 // MARK: - Asset Catalogs
@@ -20,7 +33,8 @@
 public enum SeaLensAsset: Sendable {
   public enum Assets {
   public static let accentColor = SeaLensColors(name: "AccentColor")
-    public static let folder = SeaLensImages(name: "folder")
+    public static let observationCard = SeaLensImages(name: "observationCard")
+    public static let borderColor = SeaLensColors(name: "borderColor")
     public static let iconFilter = SeaLensImages(name: "iconFilter")
     public static let iconSort = SeaLensImages(name: "iconSort")
     public static let noImage = SeaLensImages(name: "noImage")

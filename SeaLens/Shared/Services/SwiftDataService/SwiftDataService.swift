@@ -18,12 +18,15 @@ public final class SwiftDataService {
         do {
             let schema = Schema([
                 Footage.self,
-                FootageTags.self,
+                FootageTag.self,
                 FishFamily.self,
-                Fish.self,
+                FishImage.self,
                 FishConfidenceScore.self,
+                //
                 FishFamilyReference.self,
                 FishSpeciesReference.self,
+                Fish.self,
+                //
                 Site.self,
                 Location.self,
                 Transect.self
@@ -34,8 +37,7 @@ public final class SwiftDataService {
             self.container = try ModelContainer(for: schema, configurations: [config])
         }
         catch {
-            print(error)
-            fatalError("Failed to initialize ModelContainer \(error)")
+            fatalError("Failed to initialize ModelContainer: \(error)")
         }
     }
     

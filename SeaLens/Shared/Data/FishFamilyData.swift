@@ -42,6 +42,19 @@ final class FishFamilyData {
         }
     }
     
+    func retrieveFishFamilies(predicate: Predicate<FishFamily>? = nil, sortBy: [SortDescriptor<FishFamily>]?) async -> [FishFamily] {
+        errorMessage = nil
+        var fishFamilyList: [FishFamily] = []
+        
+        do {
+            fishFamilyList = try await dataService.retrieve(FishFamily.self, predicate: predicate, sortBy: sortBy!)
+        } catch {
+            errorMessage = "Failed to retrieve fish families: \(error.localizedDescription)"
+        }
+        
+        return fishFamilyList
+    }
+    
     // CREATE FISH FAMILY
     func addFishFamily(fishFamily: FishFamily)async  {
         
