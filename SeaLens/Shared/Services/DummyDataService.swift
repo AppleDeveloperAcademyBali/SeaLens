@@ -220,7 +220,7 @@ final class DummyDataService {
                 dateTaken: Calendar.current.date(byAdding: .day, value: -i * 3, to: baseDate)!,
                 location: locations[abs(i/3)],
                 siteName: siteNames[abs(i/3)],
-                transect: "T\(i + 1)",
+                transect: "T\(abs(i/3) + 1)",
                 depthInMeter: Double.random(in: 5...30),
                 dateCreated: baseDate,
                 dateUpdated: baseDate,
