@@ -53,6 +53,11 @@ class DashboardDomain: ObservableObject {
             guard let familyRef = family.fishFamilyReference,
                   let footage = family.footage else { continue }
             
+            for fishFamily in footage.fishFamily ?? [] {
+                var commonName = "Unidentified"
+                if let reference = fishFamily.fishFamilyReference {
+                    commonName = reference.commonName
+                }
             // Check if no fish family in array
             // Create 0 data point to fish that is not detected / have 0 value
             if !seriesChartData.contains(where: { $0.seriesName == familyRef.commonName })

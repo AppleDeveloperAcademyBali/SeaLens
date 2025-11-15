@@ -43,7 +43,7 @@ struct FishFamilyGrid: View {
                 
                     FlowHStack(horizontalSpacing: spacing, verticalSpacing: spacing) {
                         ForEach(Footage.sampleData) { footage in
-                            ForEach(footage.fishFamily) { family in
+                            ForEach(footage.fishFamily ?? []) { family in
                                 FishFamilyCard(
                                     familyName: family.fishFamilyReference?.commonName ?? "Unknown",
                                     latinName: family.fishFamilyReference?.latinName ?? "",

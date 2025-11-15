@@ -15,7 +15,6 @@ public struct RecentUploadsPresentation: View {
     @StateObject private var recentUploadsViewModel: RecentUploadsViewModel
     
     @State private var searchText: String = ""
-    @State private var filteredFootages: [Footage] = []
     
     init(modelContext: ModelContext) {
         _recentUploadsViewModel = StateObject(wrappedValue: RecentUploadsViewModel(modelContext: modelContext))
