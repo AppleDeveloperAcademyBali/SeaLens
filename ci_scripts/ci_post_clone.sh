@@ -10,10 +10,7 @@
 set -euxo pipefail
 
 # Install Tuist
-curl -Ls https://install.tuist.io | bash
-
-# Add Tuist to PATH
-export PATH="$HOME/.tuist/bin:$PATH"
+brew install --formula tuist@x.y.z
 
 # Check version (optional)
 tuist version
