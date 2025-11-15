@@ -6,33 +6,36 @@
 #  Run by Xcode Cloud in Post-clone phase
 #
 
-set -euxo pipefail
-
+#!/bin/sh
 echo "👉 Start CI Script"
+set -e
+echo "1️⃣ set -e done"
 
-# 1. Move from ci_scripts to repo root: /Volumes/workspace/repository
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-cd "$SCRIPT_DIR/.."
-echo "📂 Working directory: $(pwd)"
+BASEDIR=$(dirname "$0")
+echo "Script location (script file): ${BASEDIR}"
 
-# 2. Install mise
+cd ..
+echo "📂 Current working directory: $(pwd)"
+echo "2️⃣ cd.."
+
 curl -fsSL https://mise.run | sh
-echo "✅ mise installer done"
+echo "👉 curl https://mise.run | sh done"
 
-# 3. Add mise to PATH & activate for this shell
 export PATH="$HOME/.local/bin:$PATH"
-eval "$("$HOME/.local/bin/mise" activate zsh --shims)"
-echo "✅ mise activated"
+echo "1️⃣ PATH HOME done"
 
-# 4. Install tuist (based on your .mise.toml, if any)
 mise install tuist
-echo "✅ mise install tuist done"
+echo "2️⃣ install tuist done"
 
-# 5. Run Tuist from the repo root (NO ../ here)
-mise exec -- tuist fetch
-echo "✅ tuist fetch done"
+eval "$(mise activate bash --shims)"
+echo "👉 Setting mise globally:"
+
+mise use -g tuist
+echo "1️⃣ mise use -g tuist done"
+
+# Run tuist from repo root (NO ../ here)
+mise exec -- tuist install
+echo "1️⃣ tuist install done"
 
 mise exec -- tuist generate --no-open
-echo "✅ tuist generate done"
-
-echo "🎉 CI post-clone script finished successfully"
+echo "1️⃣ tuist generate done"
