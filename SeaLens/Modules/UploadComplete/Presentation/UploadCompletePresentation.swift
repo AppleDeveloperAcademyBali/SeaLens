@@ -76,13 +76,3 @@ struct UploadCompletePresentation: View {
     
 
 }
-
-
-#Preview {
-    UploadCompletePresentation(
-        viewModel: UploadCompleteViewModel(
-            footage: Footage.sampleData[9]
-        )
-    )
-    .frame(width: 1200, height: 800)
-}

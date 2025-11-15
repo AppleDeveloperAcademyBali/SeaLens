@@ -11,7 +11,7 @@ import Foundation
 final class FootageTagsData {
     private let dataService: DataService
     
-    var footageTags: [FootageTags] = []
+    var footageTags: [FootageTag] = []
     var errorMessage: String?
     
     init(dataService: DataService) {
@@ -25,25 +25,25 @@ final class FootageTagsData {
         errorMessage = nil
         
         do {
-            let sortDescriptors = [SortDescriptor(\FootageTags.name)]
-            footageTags = try await dataService.retrieve(FootageTags.self, predicate: nil, sortBy: sortDescriptors)
+            let sortDescriptors = [SortDescriptor(\FootageTag.name)]
+            footageTags = try await dataService.retrieve(FootageTag.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve footage tags: \(error.localizedDescription)"
         }
     }
     
-    func retrieveFootageTags(predicate: Predicate<FootageTags>? = nil, sortBy: [SortDescriptor<FootageTags>]?) async {
+    func retrieveFootageTags(predicate: Predicate<FootageTag>? = nil, sortBy: [SortDescriptor<FootageTag>]?) async {
         errorMessage = nil
         
         do {
-            footageTags = try await dataService.retrieve(FootageTags.self, predicate: predicate, sortBy: sortBy!)
+            footageTags = try await dataService.retrieve(FootageTag.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve footage tags: \(error.localizedDescription)"
         }
     }
     
     // CREATE FOOTAGE TAGS
-    func addFootageTag(footageTag: FootageTags) async {
+    func addFootageTag(footageTag: FootageTag) async {
         
         await dataService.insert(footageTag)
         
@@ -55,7 +55,7 @@ final class FootageTagsData {
     }
     
     // UPDATE FOOTAGE TAGS
-    func updateFootageTag(_ footageTag: FootageTags) async {
+    func updateFootageTag(_ footageTag: FootageTag) async {
         do {
             try await dataService.save()
         } catch {
@@ -64,7 +64,7 @@ final class FootageTagsData {
     }
     
     // DELETE FOOTAGE TAGS
-    func deleteFootageTag(_ footageTag: FootageTags) async {
+    func deleteFootageTag(_ footageTag: FootageTag) async {
         await dataService.delete(footageTag)
         
         do {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FishFamilyDetailGrid: View {
-    var fish: [Fish]
+    var fish: [FishImage]
     
     private let cardWidth: CGFloat = 200
     private let spacing: CGFloat = 12
@@ -36,7 +36,7 @@ struct FishFamilyDetailGrid: View {
                     
                     LazyVGrid(columns: columns, spacing: spacing) {
                         ForEach(fish, id: \.uid) { fish in
-                            FishCard(imageURL: fish.imageUrl)
+                            FishCard(imageURL: fish.url)
                                 .frame(width: cardWidth, height: cardWidth / 1.2)
                         }
                     }
@@ -51,27 +51,16 @@ struct FishFamilyDetailGrid: View {
 
 
 private struct FishFamilyDetailGridContent: View {
-    let fish: [Fish]
+    let fish: [FishImage]
     let cardWidth: CGFloat
     let spacing: CGFloat
     
     var body: some View {
         FlowHStack(horizontalSpacing: spacing, verticalSpacing: spacing) {
             ForEach(fish, id: \.uid) { fish in
-                FishCard(imageURL: fish.imageUrl)
+                FishCard(imageURL: fish.url)
                     .frame(width: cardWidth, height: cardWidth / 1.2)
             }
         }
     }
-}
-
-
-#Preview {
-    // Create multiple copies of one fish for testing
-    let sampleFish = Footage.sampleData[0].fishFamily.first!.fish.first!
-    let multipleFish = Array(repeating: sampleFish, count: 15)
-    
-    return FishFamilyDetailGrid(fish: multipleFish)
-        .frame(width: 1200, height: 800)
-        .padding()
 }

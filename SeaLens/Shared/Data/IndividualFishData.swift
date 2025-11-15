@@ -11,7 +11,7 @@ import Foundation
 final class IndividualFishData {
     private let dataService: DataService
     
-    var individualFishes: [IndividualFish] = []
+    var individualFishes: [Fish] = []
     var errorMessage: String?
     
     init(dataService: DataService) {
@@ -25,25 +25,25 @@ final class IndividualFishData {
         errorMessage = nil
         
         do {
-            let sortDescriptors = [SortDescriptor(\IndividualFish.fishId)]
-            individualFishes = try await dataService.retrieve(IndividualFish.self, predicate: nil, sortBy: sortDescriptors)
+            let sortDescriptors = [SortDescriptor(\Fish.fishId)]
+            individualFishes = try await dataService.retrieve(Fish.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve individual fish: \(error.localizedDescription)"
         }
     }
     
-    func retrieveIndividualFishes(predicate: Predicate<IndividualFish>?, sortBy: [SortDescriptor<IndividualFish>]?) async {
+    func retrieveIndividualFishes(predicate: Predicate<Fish>?, sortBy: [SortDescriptor<Fish>]?) async {
         errorMessage = nil
         
         do {
-            individualFishes = try await dataService.retrieve(IndividualFish.self, predicate: predicate, sortBy: sortBy!)
+            individualFishes = try await dataService.retrieve(Fish.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve individual fish: \(error.localizedDescription)"
         }
     }
     
     // CREATE INDIVIDUAL FISH
-    func addIndividualFish(individualFish: IndividualFish) async {
+    func addIndividualFish(individualFish: Fish) async {
         
         await dataService.insert(individualFish)
         
@@ -55,7 +55,7 @@ final class IndividualFishData {
     }
     
     // UPDATE INDIVIDUAL FISH
-    func updateIndividualFish(_ individualFish: IndividualFish) async {
+    func updateIndividualFish(_ individualFish: Fish) async {
         do {
             try await dataService.save()
         } catch {
@@ -64,7 +64,7 @@ final class IndividualFishData {
     }
     
     // DELETE INDIVIDUAL FISH
-    func deleteIndividualFish(_ individualFish: IndividualFish) async {
+    func deleteIndividualFish(_ individualFish: Fish) async {
         await dataService.delete(individualFish)
         
         do {
