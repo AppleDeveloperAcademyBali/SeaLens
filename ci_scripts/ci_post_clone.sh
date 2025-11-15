@@ -34,8 +34,8 @@ mise use -g tuist
 echo "1️⃣ mise use -g tuist done"
 
 # Run tuist from repo root (NO ../ here)
-mise exec -- tuist install
+CI=0 mise exec -- tuist install
 echo "1️⃣ tuist install done"
 
-mise exec -- tuist generate --no-open
+CI=0 mise exec -- tuist generate --no-open
 echo "1️⃣ tuist generate done"
