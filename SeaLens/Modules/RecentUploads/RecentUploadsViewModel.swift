@@ -9,23 +9,52 @@ import Foundation
 import SwiftData
 import Observation
 
-@Observable
+@MainActor
 class RecentUploadsViewModel: ObservableObject {
-    private let persistence: RecentUploadsPersistence
+    private let modelContext: ModelContext
+    private let recentuploadDomain: RecentUploadsDomain
     
-    var recentUploads: [Footage] = []
+    @Published var footages: [Footage] = []
     
-    init(persistence: RecentUploadsPersistence) {
-        self.persistence = persistence
+    private var allFootages: [Footage] = []
+    
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        self.recentuploadDomain = RecentUploadsDomain(modelContext: modelContext)
     }
     
-    func fetchRecentUploads() {
-        do {
-            recentUploads = try persistence.fetchAllRecentUploads()
-        }
-        catch {
-            print("Failed to fetch recent uploads: \(error)")
+    func loadFootages() async
+    {
+        allFootages = await recentuploadDomain.retrieveFootages()
+        footages = allFootages
+    }
+    
+    // Apply Sorting for the Presentation
+    func applySorting(sortOption: SortOption)
+    {
+        switch sortOption {
+        case .dateTakenNewest:
+            footages.sort { $0.dateTaken > $1.dateTaken }
+            break
+        case .dateTakenOldest:
+            footages.sort { $0.dateTaken < $1.dateTaken }
+            break
+        case .filenameAscending:
+            footages.sort { $0.filename < $1.filename }
+            break
+        case .filenameDesscending:
+            footages.sort { $0.filename > $1.filename }
+            break
         }
     }
-        
+    
+    // Apply Searching for the Presentation
+    func applySearching(searchText: String)
+    {
+        if searchText.isEmpty {
+            footages = allFootages
+        } else {
+            footages = allFootages.filter { $0.filename.localizedCaseInsensitiveContains(searchText) }
+        }
+    }
 }

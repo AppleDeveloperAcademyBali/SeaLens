@@ -2,12 +2,12 @@ import ProjectDescription
 
 let project = Project(
     name: "SeaLens",
-    packages: [
-        .remote(
-            url: "https://github.com/ZipArchive/ZipArchive.git",
-            requirement: .upToNextMajor(from: "2.5.0")
-        )
-    ],
+//    packages: [
+//        .remote(
+//            url: "https://github.com/ZipArchive/ZipArchive.git",
+//            requirement: .upToNextMajor(from: "2.5.0")
+//        )
+//    ],
     targets: [
         .target(
             name: "SeaLens",
@@ -17,13 +17,13 @@ let project = Project(
             infoPlist: .default,
             buildableFolders: [
                 "SeaLens/App",
-                "SeaLens/Features",
+                "SeaLens/Modules",
                 "SeaLens/Resources",
                 "SeaLens/Shared",
             ],
-            dependencies: [
-                .package(product: "ZipArchive")
-            ]
+//            dependencies: [
+//                .package(product: "ZipArchive")
+//            ]
         ),
         .target(
             name: "SeaLensTests",

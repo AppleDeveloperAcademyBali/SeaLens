@@ -1,87 +1,98 @@
 //
-//  FishFamilyCard.swift
+//  FishCard.swift
 //  SeaLens
 //
-//  Created by IP Marry Kusuma on 03/11/25.
+//  Created by Shreyas Venadan on 8/11/2025.
 //
 
 import SwiftUI
 
 struct FishFamilyCard: View {
-    let fishFamilyRef: FishFamilyReference
-    let fishFamilyConfidenceValue: Double
-
-    @Binding var selectedFishFamily: FishFamilyReference?
+    
+    var familyName: String
+    var latinName: String
+    var photoCount: Int
+    var fishCount: Int
+    var imageURL: String
     
     var body: some View {
-        HStack {
-            Rectangle()
-                .foregroundStyle(.gray.opacity(0.1))
-                .cornerRadius(20)
-                .overlay {
+        
+        VStack(alignment: .leading) {
+            
+            // Fish image
+            Image(imageURL)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 180)
+                .clipped()
+            
+            // White background section with text
+            VStack(spacing: 13)    {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(familyName)
+                        .textstyles(.title2Regular)
+                        .bold(true)
                     
-                    Image(getImageUrl(fishFamilyRef: fishFamilyRef))
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 144, height: 144)
-
-                }
-                .frame(width: 178, height: 178)
-            
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(fishFamilyRef.commonName)
-                        .font(.title2)
-                        .bold()
-                    Text("(\(fishFamilyRef.latinName))")
-                        .font(.caption)
+                    Text(latinName)
+                        .textstyles(.bodyRegular)
                         .italic()
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "arrow.right")
-                    }
                 }
                 
-                Text("\(fishFamilyRef.fishSpeciesReferences.count) species")
-                    .font(.subheadline)
-                
-                Text("")
-                
-                Text("\(String(format: "%.2f", fishFamilyConfidenceValue))% match")
-                    .foregroundColor(.green)
-                    .font(.headline)
+                // Icons row
+                HStack(spacing: 8) {  // Reduced spacing
+                    HStack(spacing: 4) {
+                        Image(systemName: "fish")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Text("\(fishCount)")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    )
+                    
+                    HStack(spacing: 4) {
+                        Image(systemName: "photo")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Text("\(photoCount)")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    )
+                }
             }
-            .padding()
-            
-            Spacer()
-            
-            Button("Assign to this family") {
-                selectedFishFamily = fishFamilyRef
-            }
-            .foregroundStyle(.blue)
-            .buttonStyle(.glass)
-            .cornerRadius(100)
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            
+            .padding(16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                
         }
-        .frame(width: 1000, height: 178)
-    }
-    
-    func getImageUrl(fishFamilyRef: FishFamilyReference) -> String {
-        var imageUrl: String = "noImage"
-        
-        if let firstSpecies = fishFamilyRef.fishSpeciesReferences.first {
-            imageUrl = firstSpecies.imageUrl
-        } else {
-            imageUrl = "noImage"
-        }
-        
-        return imageUrl
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
 }
 
+
 #Preview {
-    FishFamilyCard(fishFamilyRef: FishFamilyReference(latinName: "Chaetodondidae", commonName: "Butterflyfish", imageUrl: "samplePicture", sourceUrl: "https://www.fishbase.org.au/v4/summary/8014", attribution: "Froese, R. and D. Pauly. Editors. 2025. FishBase. World Wide Web electronic publication. www.fishbase.org, version (04/2025)"), fishFamilyConfidenceValue: 95.0, selectedFishFamily: .constant(nil))
+    FishFamilyCard(
+        familyName: "Surgeonfish",
+        latinName: "Acanthuridae",
+        photoCount: 11,
+        fishCount: 4,
+        imageURL: "samplePicture"
+    )
+    .frame(width: 258, height: 274)
+    .padding()
 }
