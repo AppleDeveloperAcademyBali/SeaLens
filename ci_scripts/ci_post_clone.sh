@@ -8,7 +8,7 @@
 
 #!/bin/bash
 # Install Tuist
-brew install --formula tuist
+brew tap tuist/tuist
 
 # Check version (optional)
 tuist version
