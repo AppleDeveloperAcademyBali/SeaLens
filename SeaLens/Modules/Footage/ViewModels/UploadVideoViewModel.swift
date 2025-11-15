@@ -193,35 +193,35 @@ final class UploadVideoViewModel: ObservableObject {
             let numberOfFish = Int.random(in: 5...10)
             var fishArray: [Fish] = []
             
-            for j in 0..<numberOfFish {
-                // Get a species reference (cycling through available ones)
-                let speciesRef = speciesRefs[j % speciesRefs.count]
-                
-                // Create individual fish with random confidence
-                let fish = Fish(
-                    imageUrl: "samplePicture",
-                    objectRecognitionConf: Double.random(in: 0.85...0.98),
-                    isFavorites: Bool.random(),
-                    dateCreated: baseDate,
-                    dateUpdated: baseDate,
-                    fishFamily: fishFamily,
-                    fishSpeciesReference: speciesRef
-                )
-                
-                // Add confidence scores for this fish
-                fish.fishConfidenceScores = [
-                    FishConfidenceScore(
-                        familyLatinName: familyRef.latinName,
-                        confidenceValue: Double.random(in: 0.85...0.98),
-                        fish: fish
-                    )
-                ]
-                
-                fishArray.append(fish)
-            }
+//            for j in 0..<numberOfFish {
+//                // Get a species reference (cycling through available ones)
+//                let speciesRef = speciesRefs[j % speciesRefs.count]
+//                
+//                // Create individual fish with random confidence
+//                let fish = Fish(
+//                    imageUrl: "samplePicture",
+//                    objectRecognitionConf: Double.random(in: 0.85...0.98),
+//                    isFavorites: Bool.random(),
+//                    dateCreated: baseDate,
+//                    dateUpdated: baseDate,
+////                    fishFamily: fishFamily,
+////                    fishSpeciesReference: speciesRef
+//                )
+//                
+//                // Add confidence scores for this fish
+//                fish.fishConfidenceScores = [
+//                    FishConfidenceScore(
+//                        familyLatinName: familyRef.latinName,
+//                        confidenceValue: Double.random(in: 0.85...0.98),
+//                        fish: fish
+//                    )
+//                ]
+//                
+//                fishArray.append(fish)
+//            }
             
             // Attach all fish to this family
-            fishFamily.fish = fishArray
+//            fishFamily.fish = fishArray
             
             // Add this family to the footage
             footage.fishFamily.append(fishFamily)

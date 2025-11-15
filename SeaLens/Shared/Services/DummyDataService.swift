@@ -398,20 +398,28 @@ extension DummyDataService {
             )
             context.insert(fishFamily)
 
-            // Add some random Fish for the family
-            let numFish = Int.random(in: 2...5)
-            for _ in 0..<numFish {
-                let fish = Fish(
-                    uid: UUID(),
-                    imageUrl: "samplePicture",
-                    objectRecognitionConf: Double.random(in: 0.7...0.99),
-                    isFavorites: Bool.random(),
-                    dateCreated: baseDate,
-                    dateUpdated: baseDate,
-                    fishFamily: fishFamily
-                )
-                context.insert(fish)
-            }
+//            // Add some random Fish for the family
+//            let numFish = Int.random(in: 2...5)
+//            for _ in 0..<numFish {
+//                let fish = Fish(
+//                    uid: UUID(),
+//                    imageUrl: "samplePicture",
+//                    objectRecognitionConf: Double.random(in: 0.7...0.99),
+//                    timestamp: "00:01:15:40",
+//                    isFavorites: Bool.random(),
+//                    dateCreated: baseDate,
+//                    dateUpdated: baseDate,
+//                    individualFish: IndividualFish(
+//                        fishId: UUID(),
+//                        dateCreated: baseDate,
+//                        dateUpdated: baseDate,
+//                        fishFamily: fishFamily,
+//                        fishSpeciesReference: ,
+//                        fish: []
+//                    )
+//                )
+//                context.insert(fish)
+//            }
         }
 
         do {

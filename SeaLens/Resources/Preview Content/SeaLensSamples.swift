@@ -212,47 +212,54 @@ extension Footage {
         let fish1b = Fish(
             imageUrl: "samplePicture",
             objectRecognitionConf: 0.89,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily1,
-            fishSpeciesReference: speciesRefs[0]
+//            fishFamily: fishFamily1,
+            individualFish: individualFish1,
+//            fishSpeciesReference: speciesRefs[0]
         )
 
         let fish1c = Fish(
             imageUrl: "samplePicture",
             objectRecognitionConf: 0.91,
+            timestamp: "00:01:15:40",
             isFavorites: true,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily1,
-            fishSpeciesReference: speciesRefs[1]
+            individualFish: individualFish1,
+//            fishFamily: fishFamily1,
+//            fishSpeciesReference: speciesRefs[1]
         )
 
         let fish1d = Fish(
             imageUrl: "samplePicture",
             objectRecognitionConf: 0.88,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily1,
-            fishSpeciesReference: speciesRefs[0]
+            individualFish: individualFish1,
+//            fishFamily: fishFamily1,
+//            fishSpeciesReference: speciesRefs[0]
         )
 
         let fish1e = Fish(
             imageUrl: "samplePicture",
             objectRecognitionConf: 0.90,
+            timestamp: "00:01:15:40",
             isFavorites: false,
             dateCreated: baseDate,
             dateUpdated: baseDate,
-            fishFamily: fishFamily1,
-            fishSpeciesReference: speciesRefs[1]
+            individualFish: individualFish1,
+//            fishFamily: fishFamily1,
+//            fishSpeciesReference: speciesRefs[1]
         )
 
         // Update the fish array
-        fishFamily1.fish = [fish1, fish1b, fish1c, fish1d, fish1e]
+        individualFish1.fish = [fish1, fish1b, fish1c, fish1d, fish1e]
         
-        individualFish1.fish = [fish1]
         fishFamily1.individualFishes = [individualFish1]
         footage1.fishFamily = [fishFamily1]
         

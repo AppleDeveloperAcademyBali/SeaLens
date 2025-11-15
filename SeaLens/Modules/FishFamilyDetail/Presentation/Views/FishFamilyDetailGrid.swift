@@ -64,14 +64,3 @@ private struct FishFamilyDetailGridContent: View {
         }
     }
 }
-
-
-#Preview {
-    // Create multiple copies of one fish for testing
-    let sampleFish = Footage.sampleData[0].fishFamily.first!.fish.first!
-    let multipleFish = Array(repeating: sampleFish, count: 15)
-    
-    return FishFamilyDetailGrid(fish: multipleFish)
-        .frame(width: 1200, height: 800)
-        .padding()
-}
