@@ -203,7 +203,7 @@ final class DummyDataService {
         
         let baseDate = Date()
         
-        for i in 0..<10 {
+        for i in 0..<30 {
             let footage = Footage(
                 uid: UUID(),
                 filename: "footage_\(String(format: "%03d", i + 1)).mp4",
@@ -211,9 +211,9 @@ final class DummyDataService {
                 footageUrl: "https://storage.example.com/footage_\(i + 1).mp4",
                 durationInSeconds: Int32.random(in: 120...600),
                 dateTaken: Calendar.current.date(byAdding: .day, value: -i * 3, to: baseDate)!,
-                location: locations[i],
-                siteName: siteNames[i],
-                transect: "T\(i + 1)",
+                location: locations[abs(i/3)],
+                siteName: siteNames[abs(i/3)],
+                transect: "T\(abs(i/3) + 1)",
                 depthInMeter: Double.random(in: 5...30),
                 dateCreated: baseDate
             )
