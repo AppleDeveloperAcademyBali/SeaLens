@@ -28,12 +28,30 @@ struct UploadVideoPresentation: View {
             VStack (alignment: .leading) {
                 
                 // top text
-                Text("Upload Video")
-                    .textstyles(.title1Emphasized)
-                Text("Choose a video file and upload to proceed.")
-                    .textstyles(.title3Regular)
-                    .foregroundStyle(.secondary)
-                    .padding(.bottom, 10)
+                HStack {
+                    VStack (alignment: .leading) {
+                        Text("Upload Video")
+                            .textstyles(.title1Emphasized)
+                        Text("Choose a video file and upload to proceed.")
+                            .textstyles(.title3Regular)
+                            .foregroundStyle(.secondary)
+                            .padding(.bottom, 10)
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        isPresented.toggle()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .padding()
+                    }
+                    .clipShape(Circle())
+                    .buttonStyle(.glass)
+
+                }
                 
                 // big box outline
                 HStack(alignment: .top, spacing: 16)  {
