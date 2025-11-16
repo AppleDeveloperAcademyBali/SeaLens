@@ -4,17 +4,15 @@ public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     //
     @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
-    //
-    @State private var sidebarSelection = SidebarType.recents.rawValue
     
     public var body: some View {
         GeometryReader { geometry in
             NavigationSplitView (
                 sidebar: {
-                    Sidebar(selection: $sidebarSelection)
+                    Sidebar(selection: $initialNavigationViewModel.sidebarSelection)
                 },
                 detail: {
-                    switch sidebarSelection {
+                    switch initialNavigationViewModel.sidebarSelection {
                     case SidebarType.dashboard.rawValue:
                         DashboardPresentation(modelContext: modelContext)
                     case SidebarType.recents.rawValue:
