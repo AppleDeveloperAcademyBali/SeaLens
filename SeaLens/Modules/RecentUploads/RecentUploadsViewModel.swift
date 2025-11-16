@@ -17,7 +17,7 @@ class RecentUploadsViewModel: ObservableObject {
     private var allFootages: [Footage] = []
     
     @Published var searchText: String = ""
-    
+        
     func loadFootages() async
     {
         allFootages = await recentuploadDomain.retrieveFootages()

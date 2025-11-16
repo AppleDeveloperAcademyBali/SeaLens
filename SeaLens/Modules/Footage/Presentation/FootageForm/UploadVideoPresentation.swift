@@ -105,12 +105,12 @@ struct UploadVideoPresentation: View {
 
     }
     
-    private func createUploadCompleteViewModel(for footageUID: UUID) -> FootageDetailViewModel {
-        let dataService = DataService(modelContainer: modelContext.container)
-        let footageData = FootageData(dataService: dataService)
-        let domain = FootageDetailDomain(footageData: footageData)
-        return FootageDetailViewModel(footageUID: footageUID, domain: domain)
-    }
+//    private func createUploadCompleteViewModel(for footageUID: UUID) -> FootageDetailViewModel {
+//        let dataService = DataService(modelContainer: modelContext.container)
+//        let footageData = FootageData(dataService: dataService)
+//        let domain = FootageDetailDomain(footageData: footageData)
+//        return FootageDetailViewModel(footageUID: footageUID, domain: domain)
+//    }
     
     private func createFishFamilyDetailViewModel(for familyID: UUID) -> FishFamilyDetailViewModel {
         let domain = FishFamilyDetailDomain(modelContext: modelContext)

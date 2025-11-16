@@ -6,17 +6,10 @@
 //
 
 import Foundation
-import SwiftData
-
 
 final class FootageDetailDomain {
-    private let footageData: FootageData
-    
-    init(footageData: FootageData) {
-        self.footageData = footageData
-    }
-    
-    
+    @Injected private var footageData: FootageData
+
     func getFootage(by uid: UUID) async -> Footage? {
         let predicate = #Predicate<Footage> { $0.uid == uid }
         let sortDescriptors = [SortDescriptor(\Footage.dateCreated, order: .reverse)]

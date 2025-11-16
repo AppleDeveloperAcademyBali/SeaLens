@@ -18,6 +18,9 @@ struct SeaLensApp: App {
         DIContainer.shared.register(RecentUploadsDomain.self) {
             RecentUploadsDomain()
         }
+        DIContainer.shared.register(FootageDetailDomain.self) {
+            FootageDetailDomain()
+        }
     }
     
     var body: some Scene {

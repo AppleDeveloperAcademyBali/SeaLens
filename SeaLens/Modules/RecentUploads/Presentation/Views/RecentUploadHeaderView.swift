@@ -10,8 +10,6 @@ import SwiftUI
 struct RecentUploadHeaderView: View {
     @ObservedObject var recentUploadsViewModel: RecentUploadsViewModel
     
-    @Binding var searchText: String
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading){
@@ -29,7 +27,7 @@ struct RecentUploadHeaderView: View {
             
             HStack() {
                 
-                SearchBar(searchText: $searchText)
+                SearchBar(searchText: $recentUploadsViewModel.searchText)
                     
                 Menu {
                     Text("Sort By")

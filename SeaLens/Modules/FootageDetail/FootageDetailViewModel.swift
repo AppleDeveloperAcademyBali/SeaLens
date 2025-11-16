@@ -12,22 +12,17 @@ import SwiftData
 
 @MainActor
 final class FootageDetailViewModel: ObservableObject {
-    
+    @Injected private var domain: FootageDetailDomain
+    //
+    @Published var footageUIDString: String = ""
+    //
     @Published var footage: Footage?
     @Published var fishFamilies: [FishFamily] = []
     
-    private let domain: FootageDetailDomain
-    private let footageUID: UUID
-    
-    // pass in the swiftdata context from the view
-    init(footageUID: UUID, domain: FootageDetailDomain) {
-        self.footageUID = footageUID
-        self.domain = domain
-    }
-    
     func loadFootage() {
         Task {
-            if let fetchedFootage = await domain.getFootage(by: footageUID)   {
+            if let uid = UUID(uuidString: footageUIDString),
+                let fetchedFootage = await domain.getFootage(by: uid)   {
                 self.footage = fetchedFootage
                 self.fishFamilies = fetchedFootage.fishFamily
             } else {
@@ -35,23 +30,5 @@ final class FootageDetailViewModel: ObservableObject {
                 self.fishFamilies = []
             }
         }
-    }
-}
-
-
-
-extension FootageDetailViewModel {
-    // convenience initializer for previews that doesn't require domain/data layer
-    convenience init(footage: Footage) {
-        // create a dummy domain - won't be used in preview
-        let dataService = DataService(modelContainer: try! ModelContainer(for: Footage.self))
-        let footageData = FootageData(dataService: dataService)
-        let domain = FootageDetailDomain(footageData: footageData)
-        
-        self.init(footageUID: footage.uid, domain: domain)
-        
-        // directly set the data for preview
-        self.footage = footage
-        self.fishFamilies = footage.fishFamily
     }
 }

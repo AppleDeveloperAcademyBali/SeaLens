@@ -10,67 +10,46 @@ import SwiftUI
 import SwiftData
 
 struct FootageDetailPresentation: View {
-    @StateObject var viewModel: FootageDetailViewModel
-    @Environment(\.modelContext) private var modelContext
-    
+    @StateObject var viewModel = FootageDetailViewModel()
     
     var body: some View {
+        VStack {
+            if viewModel.footageUIDString == "" {
+                loadingView
+            }else {
+                VStack(alignment: .leading, spacing: 1) {
+                    FootageDetailHeaderView(FootageDetailViewModel: viewModel)
+                    
+                    FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
 
-        VStack(alignment: .leading, spacing: 1) {
-            
-            HStack {
-                Text("Upload Complete")
-                    .textstyles(.title1Emphasized)
-
-                if let name = viewModel.footage?.filename  {
-                    VideoTag(fileName: name)
+                    Spacer()
                 }
             }
-
-            HStack {
-                Spacer()
-                Button { } label: {
-                    Text("Review fish count")
-                        .foregroundColor(.blue)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                }
-                .buttonStyle(.glass)
-
-                Button { } label: {
-                    Image("iconSort")
-                        .resizable()
-                        .frame(width: 70, height: 70)
-                        .clipShape(.circle)
-                }
-                .buttonStyle(.plain)
-
-                Button { } label: {
-                    Image("iconFilter")
-                        .resizable()
-                        .frame(width: 70, height: 70)
-                        .clipShape(.circle)
-                }
-                .buttonStyle(.plain)
-            }
-
-            FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
-
-            Spacer()
         }
+        .background(.blue)
 //        .navigationDestination(for: UUID.self) { familyID in
 //            FishFamilyDetailPresentation(
 //                viewModel: createFishFamilyDetailViewModel(for: familyID))
 //            
 //        }
         
-        .padding(.horizontal, 30)
-        .padding(.vertical, 30)
-        .onAppear {
-            viewModel.loadFootage()
-        }
+//        .padding(30)
+//        .onAppear {
+//            viewModel.loadFootage()
+//        }
 
     }
     
-
+    var loadingView: some View {
+        VStack {
+            Spacer()
+            ProgressView()
+                .progressViewStyle(CircularProgressViewStyle())
+            Text("Loading...")
+            Spacer()
+        }
+        .frame(width: 100, height: 100)
+        .background(.red)
+    }
+    
 }

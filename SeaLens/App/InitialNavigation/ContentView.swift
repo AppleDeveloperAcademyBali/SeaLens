@@ -18,7 +18,7 @@ public struct ContentView: View {
                     case SidebarType.dashboard.rawValue:
                         DashboardPresentation(modelContext: modelContext)
                     case SidebarType.recents.rawValue:
-                        RecentUploadsPresentation()
+                        RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel)
                     case SidebarType.mock.rawValue:
                         MockDataView()
                     default:
