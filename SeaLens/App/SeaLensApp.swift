@@ -3,12 +3,28 @@ import SwiftData
 
 @main
 struct SeaLensApp: App {
+    let container: ModelContainer
+        
+    init() {
+        container = SwiftDataService.shared.container
+        let dataService = DataService(modelContainer: container)
+        
+        // Datas
+        DIContainer.shared.register(FootageData.self) {
+            FootageData(dataService: dataService)
+        }
+        
+        // Domain
+        DIContainer.shared.register(RecentUploadsDomain.self) {
+            RecentUploadsDomain()
+        }
+    }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .frame(minWidth: 1200, minHeight: 800)
-                .modelContainer(SwiftDataService.shared.container)
+                .modelContainer(container)
         }
     }
 }

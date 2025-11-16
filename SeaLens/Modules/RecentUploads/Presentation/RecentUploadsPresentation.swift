@@ -11,22 +11,13 @@ import Foundation
 import AppKit
 
 public struct RecentUploadsPresentation: View {
-    @Environment(\.modelContext) private var modelContext
-    @StateObject private var recentUploadsViewModel: RecentUploadsViewModel
-    
-    @State private var searchText: String = ""
-    @Binding var isUploadFormPresented: Bool
-    
-    init(modelContext: ModelContext, isUploadFormPresented: Binding<Bool>) {
-        _recentUploadsViewModel = StateObject(wrappedValue: RecentUploadsViewModel(modelContext: modelContext))
-        _isUploadFormPresented = isUploadFormPresented
-    }
+    @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
     
     public var body: some View  {
         NavigationStack {
             ZStack (alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel, searchText: $searchText)
+                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel, searchText: $recentUploadsViewModel.searchText)
                         .padding()
                     
                     ScrollView {
@@ -42,7 +33,7 @@ public struct RecentUploadsPresentation: View {
                 }
                 
                 Button {
-                    isUploadFormPresented.toggle()
+                    print("Dismissed")
                 } label: {
                     Label("Upload Video", systemImage: "arrow.up.circle")
                         .frame(width: 200)
@@ -59,8 +50,8 @@ public struct RecentUploadsPresentation: View {
         .task {
             await recentUploadsViewModel.loadFootages()
         }
-        .onChange(of: searchText) { _ , _ in
-            recentUploadsViewModel.applySearching(searchText: searchText)
+        .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
+            recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
     }
 }

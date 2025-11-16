@@ -2,25 +2,23 @@ import SwiftUI
 
 public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    
-    @State private var selection = SidebarType.recents.rawValue
-    
-    //TODO: - Need to move to specific view
-    @State private var isShowingUploadFootage = false
+    //
+    @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
+    //
+    @State private var sidebarSelection = SidebarType.recents.rawValue
     
     public var body: some View {
         GeometryReader { geometry in
             NavigationSplitView (
                 sidebar: {
-                    Sidebar(selection: $selection)
+                    Sidebar(selection: $sidebarSelection)
                 },
                 detail: {
-                    switch selection {
+                    switch sidebarSelection {
                     case SidebarType.dashboard.rawValue:
                         DashboardPresentation(modelContext: modelContext)
                     case SidebarType.recents.rawValue:
-                        RecentUploadsPresentation(modelContext: modelContext,
-                                                  isUploadFormPresented: $isShowingUploadFootage)
+                        RecentUploadsPresentation()
                     case SidebarType.mock.rawValue:
                         MockDataView()
                     default:
@@ -29,8 +27,8 @@ public struct ContentView: View {
                 }
                 
             )
-            .sheet(isPresented: $isShowingUploadFootage, onDismiss: didDismiss) {
-                UploadVideoPresentation(modelContext: modelContext, isPresented: $isShowingUploadFootage)
+            .sheet(isPresented: $initialNavigationViewModel.isShowingUploadFootage, onDismiss: didDismiss) {
+                UploadVideoPresentation(modelContext: modelContext, isPresented: $initialNavigationViewModel.isShowingUploadFootage)
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
