@@ -51,12 +51,15 @@ struct RecentUploadHeaderView: View {
                         }
                     }
                 } label: {
-                    Image("iconSort")
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                        .resizable()
+                        .frame(width: 30, height: 30)
                         .clipShape(.circle)
-                        .frame(width: 50, height: 50)
                         
                 }
                 .buttonStyle(.plain)
+                .glassEffect()
+                .padding(.leading)
 
             }
         }

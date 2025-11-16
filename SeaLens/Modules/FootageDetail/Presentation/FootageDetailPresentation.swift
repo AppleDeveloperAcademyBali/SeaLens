@@ -13,7 +13,7 @@ struct FootageDetailPresentation: View {
     @StateObject var viewModel = FootageDetailViewModel()
     
     var body: some View {
-        VStack {
+        HStack {
             if viewModel.footageUIDString == "" {
                 loadingView
             }else {
@@ -26,7 +26,7 @@ struct FootageDetailPresentation: View {
                 }
             }
         }
-        .background(.blue)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
 //        .navigationDestination(for: UUID.self) { familyID in
 //            FishFamilyDetailPresentation(
 //                viewModel: createFishFamilyDetailViewModel(for: familyID))
@@ -42,14 +42,10 @@ struct FootageDetailPresentation: View {
     
     var loadingView: some View {
         VStack {
-            Spacer()
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle())
             Text("Loading...")
-            Spacer()
         }
-        .frame(width: 100, height: 100)
-        .background(.red)
     }
     
 }

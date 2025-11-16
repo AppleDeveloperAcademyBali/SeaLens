@@ -11,23 +11,28 @@ public struct RecentUploadsPresentation: View {
     @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
     @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
+    let columns = [
+        GridItem(.adaptive(minimum: 250))
+    ]
+    
     public var body: some View  {
         NavigationStack {
             ZStack (alignment: .bottom) {
                 VStack(alignment: .leading) {
                     RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel)
-                        .padding()
+                        .padding(.horizontal)
                     
                     ScrollView {
-                        FlowHStack {
+                        LazyVGrid(columns: columns, spacing: 16) {
                             ForEach(recentUploadsViewModel.footages) { footage in
                                 NavigationLink(value: footage) {
                                     FootageFolder(title: footage.filename)
-                                        .frame(width: 285, height: 170)
+                                        .padding(.horizontal)
                                 }
-                                .buttonStyle(.plain)
+                                .buttonStyle(HoverPressButtonStyle())
                             }
                         }
+                        .padding(.top, 8)
                         .padding(.bottom, 100)
                     }
                     .padding(.leading)
@@ -41,10 +46,8 @@ public struct RecentUploadsPresentation: View {
                         .padding(.vertical, 8)
                 }
                 .clipShape(Capsule())
-                .buttonStyle(.borderedProminent)
+                .glassEffect(.regular.tint(.blue.opacity(0.45)).interactive())
                 .padding(.bottom, 30)
-                
-
             }
             .padding()
             .navigationDestination(for: Footage.self) { footage in
@@ -57,5 +60,11 @@ public struct RecentUploadsPresentation: View {
         .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
             recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
+    }
+}
+
+struct EmptyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
     }
 }
