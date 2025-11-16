@@ -15,65 +15,19 @@ public struct RecentUploadsPresentation: View {
     @StateObject private var recentUploadsViewModel: RecentUploadsViewModel
     
     @State private var searchText: String = ""
+    @Binding var isUploadFormPresented: Bool
     
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, isUploadFormPresented: Binding<Bool>) {
         _recentUploadsViewModel = StateObject(wrappedValue: RecentUploadsViewModel(modelContext: modelContext))
+        _isUploadFormPresented = isUploadFormPresented
     }
     
     public var body: some View  {
         NavigationStack {
-            GeometryReader{ geometry in
+            ZStack (alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    HStack {
-                        VStack(alignment: .leading){
-                            Text("Recent Observations")
-                                .textstyles(.title1Emphasized)
-                                .padding(.bottom, 2)
-                            Text("􀉁 \(recentUploadsViewModel.footages.count) observations")
-                                .textstyles(.title3Regular)
-                                .foregroundColor(.secondary)
-                                .italic()
-                        }
-                        .padding(.bottom, 10)
-                        
-                        Spacer()
-                        
-                        HStack() {
-                            
-                            SearchBar(searchText: $searchText)
-                                
-                            Menu {
-                                Text("Sort By")
-                                Divider()
-                                
-                                Section("Date Taken") {
-                                    Button("Newest") {
-                                        recentUploadsViewModel.applySorting(sortOption: .dateTakenNewest)
-                                    }
-                                    Button("Oldest") {
-                                        recentUploadsViewModel.applySorting(sortOption: .dateTakenOldest)
-                                    }
-                                }
-                                
-                                Section("Filename"){
-                                    Button("Alphabetically (A-Z)") {
-                                        recentUploadsViewModel.applySorting(sortOption: .filenameAscending)
-                                    }
-                                    Button("Alphabetically (Z-A)") {
-                                        recentUploadsViewModel.applySorting(sortOption: .filenameDesscending)
-                                    }
-                                }
-                            } label: {
-                                Image("iconSort")
-                                    .clipShape(.circle)
-                                    .frame(width: 50, height: 50)
-                                    
-                            }
-                            .buttonStyle(.plain)
-
-                        }
-                    }
-                    .padding()
+                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel, searchText: $searchText)
+                        .padding()
                     
                     ScrollView {
                         FlowHStack {
@@ -82,11 +36,25 @@ public struct RecentUploadsPresentation: View {
                                     .frame(width: 285, height: 170)
                             }
                         }
+                        .padding(.bottom, 100)
                     }
+                    .padding(.leading)
                 }
-                .padding()
                 
+                Button {
+                    isUploadFormPresented.toggle()
+                } label: {
+                    Label("Upload Video", systemImage: "arrow.up.circle")
+                        .frame(width: 200)
+                        .padding(.vertical, 8)
+                }
+                .clipShape(Capsule())
+                .buttonStyle(.borderedProminent)
+                .padding(.bottom, 30)
+                
+
             }
+            .padding()
         }
         .task {
             await recentUploadsViewModel.loadFootages()
