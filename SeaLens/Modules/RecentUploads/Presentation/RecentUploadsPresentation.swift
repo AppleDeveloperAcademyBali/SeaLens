@@ -6,34 +6,26 @@
 //
 
 import SwiftUI
-import SwiftData
-import Foundation
-import AppKit
 
 public struct RecentUploadsPresentation: View {
-    @Environment(\.modelContext) private var modelContext
-    @StateObject private var recentUploadsViewModel: RecentUploadsViewModel
-    
-    @State private var searchText: String = ""
-    @Binding var isUploadFormPresented: Bool
-    
-    init(modelContext: ModelContext, isUploadFormPresented: Binding<Bool>) {
-        _recentUploadsViewModel = StateObject(wrappedValue: RecentUploadsViewModel(modelContext: modelContext))
-        _isUploadFormPresented = isUploadFormPresented
-    }
+    @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
+    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     public var body: some View  {
         NavigationStack {
             ZStack (alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel, searchText: $searchText)
+                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel)
                         .padding()
                     
                     ScrollView {
                         FlowHStack {
-                            ForEach(recentUploadsViewModel.footages) { upload in
-                                FootageFolder(destination: FishCollectionView(), title: upload.filename)
-                                    .frame(width: 285, height: 170)
+                            ForEach(recentUploadsViewModel.footages) { footage in
+                                NavigationLink(value: footage) {
+                                    FootageFolder(title: footage.filename)
+                                        .frame(width: 285, height: 170)
+                                }
+                                .buttonStyle(.plain)
                             }
                         }
                         .padding(.bottom, 100)
@@ -42,7 +34,7 @@ public struct RecentUploadsPresentation: View {
                 }
                 
                 Button {
-                    isUploadFormPresented.toggle()
+                    initialNavigationViewModel.showingUploadFootage()
                 } label: {
                     Label("Upload Video", systemImage: "arrow.up.circle")
                         .frame(width: 200)
@@ -55,12 +47,15 @@ public struct RecentUploadsPresentation: View {
 
             }
             .padding()
+            .navigationDestination(for: Footage.self) { footage in
+                FootageDetailPresentation()
+            }
         }
         .task {
             await recentUploadsViewModel.loadFootages()
         }
-        .onChange(of: searchText) { _ , _ in
-            recentUploadsViewModel.applySearching(searchText: searchText)
+        .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
+            recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
     }
 }

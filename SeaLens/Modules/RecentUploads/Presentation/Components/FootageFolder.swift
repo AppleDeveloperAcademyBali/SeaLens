@@ -8,29 +8,25 @@
 import Foundation
 import SwiftUI
 
-struct FootageFolder<Destination: View>: View {
-    var destination: Destination
+struct FootageFolder: View {
     
     var title: String
     
     var body: some View {
-        NavigationLink(destination: destination) {
-            ZStack {
-                Image("observationCard")
-                    .renderingMode(.original)
-                
-                VStack {
-                    Spacer()
-                    Text(title)
-                        .textstyles(.title2Regular)
-                        .lineLimit(2)
-                        .padding()
-                }
-                .frame(width: 285, height: 155, alignment: .leading)
+        ZStack {
+            Image("observationCard")
+                .renderingMode(.original)
+            
+            VStack {
+                Spacer()
+                Text(title)
+                    .textstyles(.title2Regular)
+                    .lineLimit(2)
+                    .padding()
             }
-            .padding()
-            .frame(width: 285, height: 155)
+            .frame(width: 285, height: 155, alignment: .leading)
         }
-        .buttonStyle(.plain)
+        .padding()
+        .frame(width: 285, height: 155)
     }
 }
