@@ -12,15 +12,16 @@ struct Sidebar: View {
     // a binding to track which sidebar item is currently selected
     @Binding var selection: String
     
-    //TODO: - Need to move to specific view
-    @MainActor var onClick: () -> Void
-    
     // list of sidebar items
     private let items: [(title: String, icon: String)] = [
-        ("Dashboard", "chart.xyaxis.line"),
-        ("Recent Observations", "clock"),
-        ("Fish Collection", "rectangle.grid.3x1"),
-        ("Upload Video", "tray.and.arrow.up.fill")
+        (SidebarType.dashboard.rawValue, "chart.xyaxis.line"),
+        (SidebarType.recents.rawValue, "clock"),
+
+    ]
+    
+    // development pages
+    private let devPages: [(title: String, icon: String)] = [
+        (SidebarType.mock.rawValue, "gear"),
 
     ]
     
@@ -35,11 +36,16 @@ struct Sidebar: View {
                     .tag(item.title)
             }
             
-            //TODO: - Need to move to specific view
-            Button("Review fish count") {
-                onClick()
+            #if DEBUG
+            Section {
+                Text("Development")
             }
-            .buttonStyle(.glass)
+            
+            ForEach(devPages, id: \.title) { devItem in
+                Label(devItem.title, systemImage: devItem.icon)
+                    .tag(devItem.title)
+            }
+            #endif
             
         }
         // macOS sidebar list appearance (collapsible & transparent)
@@ -52,7 +58,5 @@ struct Sidebar: View {
 }
 
 #Preview {
-    Sidebar(selection: .constant("Dashboard")) {
-        print("Clicked!")
-    }
+    Sidebar(selection: .constant("Dashboard"))
 }

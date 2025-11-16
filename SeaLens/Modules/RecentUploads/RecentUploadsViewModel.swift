@@ -11,18 +11,13 @@ import Observation
 
 @MainActor
 class RecentUploadsViewModel: ObservableObject {
-    private let modelContext: ModelContext
-    private let recentuploadDomain: RecentUploadsDomain
+    @Injected private var recentuploadDomain: RecentUploadsDomain
     
     @Published var footages: [Footage] = []
-    
     private var allFootages: [Footage] = []
     
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-        self.recentuploadDomain = RecentUploadsDomain(modelContext: modelContext)
-    }
-    
+    @Published var searchText: String = ""
+        
     func loadFootages() async
     {
         allFootages = await recentuploadDomain.retrieveFootages()

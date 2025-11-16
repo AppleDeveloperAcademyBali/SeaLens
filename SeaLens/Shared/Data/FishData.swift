@@ -11,7 +11,7 @@ import Foundation
 final class FishData {
     private let dataService: DataService
     
-    var fishes: [Fish] = []
+    var fishes: [FishImage] = []
     var errorMessage: String?
     
     init(dataService: DataService) {
@@ -25,25 +25,25 @@ final class FishData {
         errorMessage = nil
         
         do {
-            let sortDescriptors = [SortDescriptor(\Fish.imageUrl , order: .reverse)]
-            fishes = try await dataService.retrieve(Fish.self, predicate: nil, sortBy: sortDescriptors)
+            let sortDescriptors = [SortDescriptor(\FishImage.url , order: .reverse)]
+            fishes = try await dataService.retrieve(FishImage.self, predicate: nil, sortBy: sortDescriptors)
         } catch {
             errorMessage = "Failed to retrieve fish: \(error.localizedDescription)"
         }
     }
     
-    func retrieveFishes(predicate: Predicate<Fish>?, sortBy: [SortDescriptor<Fish>]?) async {
+    func retrieveFishes(predicate: Predicate<FishImage>?, sortBy: [SortDescriptor<FishImage>]?) async {
         errorMessage = nil
         
         do {
-            fishes = try await dataService.retrieve(Fish.self, predicate: predicate, sortBy: sortBy!)
+            fishes = try await dataService.retrieve(FishImage.self, predicate: predicate, sortBy: sortBy!)
         } catch {
             errorMessage = "Failed to retrieve fish: \(error.localizedDescription)"
         }
     }
     
     // CREATE FISH
-    func addFish(fish: Fish) async {
+    func addFish(fish: FishImage) async {
         
         await dataService.insert(fish)
         
@@ -55,7 +55,7 @@ final class FishData {
     }
     
     // UPDATE FISH
-    func updateFish(_ fish: Fish) async {
+    func updateFish(_ fish: FishImage) async {
         do {
             try await dataService.save()
         } catch {
@@ -64,7 +64,7 @@ final class FishData {
     }
     
     // DELETE FISH
-    func deleteFish(_ fish: Fish) async {
+    func deleteFish(_ fish: FishImage) async {
         await dataService.delete(fish)
         
         do {

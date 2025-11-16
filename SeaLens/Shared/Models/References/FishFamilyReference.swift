@@ -44,3 +44,31 @@ final class FishFamilyReference {
         self.fishFamilies = fishFamilies
     }
 }
+
+// MARK: - Mock Data
+extension FishFamilyReference {
+
+    static let mock: FishFamilyReference = FishFamilyReference(
+        latinName: "Pomacentridae",
+        commonName: "Damselfishes",
+        imageUrl: "https://example.com/families/pomacentridae.jpg",
+        sourceUrl: "https://example.com/reference/reef-fish",
+        attribution: "Allen, 2000",
+        fishSpeciesReferences: [],
+        fishFamilies: []
+    )
+
+    static var mockArray: [FishFamilyReference] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            FishFamilyReference(
+                latinName: ["Pomacentridae","Labridae","Chaetodontidae","Acanthuridae"].randomElement()!,
+                commonName: ["Damselfish","Wrasse","Butterflyfish","Surgeonfish"].randomElement()!,
+                imageUrl: "https://example.com/\(UUID.randomString()).jpg",
+                sourceUrl: "https://example.com/book/\(UUID.randomString())",
+                attribution: ["Allen (2000)", "Randall (1997)", "Myers (1999)"].randomElement()!,
+                fishSpeciesReferences: [],
+                fishFamilies: []
+            )
+        }
+    }
+}

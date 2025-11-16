@@ -1,5 +1,5 @@
 //
-//  Location.swift
+//  Transect.swift
 //  SeaLens
 //
 //  Created by IP Marry Kusuma on 06/11/25.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Location {
+final class Transect {
     @Attribute(.unique) var uid: UUID
     var name: String
     
@@ -22,3 +22,11 @@ final class Location {
     }
 }
 
+// MARK: - Mock Data
+extension Transect {
+    static var mockArray: [Transect] {
+        (0..<Int.random(in: 3...10)).map { _ in
+            Transect(name: "Transect \(Int.random(in: 1...10))")
+        }
+    }
+}

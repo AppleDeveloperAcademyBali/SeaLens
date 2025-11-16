@@ -42,7 +42,7 @@ struct FishFamilyDetailPresentation: View {
                             .textstyles(.title3Regular)
                     }
                     
-                    FishFamilyDetailGrid(fish: fishFamily.fish)
+//                    FishFamilyDetailGrid(fish: fishFamily.fish)
                 }
                 .padding(.horizontal, 30)
                 .padding(.vertical, 30)
