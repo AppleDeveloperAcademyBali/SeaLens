@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 
-final class UploadCompleteDomain {
+final class FootageDetailDomain {
     private let footageData: FootageData
     
     init(footageData: FootageData) {

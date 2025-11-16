@@ -9,10 +9,8 @@
 import SwiftUI
 import SwiftData
 
-
-
-struct UploadCompletePresentation: View {
-    @StateObject var viewModel: UploadCompleteViewModel
+struct FootageDetailPresentation: View {
+    @StateObject var viewModel: FootageDetailViewModel
     @Environment(\.modelContext) private var modelContext
     
     

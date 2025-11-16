@@ -39,6 +39,7 @@ public struct ContentView: View {
     
     //TODO: - Need to move to specific view
     func didDismiss() {
+        print("Its Dismissed")
         // Handle the dismissing action.
     }
     

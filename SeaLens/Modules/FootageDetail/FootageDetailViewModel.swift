@@ -11,16 +11,16 @@ import SwiftData
 
 
 @MainActor
-final class UploadCompleteViewModel: ObservableObject {
+final class FootageDetailViewModel: ObservableObject {
     
     @Published var footage: Footage?
     @Published var fishFamilies: [FishFamily] = []
     
-    private let domain: UploadCompleteDomain
+    private let domain: FootageDetailDomain
     private let footageUID: UUID
     
     // pass in the swiftdata context from the view
-    init(footageUID: UUID, domain: UploadCompleteDomain) {
+    init(footageUID: UUID, domain: FootageDetailDomain) {
         self.footageUID = footageUID
         self.domain = domain
     }
@@ -40,13 +40,13 @@ final class UploadCompleteViewModel: ObservableObject {
 
 
 
-extension UploadCompleteViewModel {
+extension FootageDetailViewModel {
     // convenience initializer for previews that doesn't require domain/data layer
     convenience init(footage: Footage) {
         // create a dummy domain - won't be used in preview
         let dataService = DataService(modelContainer: try! ModelContainer(for: Footage.self))
         let footageData = FootageData(dataService: dataService)
-        let domain = UploadCompleteDomain(footageData: footageData)
+        let domain = FootageDetailDomain(footageData: footageData)
         
         self.init(footageUID: footage.uid, domain: domain)
         
