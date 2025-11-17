@@ -53,13 +53,14 @@ struct RecentUploadHeaderView: View {
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 24, height: 24)
+                        .padding(8)
                         .clipShape(.circle)
                         
                 }
                 .buttonStyle(.plain)
                 .glassEffect()
-                .padding(.leading)
+                .padding(.leading, 8)
 
             }
         }

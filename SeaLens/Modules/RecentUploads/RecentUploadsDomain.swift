@@ -12,6 +12,7 @@ class RecentUploadsDomain {
     @Injected private var footageData: FootageData
     
     func retrieveFootages() async -> [Footage] {
+        //TODO: - Implement sorting based on the uploaded footage to server
         await footageData.retrieveFootages()
         return footageData.footages
     }

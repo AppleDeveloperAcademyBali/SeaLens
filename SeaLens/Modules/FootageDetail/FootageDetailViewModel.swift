@@ -19,6 +19,10 @@ final class FootageDetailViewModel: ObservableObject {
     @Published var footage: Footage?
     @Published var fishFamilies: [FishFamily] = []
     
+    init(footageUIDString: String) {
+        self.footageUIDString = footageUIDString
+    }
+    
     func loadFootage() {
         Task {
             if let uid = UUID(uuidString: footageUIDString),
@@ -30,5 +34,26 @@ final class FootageDetailViewModel: ObservableObject {
                 self.fishFamilies = []
             }
         }
+    }
+    
+    func loadFishFamilies() {
+        Task {
+            guard let uid = UUID(uuidString: footageUIDString),
+               let fetchedFishFamilies = await domain.getFootage(by: uid)?.fishFamily
+            else { return }
+            self.fishFamilies = fetchedFishFamilies
+        }
+    }
+    
+    func getTitle() -> String {
+        guard
+            let dateTaken = footage?.dateTaken,
+            let location = footage?.locationName
+        else { return "\(#function) called with nil data" }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        let formattedDate = formatter.string(from: dateTaken)
+        return "\(location) - \(formattedDate)"
     }
 }
