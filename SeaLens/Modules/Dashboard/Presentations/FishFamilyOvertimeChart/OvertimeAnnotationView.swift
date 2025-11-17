@@ -16,7 +16,11 @@ struct OvertimeAnnotationView: View {
     @State var selectedFilters: [String: Any]
     @State var dashboardViewModel: DashboardViewModel
     
+    @State var colorCodeSubtitle: String = ""
+    @State var buttonTitle: String = ""
     @State var chartData: [StringDataPoint] = []
+    
+    @State private var isLoading: Bool = true
     
     init(
         selectedFamilyName: String,
@@ -34,45 +38,50 @@ struct OvertimeAnnotationView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            ColorCode(
-                color: selectedColor,
-                title: dashboardViewModel.getTitleForAnnotation(fishFamily: selectedFamilyName, selectedMonth: selectedDate) ,
-                subtitle: dashboardViewModel.getSubtitleForAnnotation())
-            
-            // TODO: Key Insight
-            //Text("KEY INSIGHT")
-            //    .textstyles(.caption1Regular)
-            
-            Divider()
-            
-            Text("LOCATION BREAKDOWN")
-                .textstyles(.caption1Regular)
-            
-            // Bar Chart for each location
-            Chart(chartData) { dataPoint in
-                BarMark (
-                    x: .value("Number of Fish", dataPoint.value),
-                    y: .value("Location", dataPoint.name)
-                )
-            }
-            .padding()
-            .frame(height: 200)
-            
-            //Link to Recents Observations
-            NavigationLink(destination: FishCollectionView()) {
-                HStack {
-                    Text(dashboardViewModel.getButtonTitleForAnnotation())
-                        .textstyles(.bodyMedium)
-                        .foregroundColor(.white)
+            if isLoading {
+                ProgressView()
+                    .frame(height: 350)
+            } else {
+                ColorCode(
+                    color: selectedColor,
+                    title: dashboardViewModel.getTitleForAnnotation(fishFamily: selectedFamilyName, selectedMonth: selectedDate) ,
+                    subtitle: colorCodeSubtitle)
+                
+                // TODO: Key Insight
+                //Text("KEY INSIGHT")
+                //    .textstyles(.caption1Regular)
+                
+                Divider()
+                
+                Text("LOCATION BREAKDOWN")
+                    .textstyles(.caption1Regular)
+                
+                // Bar Chart for each location
+                Chart(chartData) { dataPoint in
+                    BarMark (
+                        x: .value("Number of Fish", dataPoint.value),
+                        y: .value("Location", dataPoint.name)
+                    )
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 30)
-                .background(Color.blue)
-                .cornerRadius(25)
-                .buttonStyle(.plain)
-                .foregroundStyle(Color.blue)
+                .padding()
+                .frame(height: 200)
+                
+                //Link to Recents Observations
+                NavigationLink(destination: FishCollectionView()) {
+                    HStack {
+                        Text(buttonTitle)
+                            .textstyles(.bodyMedium)
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 30)
+                    .background(Color.blue)
+                    .cornerRadius(25)
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Color.blue)
+                }
+                .buttonStyle(.borderless)
             }
-            .buttonStyle(.borderless)
         }
         .padding()
         .frame(width: 550)
@@ -83,7 +92,13 @@ struct OvertimeAnnotationView: View {
         }
         .onAppear() {
             Task {
-                chartData = await dashboardViewModel.processFamilyOverLocationChartData(selectedMonth: selectedDate, selectedFishFamily: selectedFamilyName, selectedFilters: selectedFilters)
+                isLoading = true
+                let result = await dashboardViewModel.processFamilyOverLocationChartData(selectedMonth: selectedDate, selectedFishFamily: selectedFamilyName, selectedFilters: selectedFilters)
+                
+                chartData = result.chartData
+                colorCodeSubtitle = result.subtitle
+                buttonTitle = result.buttonTitle
+                isLoading = false
             }
         }
     }
