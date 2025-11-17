@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Footage {
+final class Footage: Equatable {
     @Attribute(.unique) var uid: UUID
     var filename: String
     var originalFilename: String
@@ -20,6 +20,7 @@ final class Footage {
     var siteName: String
     var transect: String
     var depthInMeter: Double
+    var fileSize: Double // in bytes
     var dateCreated: Date
     var dateUpdated: Date
     
@@ -43,6 +44,7 @@ final class Footage {
         depthInMeter: Double,
         dateCreated: Date,
         dateUpdated: Date,
+        fileSize: Double,
         fishFamily: [FishFamily] = [],
         footageTags: [FootageTag] = [])
     {
@@ -58,6 +60,7 @@ final class Footage {
         self.depthInMeter = depthInMeter
         self.dateCreated = dateCreated
         self.dateUpdated = dateUpdated
+        self.fileSize = fileSize
         
         self.fishFamily = fishFamily
         self.footageTags = footageTags
@@ -80,6 +83,7 @@ extension Footage {
         depthInMeter: 8,
         dateCreated: .randomDaysAgo(40),
         dateUpdated: .randomDaysAgo(1),
+        fileSize: .random(in: 1000000...50000000),
         fishFamily: [],
         footageTags: []
     )
@@ -99,6 +103,7 @@ extension Footage {
                 depthInMeter: Double.random(in: 3...30),
                 dateCreated: .randomDaysAgo(Int.random(in: 10...250)),
                 dateUpdated: .randomDaysAgo(Int.random(in: 1...5)),
+                fileSize: .random(in: 1000000...50000000),
                 fishFamily: [],
                 footageTags: []
             )

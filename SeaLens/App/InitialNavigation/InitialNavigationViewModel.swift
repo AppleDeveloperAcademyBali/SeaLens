@@ -13,6 +13,7 @@ class InitialNavigationViewModel: ObservableObject {
     @Published var isShowingUploadFootage = false
     @Published var _sidebarSelection = SidebarType.recents.rawValue
     @Published var newFootageUid: UUID? = nil
+    @Published var isShowingReviewFish = false
 
     var sidebarSelection: String {
             get { _sidebarSelection }
@@ -41,5 +42,13 @@ class InitialNavigationViewModel: ObservableObject {
     
     func resetNewFootageUid() async {
         newFootageUid = nil
+    }
+    
+    func dismissReviewFish() {
+        isShowingReviewFish = false
+    }
+    
+    func showingReviewFish() {
+        isShowingReviewFish = true
     }
 }

@@ -13,32 +13,38 @@ public struct ContentView: View {
                     Sidebar(selection: $initialNavigationViewModel.sidebarSelection)
                 },
                 detail: {
-                    
+                    NavigationStack (path: $recentPath) {
                         Group {
                             switch initialNavigationViewModel.sidebarSelection {
                             case SidebarType.dashboard.rawValue:
                                 DashboardPresentation(modelContext: modelContext)
                             case SidebarType.recents.rawValue:
-                                NavigationStack (path: $recentPath) {
-                                    RecentUploadsPresentation(
-                                        initialNavigationViewModel: initialNavigationViewModel)
-                                    .navigationDestination(for: String.self) { uidString in
-                                        let footageDetailViewModel = FootageDetailViewModel(footageUIDString: uidString)
-                                        FootageDetailPresentation(viewModel: footageDetailViewModel)
-                                    }
-                                }
+                                RecentUploadsPresentation(
+                                    initialNavigationViewModel: initialNavigationViewModel)
                             case SidebarType.mock.rawValue:
                                 MockDataView()
                             default:
                                 Text("Unknown Section")
                             }
                         }
-                        
+                        .navigationDestination(for: String.self) { uidString in
+                            let footageDetailViewModel = FootageDetailViewModel(footageUIDString: uidString)
+                            FootageDetailPresentation(
+                                viewModel: footageDetailViewModel,
+                                initialNavigationViewModel: initialNavigationViewModel
+                            )
+                        }
                     }
+                }
                 
             )
             .sheet(isPresented: $initialNavigationViewModel.isShowingUploadFootage, onDismiss: didDismiss) {
                 UploadVideoPresentation(initialNavigationViewModel: initialNavigationViewModel)
+                    .frame(width: geometry.size.width - 100,
+                           height: geometry.size.height - 100)
+            }
+            .sheet(isPresented: $initialNavigationViewModel.isShowingReviewFish) {
+                ReviewFishPresentation(isShowingSheet: $initialNavigationViewModel.isShowingReviewFish)
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
@@ -59,12 +65,6 @@ public struct ContentView: View {
         // Handle the dismissing action.
     }
     
-    //    func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
-    //        let dataService = DataService(modelContainer: modelContext.container)
-    //        let footageData = FootageData(dataService: dataService)
-    //        let domain = UploadCompleteDomain(footageData: footageData)
-    //        return UploadCompleteViewModel(footageUID: footageUID, domain: domain)
-    //    }
 }
 
 
