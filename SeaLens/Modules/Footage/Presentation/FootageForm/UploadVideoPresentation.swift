@@ -86,22 +86,7 @@ struct UploadVideoPresentation: View {
                 }
             }
         }
-<<<<<<< HEAD
-        .navigationDestination(for: UUID.self) { familyID in
-            Text("Big")
-//            FishFamilyDetailPresentation(
-//                viewModel: createFishFamilyDetailViewModel(for: familyID))
-            
-            
-        }
-        .navigationDestination(isPresented: $navigateToComplete) {
-            if let footageUID = viewModel.uploadedFootageUID {
-                UploadCompletePresentation(
-                    viewModel: createUploadCompleteViewModel(for: footageUID)
-                )
-            }
-        }
-=======
+
 //        .navigationDestination(for: UUID.self) { familyID in
 //            Text("Big")
 ////            FishFamilyDetailPresentation(
@@ -117,7 +102,6 @@ struct UploadVideoPresentation: View {
 //            }
 //        }
 
->>>>>>> development
 
 
 
@@ -134,16 +118,7 @@ struct UploadVideoPresentation: View {
         let domain = FishFamilyDetailDomain(modelContext: modelContext)
         return FishFamilyDetailViewModel(fishFamilyID: familyID, domain: domain)
     }
-    
-<<<<<<< HEAD
-    private func createFishFamilyDetailViewModel(for familyID: UUID) -> FishFamilyDetailViewModel {
-        let domain = FishFamilyDetailDomain(modelContext: modelContext)
-        return FishFamilyDetailViewModel(fishFamilyID: familyID, domain: domain)
-    }
-    
-=======
->>>>>>> development
-    
+        
 
 
     

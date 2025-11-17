@@ -32,3 +32,14 @@ final class FootageDetailViewModel: ObservableObject {
         }
     }
 }
+
+// MARK: - Preview
+extension FootageDetailViewModel {
+    static var preview: FootageDetailViewModel {
+        let vm = FootageDetailViewModel()
+        vm.footage = .mock
+        vm.fishFamilies = [] // add mock families if needed
+        vm.footageUIDString = vm.footage?.uid.uuidString ?? ""
+        return vm
+    }
+}
