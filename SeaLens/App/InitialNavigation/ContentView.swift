@@ -21,6 +21,8 @@ public struct ContentView: View {
                         RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel)
                     case SidebarType.mock.rawValue:
                         MockDataView()
+                    case SidebarType.testImageDetail.rawValue:
+                        TestImageDetailLoaderView()
                     default:
                         Text("Unknown Section")
                     }

@@ -10,39 +10,23 @@ import SwiftUI
 import SwiftData
 
 struct ImageDetailPresentation: View {
-    
-    @StateObject var viewModel = ImageDetailViewModel()
-    
 
-   
+    @StateObject var vm: ImageDetailViewModel
+
+    init(fishImageUID: UUID) {
+        _vm = StateObject(wrappedValue: ImageDetailViewModel(fishImageUID: fishImageUID))
+    }
+
     var body: some View {
-        VStack {
-            if viewModel.fishImageUIDString == "" {
-                loadingView
-            } else {
-                VStack(alignment: .leading, spacing: 1) {
-                    ImageDetailHeaderView(vm: viewModel)
-                    
-                    
-                    Spacer()
-                }
-            }
-        }
-        .background(.blue)
-    }
-    
-    
-    var loadingView: some View {
-        VStack {
-            Spacer()
-            ProgressView()
-                .progressViewStyle(CircularProgressViewStyle())
-            Text("Loading...")
+        VStack(alignment: .leading, spacing: 16) {
+
+            ImageDetailHeaderView(vm: vm)
+
+            ImageDetailGalleryView(vm: vm)
+
             Spacer()
         }
-        .frame(width: 100, height: 100)
-        .background(.red)
+        .padding()
     }
-    
 }
 

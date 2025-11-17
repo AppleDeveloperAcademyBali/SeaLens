@@ -15,10 +15,9 @@ final class ImageDetailViewModel: ObservableObject {
     
     @Injected private var domain: ImageDetailDomain
 
-
     
     // input
-    @Published var fishImageUIDString: String = ""
+    private var fishImageUID: UUID?
 
     // output
     @Published var fish: Fish?
@@ -26,12 +25,21 @@ final class ImageDetailViewModel: ObservableObject {
     @Published var images: [FishImage] = []
     @Published var selectedImage: FishImage?
     
+    
+    // MARK: - Initializers
+    init() { }
+    
+    init(fishImageUID: UUID) {
+        self.fishImageUID = fishImageUID
+        loadImageDetail()
+    }
+    
 
     
     // MARK: - Load Image
     func loadImageDetail() {
         Task {
-            guard let uid = UUID(uuidString: fishImageUIDString),
+            guard let uid = fishImageUID,
                   let image = await domain.getFishImage(by: uid) else {
                 clear()
                 return
@@ -65,7 +73,7 @@ extension ImageDetailViewModel {
         vm.selectedImage = mockFish.fishImages.first
         vm.fish = mockFish
         vm.species = mockFish.fishSpeciesReference
-        vm.fishImageUIDString = vm.selectedImage?.uid.uuidString ?? ""
+        vm.fishImageUID = vm.selectedImage?.uid
         return vm
     }
 }

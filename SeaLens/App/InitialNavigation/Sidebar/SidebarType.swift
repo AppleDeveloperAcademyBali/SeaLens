@@ -11,4 +11,5 @@ enum SidebarType: String {
     case dashboard = "Dashboard"
     case recents = "Recents"
     case mock = "Mock Data"
+    case testImageDetail = "Test Image Detail"
 }

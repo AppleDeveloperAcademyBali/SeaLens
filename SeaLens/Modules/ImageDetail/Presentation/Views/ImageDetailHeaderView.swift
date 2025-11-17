@@ -12,6 +12,7 @@ struct ImageDetailHeaderView: View {
     
     @ObservedObject var vm: ImageDetailViewModel
     
+    
     var body: some View {
         
         HStack {
@@ -27,10 +28,16 @@ struct ImageDetailHeaderView: View {
                     .clipShape(Circle())
             }
             
-            Text(vm.species?.commonName ?? "")
-                .textstyles(.largeTitleEmphasized)
+//            Text(vm.species?.commonName ?? "")
+//                .textstyles(.largeTitleEmphasized)
+//            
+//            Text("(\(vm.species?.latinName ?? ""))")
+//                .textstyles(.bodyRegular)
             
-            Text("(\(vm.species?.latinName ?? ""))")
+            Text("Clownfish")
+                .textstyles(.largeTitleEmphasized)
+
+            Text("(Amphiprioninae)")
                 .textstyles(.bodyRegular)
             
             Spacer()
@@ -62,6 +69,37 @@ struct ImageDetailHeaderView: View {
 }
 
 #Preview {
-    ImageDetailHeaderView(vm: .preview)
-        .frame(width: 1200, height: 800)
+    HStack {
+        Button {
+        } label: {
+            Image(systemName: "chevron.left")
+                .padding(8)
+                .background(.ultraThinMaterial)
+                .clipShape(Circle())
+        }
+        .clipShape(Circle())
+        
+        Text("Clownfish")
+            .textstyles(.largeTitleEmphasized)
+
+        Text("(Amphiprioninae)")
+            .textstyles(.bodyRegular)
+        
+        Spacer()
+        
+        Button {
+        } label: {
+            HStack {
+                Text("About this item")
+                Image(systemName: "info.circle")
+            }
+        }
+        
+        Button {
+        } label: {
+            Image(systemName: "arrow.down.circle")
+        }
+    }
+    .frame(width: 1200, height: 200)
+    .padding()
 }
