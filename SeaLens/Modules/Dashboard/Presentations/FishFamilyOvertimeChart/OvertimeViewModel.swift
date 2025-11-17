@@ -10,8 +10,10 @@ import SwiftUI
 
 class OvertimeViewModel: ObservableObject {
     func getColorForFamily(_ family: String) -> Color {
-        let colors: [Color] = [.blue, .green, .orange, .red, .purple, .pink, .yellow, .cyan]
-        let index = abs(family.hashValue) % colors.count
-        return colors[index]
+        if let color = ChartConstants.focusedFishFamily[family] {
+            return color
+        }
+        
+        return Color.red
     }
 }

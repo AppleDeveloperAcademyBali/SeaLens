@@ -12,16 +12,21 @@ import Charts
 struct FishFamilyOvertimeChartView: View {
     @Environment(\.modelContext) private var modelContext
     
-    @State var seriesChartData: [SeriesOvertimeChart] = []
-    @State var selectedFilters: [String: Any] = [:]
-    /*@State private var selectedDate: Date?
+    var seriesChartData: [SeriesOvertimeChart] = []
+    var selectedFilters: [String: Any] = [:]
+    
+    @State private var selectedDate: Date?
     @State private var selectedFamily: String?
     @State private var selectedColor: Color?
-    @State private var selectedValue: Int?*/
+    @State private var selectedValue: Int?
     
     @State private var persistentSelectedPoint: DateDataPoint?
     @State private var persistentSelectedFamily: String?
     @State private var persistentSelectedColor: Color?
+    
+    // Store the tap location for annotation positioning
+    @State private var annotationPosition: CGPoint?
+    @State private var chartGeometry: GeometryProxy?
     
     private var overtimeViewModel = OvertimeViewModel()
     
@@ -46,58 +51,68 @@ struct FishFamilyOvertimeChartView: View {
     
     @ViewBuilder
     private var chartView: some View {
-        Chart {
-            ForEach(seriesChartData) { familyData in
-                ForEach(familyData.chartData) { point in
-                    lineMarkChart(point, familyData)
-                }
-            }
-            
-            // Rule mark for vertical line - Use persistent state
-            if let selectedDate = persistentSelectedPoint?.date {
-                RuleMark(x: .value("Date", selectedDate))
-                    .foregroundStyle(.gray.opacity(0.5))
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
-            }
-        }
-        .chartOverlay { chartProxy in
-            GeometryReader { geometry in
-                Rectangle()
-                    .fill(.clear)
-                    .contentShape(Rectangle())
-                    .gesture(
-                        SpatialTapGesture()
-                            .onEnded { event in
-                                handleTap(at: event.location , in: geometry, chartProxy: chartProxy)
-                            }
-                    )
-            }
-        }
-        .chartXAxis {
-            AxisMarks(values: .stride(by: .month)) { value in
-                if let date = value.as(Date.self) {
-                    AxisValueLabel {
-                        Text(date, format: .dateTime.month(.abbreviated).year())
+        ZStack(alignment: .topLeading) {
+            Chart {
+                ForEach(seriesChartData) { familyData in
+                    ForEach(familyData.chartData) { point in
+                        lineMarkChart(point, familyData)
                     }
                 }
-                AxisGridLine()
-                AxisTick()
+                
+                // Rule mark for vertical line - Use persistent state
+                if let selectedDate = persistentSelectedPoint?.date {
+                    RuleMark(x: .value("Date", selectedDate))
+                        .foregroundStyle(.gray.opacity(0.5))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
+                }
             }
-        }
-        .chartYAxis {
-            AxisMarks(position: .leading) { value in
-                AxisValueLabel()
-                AxisGridLine()
+            .chartForegroundStyleScale(
+                domain: seriesChartData.map { $0.seriesName },
+                range: seriesChartData.map { $0.seriesColor })
+            .chartOverlay { chartProxy in
+                GeometryReader { geometry in
+                    Rectangle()
+                        .fill(.clear)
+                        .contentShape(Rectangle())
+                        .gesture(
+                            SpatialTapGesture()
+                                .onEnded { event in
+                                    handleTap(at: event.location, in: geometry, chartProxy: chartProxy)
+                                }
+                        )
+                        .onAppear {
+                            chartGeometry = geometry
+                        }
+                }
             }
-        }
-        .chartYAxisLabel("Number of Fish Detected")
-        .chartLegend(position: .bottom, alignment: .leading)
-        .frame(height: 300)
-        .padding()
-        .overlay(alignment: .topLeading) {
+            .chartXAxis {
+                AxisMarks(values: .stride(by: .month)) { value in
+                    if let date = value.as(Date.self) {
+                        AxisValueLabel {
+                            Text(date, format: .dateTime.month(.abbreviated).year())
+                        }
+                    }
+                    AxisGridLine()
+                    AxisTick()
+                }
+            }
+            .chartYAxis {
+                AxisMarks(position: .leading) { value in
+                    AxisValueLabel()
+                    AxisGridLine()
+                }
+            }
+            .chartYAxisLabel("Number of Fish Detected")
+            .chartLegend(position: .bottom, alignment: .leading)
+            .frame(height: 300)
+            .padding()
+            
+            // Annotation overlay with dynamic positioning
             if let selectedFamily = persistentSelectedFamily,
                let selectedPoint = persistentSelectedPoint,
-               let selectedColor = persistentSelectedColor
+               let selectedColor = persistentSelectedColor,
+               let position = annotationPosition,
+               let geometry = chartGeometry
             {
                 OvertimeAnnotationView(
                     selectedFamilyName: selectedFamily,
@@ -109,12 +124,15 @@ struct FishFamilyOvertimeChartView: View {
                 )
                 .padding(8)
                 .background(
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: 30)
                         .fill(.white)
                         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                 )
-                .padding(.leading, 40)
-                .padding(.top, 20)
+                .fixedSize()
+                .position(
+                    x: calculateAnnotationX(position: position, geometry: geometry),
+                    y: calculateAnnotationY(position: position, geometry: geometry)
+                )
                 .transition(.opacity.combined(with: .scale(scale: 0.95)))
                 .animation(.easeInOut(duration: 0.15), value: selectedFamily)
                 .animation(.easeInOut(duration: 0.15), value: selectedPoint.date)
@@ -162,6 +180,9 @@ struct FishFamilyOvertimeChartView: View {
             return
         }
         
+        // Store the tap location
+        annotationPosition = location
+        
         findClosestDataPoint(to: date, yValue: yValue)
     }
     
@@ -192,18 +213,58 @@ struct FishFamilyOvertimeChartView: View {
             }
         }
         
-        if closestDistance < 10,
+        // Only update if we found a reasonably close point
+        if closestDistance < 10, // Adjust threshold as needed
            let family = closestFamily,
            let value = closestValue,
            let pointDate = closestDate {
             
-            // Update persistent state with animation
             withAnimation(.easeInOut(duration: 0.15)) {
-                persistentSelectedFamily = family
                 persistentSelectedPoint = DateDataPoint(date: pointDate, value: value, monthOfYear: ChartConstants.formatMonthYear(pointDate))
+                persistentSelectedFamily = family
                 persistentSelectedColor = overtimeViewModel.getColorForFamily(family)
             }
         }
+    }
+    
+    private func calculateAnnotationX(position: CGPoint, geometry: GeometryProxy) -> CGFloat {
+        let annotationWidth: CGFloat = 550 // Width from OvertimeAnnotationView
+        let padding: CGFloat = 20
+        
+        // Try to position to the right of the cursor
+        var xPos = position.x + annotationWidth / 2 + padding
+        
+        // If it would go off the right edge, position to the left instead
+        if xPos + annotationWidth / 2 > geometry.size.width {
+            xPos = position.x - annotationWidth / 2 - padding
+        }
+        
+        // Ensure it doesn't go off the left edge
+        if xPos - annotationWidth / 2 < 0 {
+            xPos = annotationWidth / 2 + padding
+        }
+        
+        return xPos
+    }
+    
+    private func calculateAnnotationY(position: CGPoint, geometry: GeometryProxy) -> CGFloat {
+        let estimatedAnnotationHeight: CGFloat = 400 // Approximate height
+        let padding: CGFloat = 20
+        
+        // Try to center vertically around the click point
+        var yPos = position.y
+        
+        // If it would go off the bottom, move it up
+        if yPos + estimatedAnnotationHeight / 2 > geometry.size.height {
+            yPos = geometry.size.height - estimatedAnnotationHeight / 2 - padding
+        }
+        
+        // If it would go off the top, move it down
+        if yPos - estimatedAnnotationHeight / 2 < 0 {
+            yPos = estimatedAnnotationHeight / 2 + padding
+        }
+        
+        return yPos
     }
     
     private func clearSelection() {
@@ -211,9 +272,9 @@ struct FishFamilyOvertimeChartView: View {
             persistentSelectedPoint = nil
             persistentSelectedFamily = nil
             persistentSelectedColor = nil
+            annotationPosition = nil
         }
     }
-
 }
 
 

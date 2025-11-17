@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct SeriesOvertimeChart: Identifiable {
     var seriesName: String
     var chartData: [DateDataPoint]
+    var seriesColor: Color = .blue
     
     var id : String { seriesName }
 }

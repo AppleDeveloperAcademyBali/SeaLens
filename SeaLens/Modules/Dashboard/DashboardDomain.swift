@@ -76,7 +76,9 @@ class DashboardDomain: ObservableObject {
                     dataPoints.append(point)
                 }
                 
-                seriesChartData.append(SeriesOvertimeChart(seriesName: familyRef.commonName, chartData: dataPoints))
+                var seriesColor = ChartConstants.focusedFishFamily[familyRef.commonName] ?? .red
+                
+                seriesChartData.append(SeriesOvertimeChart(seriesName: familyRef.commonName, chartData: dataPoints, seriesColor: seriesColor))
             }
             
             // Append real data

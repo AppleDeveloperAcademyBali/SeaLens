@@ -46,7 +46,7 @@ struct OvertimeAnnotationView: View {
                 ProgressView()
                     .frame(height: 350)
             } else {
-                HStack {
+                HStack(alignment: .top) {
                     ColorCode(
                         color: selectedColor,
                         title: dashboardViewModel.getTitleForAnnotation(fishFamily: selectedFamilyName, selectedMonth: selectedDate) ,
