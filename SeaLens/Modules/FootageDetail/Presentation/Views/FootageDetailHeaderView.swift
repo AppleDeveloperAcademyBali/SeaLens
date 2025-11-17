@@ -7,17 +7,26 @@
 import SwiftUI
 
 struct FootageDetailHeaderView: View {
-    @ObservedObject var FootageDetailViewModel: FootageDetailViewModel
+    @ObservedObject var footageDetailViewModel: FootageDetailViewModel
     
     var body: some View {
-        VStack {
+        VStack (alignment: .leading) {
             HStack {
-                Text("Upload Complete")
+                Text(footageDetailViewModel.getTitle())
                     .textstyles(.title1Emphasized)
-
-                if let name = FootageDetailViewModel.footage?.filename  {
-                    VideoTag(fileName: name)
+                
+                Button {
+                    print("Pop Up Info")
+                } label: {
+                    Image(systemName: "info.circle")
+                        .textstyles(.title3Medium)
+                        .foregroundStyle(.blue)
+                        .padding(4)
+                        
                 }
+                .glassEffect()
+                .clipShape(Circle())
+
             }
 
             HStack {

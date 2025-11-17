@@ -10,19 +10,9 @@ import SwiftData
 
 struct UploadVideoPresentation: View {
     
-    @StateObject var viewModel: UploadVideoViewModel
-    @Environment(\.modelContext) private var modelContext
-    @Binding var isPresented: Bool
-    @State private var navigateToComplete = false
+    @StateObject var viewModel = UploadVideoViewModel()
+    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
-    init(modelContext: ModelContext, isPresented: Binding<Bool>) {
-        let dataService = DataService(modelContainer: modelContext.container)
-        let uploadVideoData = UploadVideoData(dataService: dataService)
-        let uploadVideoDomain = UploadVideoDomain(uploadVideoData: uploadVideoData)
-        _viewModel = StateObject(wrappedValue: UploadVideoViewModel(uploadVideoDomain: uploadVideoDomain))
-        _isPresented = isPresented
-    }
-
     var body: some View {
         ScrollView {
             VStack (alignment: .leading) {
@@ -41,7 +31,7 @@ struct UploadVideoPresentation: View {
                     Spacer()
                     
                     Button {
-                        isPresented.toggle()
+                        initialNavigationViewModel.dismissUploadFootage()
                     } label: {
                         Image(systemName: "xmark")
                             .resizable()
@@ -82,7 +72,8 @@ struct UploadVideoPresentation: View {
             .padding(.horizontal,12)
             .onChange(of: viewModel.uploadSucceded) { _, newValue in
                 if newValue {
-                    navigateToComplete = true
+                    guard let footageUID = viewModel.uploadedFootageUID else { return }
+                    initialNavigationViewModel.submittedFootage(uid: footageUID)
                 }
             }
         }
@@ -101,25 +92,5 @@ struct UploadVideoPresentation: View {
 //            }
 //        }
 
-
-
     }
-    
-//    private func createUploadCompleteViewModel(for footageUID: UUID) -> FootageDetailViewModel {
-//        let dataService = DataService(modelContainer: modelContext.container)
-//        let footageData = FootageData(dataService: dataService)
-//        let domain = FootageDetailDomain(footageData: footageData)
-//        return FootageDetailViewModel(footageUID: footageUID, domain: domain)
-//    }
-    
-    private func createFishFamilyDetailViewModel(for familyID: UUID) -> FishFamilyDetailViewModel {
-        let domain = FishFamilyDetailDomain(modelContext: modelContext)
-        return FishFamilyDetailViewModel(fishFamilyID: familyID, domain: domain)
-    }
-    
-    
-
-
-    
-    
 }

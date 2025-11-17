@@ -8,13 +8,8 @@
 import Foundation
 
 struct UploadVideoDomain {
-    
-    let uploadVideoData: UploadVideoData
-    
-    init(uploadVideoData: UploadVideoData) {
-        self.uploadVideoData = uploadVideoData
-    }
-        
+    @Injected var uploadVideoData: UploadVideoData
+            
     // MARK: - Upload Video
     func uploadVideo(fileURL: URL,
                      progress: @escaping (Double) -> Void,
