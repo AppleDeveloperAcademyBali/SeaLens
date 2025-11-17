@@ -19,8 +19,7 @@ public struct RecentUploadsPresentation: View {
         ZStack (alignment: .bottom) {
             VStack(alignment: .leading) {
                 RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel)
-                    .padding(.horizontal)
-                
+                //
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(recentUploadsViewModel.footages) { footage in
@@ -34,7 +33,6 @@ public struct RecentUploadsPresentation: View {
                     .padding(.top, 8)
                     .padding(.bottom, 100)
                 }
-                .padding(.leading)
             }
             
             Button {
