@@ -56,4 +56,5 @@ final class FootageDetailViewModel: ObservableObject {
         let formattedDate = formatter.string(from: dateTaken)
         return "\(location) - \(formattedDate)"
     }
+    
 }

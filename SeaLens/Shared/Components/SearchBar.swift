@@ -19,10 +19,10 @@ struct SearchBar: View {
             Spacer()
             
             Image(systemName: "magnifyingglass")
-                .frame(width: 25, height: 50)
+                .frame(width: 25, height: 40)
         }
         .padding()
-        .frame(width: 300, height: 50)
+        .frame(width: 300, height: 40)
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color.gray, lineWidth: 1)

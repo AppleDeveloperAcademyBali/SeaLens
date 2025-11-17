@@ -11,6 +11,7 @@ import SwiftData
 
 struct FootageDetailPresentation: View {
     @ObservedObject var viewModel: FootageDetailViewModel
+    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     var body: some View {
         HStack {
@@ -18,9 +19,12 @@ struct FootageDetailPresentation: View {
                 loadingView
             }else {
                 VStack(alignment: .leading, spacing: 1) {                    
-                    FootageDetailHeaderView(footageDetailViewModel: viewModel)
+                    FootageDetailHeaderView(
+                        footageDetailViewModel: viewModel,
+                        initialNavigationViewModel: initialNavigationViewModel
+                    )
                     
-                    FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
+//                    FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
 
                     Spacer()
                 }
@@ -29,11 +33,6 @@ struct FootageDetailPresentation: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .padding()
         .navigationTitle(viewModel.footage?.filename ?? "No Footage")
-//        .navigationDestination(for: UUID.self) { familyID in
-//            FishFamilyDetailPresentation(
-//                viewModel: createFishFamilyDetailViewModel(for: familyID))
-//            
-//        }
         .onAppear {
             viewModel.loadFootage()
         }

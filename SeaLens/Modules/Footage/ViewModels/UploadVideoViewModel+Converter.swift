@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVFoundation
 
 extension UploadVideoViewModel {
     func createFootage() -> Footage {
@@ -15,14 +16,15 @@ extension UploadVideoViewModel {
             originalFilename: self.originalFileName,
             //TODO: What kind of url is it?
             url: self.selectedFileURL?.absoluteString ?? "",
-            durationInSeconds: parseTimeToSeconds(self.fileDuration) ?? 0,
-            dateTaken: parseDate(self.date) ?? Date(),
+            durationInSeconds: Int32(rawFileDuration),
+            dateTaken: self.rawDateTaken,
             location: self.location,
             siteName: self.site,
             transect: self.transect,
             depthInMeter: Double(self.depth) ?? 0,
             dateCreated: Date(),
-            dateUpdated: Date()
+            dateUpdated: Date(),
+            fileSize: self.rawFileSize
         )
         let customTags = self.tags.map { tag in
             FootageTag(uid: UUID(), name: tag, footage: footage)
@@ -76,6 +78,34 @@ extension UploadVideoViewModel {
                 transect.name
             })
         }
+    }
+    
+    // MARK: - Helper Functions
+    // format time
+    func formatDuration(_ time: Double) -> String {
+        let minutes = Int(time) / 60
+        let seconds = Int(time) % 60
+        return "\(minutes)m \(seconds)s"
+    }
+    
+    // format date
+    func formatCreationDate(_ date: Date?) -> String {
+        guard let date else { return "Unknown" }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+    
+    // format file size
+    func formatFileSize(for url: URL) -> String {
+        guard let fileSizeValue = try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
+            return "Unknown"
+        }
+        
+        let bytes = Double(fileSizeValue)
+        let megaBytes = bytes / (1024 * 1024)
+        return String(format: "%.1f MB", megaBytes)
     }
     
 }
