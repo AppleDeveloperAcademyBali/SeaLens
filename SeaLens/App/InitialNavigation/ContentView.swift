@@ -13,25 +13,28 @@ public struct ContentView: View {
                     Sidebar(selection: $initialNavigationViewModel.sidebarSelection)
                 },
                 detail: {
-                    switch initialNavigationViewModel.sidebarSelection {
-                    case SidebarType.dashboard.rawValue:
-                        DashboardPresentation(modelContext: modelContext)
-                    case SidebarType.recents.rawValue:
-                        NavigationStack (path: $recentPath) {
-                            RecentUploadsPresentation(
-                                initialNavigationViewModel: initialNavigationViewModel)
-                            .navigationTitle(Text("Recent Uploads"))
-                            .navigationDestination(for: String.self) { uidString in
-                                let footageDetailViewModel = FootageDetailViewModel(footageUIDString: uidString)
-                                FootageDetailPresentation(viewModel: footageDetailViewModel)
+                    
+                        Group {
+                            switch initialNavigationViewModel.sidebarSelection {
+                            case SidebarType.dashboard.rawValue:
+                                DashboardPresentation(modelContext: modelContext)
+                            case SidebarType.recents.rawValue:
+                                NavigationStack (path: $recentPath) {
+                                    RecentUploadsPresentation(
+                                        initialNavigationViewModel: initialNavigationViewModel)
+                                    .navigationDestination(for: String.self) { uidString in
+                                        let footageDetailViewModel = FootageDetailViewModel(footageUIDString: uidString)
+                                        FootageDetailPresentation(viewModel: footageDetailViewModel)
+                                    }
+                                }
+                            case SidebarType.mock.rawValue:
+                                MockDataView()
+                            default:
+                                Text("Unknown Section")
                             }
                         }
-                    case SidebarType.mock.rawValue:
-                        MockDataView()
-                    default:
-                        Text("Unknown Section")
+                        
                     }
-                }
                 
             )
             .sheet(isPresented: $initialNavigationViewModel.isShowingUploadFootage, onDismiss: didDismiss) {
@@ -42,7 +45,11 @@ public struct ContentView: View {
         }
         .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
             guard let footageUid = newValue else { return }
-            recentPath.append(footageUid)
+            Task {
+                recentPath.append(footageUid.uuidString)
+                await initialNavigationViewModel.resetNewFootageUid()
+            }
+            
         }
     }
     
@@ -52,12 +59,12 @@ public struct ContentView: View {
         // Handle the dismissing action.
     }
     
-//    func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
-//        let dataService = DataService(modelContainer: modelContext.container)
-//        let footageData = FootageData(dataService: dataService)
-//        let domain = UploadCompleteDomain(footageData: footageData)
-//        return UploadCompleteViewModel(footageUID: footageUID, domain: domain)
-//    }
+    //    func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
+    //        let dataService = DataService(modelContainer: modelContext.container)
+    //        let footageData = FootageData(dataService: dataService)
+    //        let domain = UploadCompleteDomain(footageData: footageData)
+    //        return UploadCompleteViewModel(footageUID: footageUID, domain: domain)
+    //    }
 }
 
 

@@ -38,4 +38,8 @@ class InitialNavigationViewModel: ObservableObject {
         //
         dismissUploadFootage()
     }
+    
+    func resetNewFootageUid() async {
+        newFootageUid = nil
+    }
 }
