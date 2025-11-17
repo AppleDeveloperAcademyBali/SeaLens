@@ -22,18 +22,22 @@ struct OvertimeAnnotationView: View {
     
     @State private var isLoading: Bool = true
     
+    var onDismiss: () -> Void
+    
     init(
         selectedFamilyName: String,
         selectedDate: Date,
         selectedColor: Color,
         selectedFilters: [String: Any],
-        modelContext: ModelContext)
+        modelContext: ModelContext,
+        onDismiss: @escaping () -> Void)
     {
         self.selectedFamilyName = selectedFamilyName
         self.selectedDate = selectedDate
         self.selectedColor = selectedColor
         self.selectedFilters = selectedFilters
         self.dashboardViewModel = DashboardViewModel(modelContext: modelContext)
+        self.onDismiss = onDismiss
     }
     
     var body: some View {
@@ -42,10 +46,20 @@ struct OvertimeAnnotationView: View {
                 ProgressView()
                     .frame(height: 350)
             } else {
-                ColorCode(
-                    color: selectedColor,
-                    title: dashboardViewModel.getTitleForAnnotation(fishFamily: selectedFamilyName, selectedMonth: selectedDate) ,
-                    subtitle: colorCodeSubtitle)
+                HStack {
+                    ColorCode(
+                        color: selectedColor,
+                        title: dashboardViewModel.getTitleForAnnotation(fishFamily: selectedFamilyName, selectedMonth: selectedDate) ,
+                        subtitle: colorCodeSubtitle)
+                    
+                    Spacer()
+                    
+                    Button(action: onDismiss) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                    }
+                    .buttonStyle(.plain)
+                }
                 
                 // TODO: Key Insight
                 //Text("KEY INSIGHT")

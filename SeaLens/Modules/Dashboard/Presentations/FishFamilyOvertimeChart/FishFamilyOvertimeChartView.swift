@@ -6,18 +6,29 @@
 //
 
 import SwiftUI
+import SwiftData
 import Charts
 
 struct FishFamilyOvertimeChartView: View {
     @Environment(\.modelContext) private var modelContext
     
     @State var seriesChartData: [SeriesOvertimeChart] = []
-    @State var selectedFilters: [String: Any]
-    @State var selectedDate: Date?
-    @State var selectedFamily: String?
-    @State var selectedColor: Color?
-    @State var selectedValue: Int?
-    @State var hoverLocation: CGPoint?
+    @State var selectedFilters: [String: Any] = [:]
+    /*@State private var selectedDate: Date?
+    @State private var selectedFamily: String?
+    @State private var selectedColor: Color?
+    @State private var selectedValue: Int?*/
+    
+    @State private var persistentSelectedPoint: DateDataPoint?
+    @State private var persistentSelectedFamily: String?
+    @State private var persistentSelectedColor: Color?
+    
+    private var overtimeViewModel = OvertimeViewModel()
+    
+    init(seriesChartData: [SeriesOvertimeChart], selectedFilters: [String: Any]) {
+        self.seriesChartData = seriesChartData
+        self.selectedFilters = selectedFilters
+    }
     
     var body: some View {
         VStack {
@@ -38,14 +49,14 @@ struct FishFamilyOvertimeChartView: View {
         Chart {
             ForEach(seriesChartData) { familyData in
                 ForEach(familyData.chartData) { point in
-                    lineMarkView(for: point, family: familyData.seriesName)
+                    lineMarkChart(point, familyData)
                 }
             }
             
-            // Rule mark for vertical line
-            if let selectedDate {
+            // Rule mark for vertical line - Use persistent state
+            if let selectedDate = persistentSelectedPoint?.date {
                 RuleMark(x: .value("Date", selectedDate))
-                    .foregroundStyle(.gray.opacity(0.3))
+                    .foregroundStyle(.gray.opacity(0.5))
                     .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
             }
         }
@@ -55,24 +66,11 @@ struct FishFamilyOvertimeChartView: View {
                     .fill(.clear)
                     .contentShape(Rectangle())
                     .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                handleHover(at: value.location, in: geometry, chartProxy: chartProxy)
-                            }
-                            .onEnded { _ in
-                                clearSelection()
+                        SpatialTapGesture()
+                            .onEnded { event in
+                                handleTap(at: event.location , in: geometry, chartProxy: chartProxy)
                             }
                     )
-                    .onContinuousHover { phase in
-                        switch phase {
-                        case .active(let location):
-                            hoverLocation = location
-                            handleHover(at: location, in: geometry, chartProxy: chartProxy)
-                        case .ended:
-                            hoverLocation = nil
-                            clearSelection()
-                        }
-                    }
             }
         }
         .chartXAxis {
@@ -97,13 +95,17 @@ struct FishFamilyOvertimeChartView: View {
         .frame(height: 300)
         .padding()
         .overlay(alignment: .topLeading) {
-            if let selectedFamily, let selectedDate, let selectedColor {
+            if let selectedFamily = persistentSelectedFamily,
+               let selectedPoint = persistentSelectedPoint,
+               let selectedColor = persistentSelectedColor
+            {
                 OvertimeAnnotationView(
                     selectedFamilyName: selectedFamily,
-                    selectedDate: selectedDate,
+                    selectedDate: selectedPoint.date,
                     selectedColor: selectedColor,
                     selectedFilters: selectedFilters,
-                    modelContext: modelContext
+                    modelContext: modelContext,
+                    onDismiss: { clearSelection() }
                 )
                 .padding(8)
                 .background(
@@ -115,31 +117,42 @@ struct FishFamilyOvertimeChartView: View {
                 .padding(.top, 20)
                 .transition(.opacity.combined(with: .scale(scale: 0.95)))
                 .animation(.easeInOut(duration: 0.15), value: selectedFamily)
-                .animation(.easeInOut(duration: 0.15), value: selectedDate)
+                .animation(.easeInOut(duration: 0.15), value: selectedPoint.date)
             }
         }
     }
     
     @ChartContentBuilder
-    private func lineMarkView(for point: DateDataPoint, family: String) -> some ChartContent {
+    private func lineMarkChart(_ point: DateDataPoint, _ familyData: SeriesOvertimeChart) -> some ChartContent {
         LineMark(
             x: .value("Date", point.date),
             y: .value("Count", point.value)
         )
-        .foregroundStyle(by: .value("Family", family))
-        .symbol(Circle())
-        .symbolSize(80)
+        .foregroundStyle(by: .value("Family", familyData.seriesName))
+        .symbol {
+            if persistentSelectedPoint == point && persistentSelectedFamily == familyData.seriesName {
+                Circle()
+                    .fill(persistentSelectedColor ?? .clear)
+                    .frame(width: 15, height: 15)
+                    .shadow(radius: 3)
+            } else {
+                Circle()
+                    .fill(overtimeViewModel.getColorForFamily(familyData.seriesName))
+                    .frame(width: 8, height: 8)
+                    .opacity(0.8)
+            }
+        }
     }
     
-    private func handleHover(at location: CGPoint, in geometry: GeometryProxy, chartProxy: ChartProxy) {
+    private func handleTap(at location: CGPoint, in geometry: GeometryProxy, chartProxy: ChartProxy) {
         guard let plotFrame = chartProxy.plotFrame else { return }
         
         let xPosition = location.x - geometry[plotFrame].origin.x
         let yPosition = location.y - geometry[plotFrame].origin.y
         
-        // Check if we're within the plot area
         guard xPosition >= 0, xPosition <= geometry[plotFrame].width,
               yPosition >= 0, yPosition <= geometry[plotFrame].height else {
+            // Tapped outside the chart area, clear selection
             clearSelection()
             return
         }
@@ -179,45 +192,28 @@ struct FishFamilyOvertimeChartView: View {
             }
         }
         
-        // Only update if we found a reasonably close point
-        if closestDistance < 10, // Adjust threshold as needed
+        if closestDistance < 10,
            let family = closestFamily,
            let value = closestValue,
            let pointDate = closestDate {
             
-            // Force update by setting to nil first if changing
-            if selectedFamily != family || selectedDate != pointDate {
-                selectedFamily = nil
-                selectedValue = nil
-                selectedDate = nil
-                selectedColor = nil
-                
-                // Update with new values
-                DispatchQueue.main.async {
-                    selectedFamily = family
-                    selectedValue = value
-                    selectedDate = pointDate
-                    selectedColor = getColorForFamily(family)
-                }
+            // Update persistent state with animation
+            withAnimation(.easeInOut(duration: 0.15)) {
+                persistentSelectedFamily = family
+                persistentSelectedPoint = DateDataPoint(date: pointDate, value: value, monthOfYear: ChartConstants.formatMonthYear(pointDate))
+                persistentSelectedColor = overtimeViewModel.getColorForFamily(family)
             }
         }
     }
     
     private func clearSelection() {
         withAnimation(.easeOut(duration: 0.1)) {
-            selectedDate = nil
-            selectedFamily = nil
-            selectedColor = nil
-            selectedValue = nil
+            persistentSelectedPoint = nil
+            persistentSelectedFamily = nil
+            persistentSelectedColor = nil
         }
     }
-    
-    private func getColorForFamily(_ family: String) -> Color {
-        // Map family names to colors - adjust based on your chart's color scheme
-        let colors: [Color] = [.blue, .green, .orange, .red, .purple, .pink, .yellow, .cyan]
-        let index = abs(family.hashValue) % colors.count
-        return colors[index]
-    }
+
 }
 
 

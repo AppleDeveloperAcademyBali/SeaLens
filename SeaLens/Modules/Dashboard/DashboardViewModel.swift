@@ -5,6 +5,7 @@
 //  Created by IP Marry Kusuma on 09/11/25.
 //
 
+import SwiftUI
 import Foundation
 import SwiftData
 
@@ -110,7 +111,7 @@ class DashboardViewModel: ObservableObject {
         fishFamily: String,
         selectedMonth: Date) -> String
     {
-        return "\(fishFamily) - \(formatMonthYear(selectedMonth)) "
+        return "\(fishFamily) - \(ChartConstants.formatMonthYear(selectedMonth))"
     }
     
     func getSubtitleForAnnotation() -> String {
@@ -138,11 +139,5 @@ class DashboardViewModel: ObservableObject {
         }
         
         return "View \(numOfObservations) observations"
-    }
-    
-    private func formatMonthYear(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM yyyy"
-        return formatter.string(from: date)
     }
 }

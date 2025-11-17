@@ -12,6 +12,7 @@ import Charts
 public struct DashboardPresentation: View {
     @State private var modelContext: ModelContext
     @State private var dashboardViewModel: DashboardViewModel
+    @State private var isLoading: Bool = true
     
     @State var filters: [String: Any] = [:]
     @State var isInspectorPresented: Bool = true
@@ -34,6 +35,7 @@ public struct DashboardPresentation: View {
         .padding()
         .onAppear() {
             Task {
+                isLoading = true
                 filters = dashboardViewModel.collectFilterInput(
                     startDate: Calendar.current.date(byAdding: .month,value: -4, to: Date.now) ?? Date.now,
                     endDate: Date.now,
@@ -44,6 +46,7 @@ public struct DashboardPresentation: View {
                     maxDepth: 100)
                 
                 seriesChartData = await dashboardViewModel.processChartOvertimeData(filters: filters)
+                isLoading = false
             }
         }
         .inspector(isPresented: $isInspectorPresented) {
@@ -56,34 +59,21 @@ public struct DashboardPresentation: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Dashboard")
                 .textstyles(.title1Emphasized)
-            
-            HStack {
-                Text("Based on 300 observations")
-                    .textstyles(.title3Regular)
-                    .italic()
-                    .foregroundColor(.secondary)
-                
-                Spacer()
-                
-                Button {
-                    // Export Charts
-                } label: {
-                    Text("Export all charts")
-                        .textstyles(.bodyEmphasized)
-                        .frame(height: 25)
-                }
-                .buttonStyle(.glass)
-            }
         }
     }
     
     private var chartCardView: some View {
         VStack(alignment: .center, spacing: 12) {
-            chartTitleSection
-            
-            Divider()
-            
-            chartContentView
+            if isLoading {
+                ProgressView()
+                    .frame(height: 350)
+            } else {
+                chartTitleSection
+                
+                Divider()
+                
+                chartContentView
+            }
             
         }
         .padding()
@@ -96,14 +86,38 @@ public struct DashboardPresentation: View {
     }
     
     private var chartTitleSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Fish Family Population Trends Over Time")
-                .textstyles(.title1Medium)
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Fish Family Population Trends Over Time")
+                    .textstyles(.title1Medium)
+                
+                Text("Tracks the total number of fish counted for each family across all your observations. Each line represents one fish family. Higher points mean more fish of that family were observed during that time period.")
+                    .textstyles(.title3Regular)
+                    .foregroundColor(.secondary)
+                
+                Text("Showing 5 of 12 families based on 300 observations")
+                    .textstyles(.title3Regular)
+                    .italic()
+                    .foregroundColor(.secondary)
+            }
             
-            Text("Tracks the total number of fish counted for each family across all your observations. Each line represents one fish family. Higher points mean more fish of that family were observed during that time period.")
-                .textstyles(.title3Regular)
-                .foregroundColor(.secondary)
+            Spacer()
+            
+            Button {
+                
+            } label: {
+                Image(systemName: "arrow.down.to.line")
+                    .resizable()
+                    .frame(width: 20, height: 25)
+                    .foregroundColor(Color("CoreColor-DarkBlue"))
+            }
+            .padding()
+            .frame(width: 40, height: 40)
+            .buttonStyle(.borderless)
+            .glassEffect()
+
         }
+        .padding()
     }
     
     @ViewBuilder
