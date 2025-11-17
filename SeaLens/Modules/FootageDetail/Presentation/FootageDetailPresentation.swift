@@ -24,7 +24,7 @@ struct FootageDetailPresentation: View {
                         initialNavigationViewModel: initialNavigationViewModel
                     )
                     
-//                    FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
+                    FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
 
                     Spacer()
                 }
@@ -32,8 +32,11 @@ struct FootageDetailPresentation: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .padding()
-        .navigationTitle(viewModel.footage?.filename ?? "No Footage")
+        .navigationTitle(viewModel.footage?.filename ?? "")
         .onAppear {
+            viewModel.loadFootage()
+        }
+        .onChange(of: viewModel.footage) { _, newValue in
             viewModel.loadFootage()
         }
 

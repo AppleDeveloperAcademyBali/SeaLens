@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Footage {
+final class Footage: Equatable {
     @Attribute(.unique) var uid: UUID
     var filename: String
     var originalFilename: String

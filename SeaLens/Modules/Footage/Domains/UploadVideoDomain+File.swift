@@ -45,7 +45,6 @@ extension UploadVideoDomain {
                 return nil
             }
             
-            let bytes = Double(fileSizeValue)
             return (url, totalSeconds, creationDateValue, Double(fileSizeValue))
 
             

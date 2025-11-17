@@ -30,7 +30,7 @@ final class FootageDetailViewModel: ObservableObject {
                 self.footage = fetchedFootage
                 self.fishFamilies = fetchedFootage.fishFamily
             } else {
-                self.footage = nil
+                self.footage = .mock
                 self.fishFamilies = []
             }
         }
@@ -49,7 +49,7 @@ final class FootageDetailViewModel: ObservableObject {
         guard
             let dateTaken = footage?.dateTaken,
             let location = footage?.locationName
-        else { return "\(#function) called with nil data" }
+        else { return "" }
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
