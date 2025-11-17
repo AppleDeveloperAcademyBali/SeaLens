@@ -33,7 +33,7 @@ struct FileUploadView: View {
                     VStack(spacing: 3) {
                         Text("Drag & drop or select a file")
                             .textstyles(.title2Regular)
-                        Text("MP4, AVI, MOV, WMV, and MKV formats, up to 50MB")
+                        Text("MP4, AVI, MOV, WMV, and MKV formats")
                             .textstyles(.bodyRegular)
                             .foregroundStyle(.secondary)
                     }
@@ -68,6 +68,7 @@ struct FileUploadView: View {
                 }
                 
             }
+            .frame(minHeight: 520)
             .padding()
         }
     }

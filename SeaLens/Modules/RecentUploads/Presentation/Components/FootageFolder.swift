@@ -8,29 +8,32 @@
 import Foundation
 import SwiftUI
 
-struct FootageFolder<Destination: View>: View {
-    var destination: Destination
+struct FootageFolder: View {
+    
+    @State var isHovered: Bool = false
     
     var title: String
     
     var body: some View {
-        NavigationLink(destination: destination) {
-            ZStack {
-                Image("observationCard")
-                    .renderingMode(.original)
-                
-                VStack {
-                    Spacer()
-                    Text(title)
-                        .textstyles(.title2Regular)
-                        .lineLimit(2)
-                        .padding()
-                }
-                .frame(width: 285, height: 155, alignment: .leading)
+        ZStack {
+            FolderComponent()
+                .frame(width: 250, height: 150)
+            
+            VStack {
+                Spacer()
+                Text(title)
+                    .textstyles(.title2Regular)
+                    .lineLimit(2)
+                    .padding()
             }
+            .frame(width: 250, height: 150, alignment: .leading)
             .padding()
-            .frame(width: 285, height: 155)
         }
-        .buttonStyle(.plain)
+        .padding()
+        .frame(width: 250, height: 150)
+        .onHover { isHovered in
+            self.isHovered = isHovered
+        }
+        .scaleEffect(self.isHovered ? 1.05 : 1, anchor: .center)
     }
 }

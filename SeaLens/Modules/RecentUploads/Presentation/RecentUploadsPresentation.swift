@@ -6,93 +6,65 @@
 //
 
 import SwiftUI
-import SwiftData
-import Foundation
-import AppKit
 
 public struct RecentUploadsPresentation: View {
-    @Environment(\.modelContext) private var modelContext
-    @StateObject private var recentUploadsViewModel: RecentUploadsViewModel
+    @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
+    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
-    @State private var searchText: String = ""
-    
-    init(modelContext: ModelContext) {
-        _recentUploadsViewModel = StateObject(wrappedValue: RecentUploadsViewModel(modelContext: modelContext))
-    }
+    let columns = [
+        GridItem(.adaptive(minimum: 250))
+    ]
     
     public var body: some View  {
         NavigationStack {
-            GeometryReader{ geometry in
+            ZStack (alignment: .bottom) {
                 VStack(alignment: .leading) {
-                    HStack {
-                        VStack(alignment: .leading){
-                            Text("Recent Observations")
-                                .textstyles(.title1Emphasized)
-                                .padding(.bottom, 2)
-                            Text("􀉁 \(recentUploadsViewModel.footages.count) observations")
-                                .textstyles(.title3Regular)
-                                .foregroundColor(.secondary)
-                                .italic()
-                        }
-                        .padding(.bottom, 10)
-                        
-                        Spacer()
-                        
-                        HStack() {
-                            
-                            SearchBar(searchText: $searchText)
-                                
-                            Menu {
-                                Text("Sort By")
-                                Divider()
-                                
-                                Section("Date Taken") {
-                                    Button("Newest") {
-                                        recentUploadsViewModel.applySorting(sortOption: .dateTakenNewest)
-                                    }
-                                    Button("Oldest") {
-                                        recentUploadsViewModel.applySorting(sortOption: .dateTakenOldest)
-                                    }
-                                }
-                                
-                                Section("Filename"){
-                                    Button("Alphabetically (A-Z)") {
-                                        recentUploadsViewModel.applySorting(sortOption: .filenameAscending)
-                                    }
-                                    Button("Alphabetically (Z-A)") {
-                                        recentUploadsViewModel.applySorting(sortOption: .filenameDesscending)
-                                    }
-                                }
-                            } label: {
-                                Image("iconSort")
-                                    .clipShape(.circle)
-                                    .frame(width: 50, height: 50)
-                                    
-                            }
-                            .buttonStyle(.plain)
-
-                        }
-                    }
-                    .padding()
+                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel)
+                        .padding(.horizontal)
                     
                     ScrollView {
-                        FlowHStack {
-                            ForEach(recentUploadsViewModel.footages) { upload in
-                                FootageFolder(destination: FishCollectionView(), title: upload.filename)
-                                    .frame(width: 285, height: 170)
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(recentUploadsViewModel.footages) { footage in
+                                NavigationLink(value: footage) {
+                                    FootageFolder(title: footage.filename)
+                                        .padding(.horizontal)
+                                }
+                                .buttonStyle(HoverPressButtonStyle())
                             }
                         }
+                        .padding(.top, 8)
+                        .padding(.bottom, 100)
                     }
+                    .padding(.leading)
                 }
-                .padding()
                 
+                Button {
+                    initialNavigationViewModel.showingUploadFootage()
+                } label: {
+                    Label("Upload Video", systemImage: "arrow.up.circle")
+                        .frame(width: 200)
+                        .padding(.vertical, 8)
+                }
+                .clipShape(Capsule())
+                .glassEffect(.regular.tint(.blue.opacity(0.45)).interactive())
+                .padding(.bottom, 30)
+            }
+            .padding()
+            .navigationDestination(for: Footage.self) { footage in
+                FootageDetailPresentation()
             }
         }
         .task {
             await recentUploadsViewModel.loadFootages()
         }
-        .onChange(of: searchText) { _ , _ in
-            recentUploadsViewModel.applySearching(searchText: searchText)
+        .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
+            recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
+    }
+}
+
+struct EmptyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
     }
 }

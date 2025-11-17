@@ -2,24 +2,21 @@ import SwiftUI
 
 public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
-    
-    @State private var selection = SidebarType.dashboard.rawValue
-    
-    //TODO: - Need to move to specific view
-    @State private var isShowingSheet = false
+    //
+    @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
     
     public var body: some View {
         GeometryReader { geometry in
             NavigationSplitView (
                 sidebar: {
-                    Sidebar(selection: $selection)
+                    Sidebar(selection: $initialNavigationViewModel.sidebarSelection)
                 },
                 detail: {
-                    switch selection {
+                    switch initialNavigationViewModel.sidebarSelection {
                     case SidebarType.dashboard.rawValue:
                         DashboardPresentation(modelContext: modelContext)
                     case SidebarType.recents.rawValue:
-                        RecentUploadsPresentation(modelContext: modelContext)
+                        RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel)
                     case SidebarType.mock.rawValue:
                         MockDataView()
                     default:
@@ -28,8 +25,8 @@ public struct ContentView: View {
                 }
                 
             )
-            .sheet(isPresented: $isShowingSheet, onDismiss: didDismiss) {
-                ReviewFishPresentation(isShowingSheet: $isShowingSheet)
+            .sheet(isPresented: $initialNavigationViewModel.isShowingUploadFootage, onDismiss: didDismiss) {
+                UploadVideoPresentation(modelContext: modelContext, isPresented: $initialNavigationViewModel.isShowingUploadFootage)
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
@@ -39,15 +36,9 @@ public struct ContentView: View {
     
     //TODO: - Need to move to specific view
     func didDismiss() {
+        print("Its Dismissed")
         // Handle the dismissing action.
     }
-    
-//    func createUploadVideoViewModel() -> UploadVideoViewModel {
-//        let dataService = DataService(modelContainer: modelContext.container)
-//        let uploadVideoData = UploadVideoData(dataService: dataService)
-//        let uploadVideoDomain = UploadVideoDomain(uploadVideoData: uploadVideoData)
-//        return UploadVideoViewModel(uploadVideoDomain: uploadVideoDomain)
-//    }
     
 //    func createUploadCompleteViewModel(for footageUID: UUID) -> UploadCompleteViewModel {
 //        let dataService = DataService(modelContainer: modelContext.container)
