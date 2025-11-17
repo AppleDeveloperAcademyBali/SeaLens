@@ -24,7 +24,7 @@ public struct RecentUploadsPresentation: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(recentUploadsViewModel.footages) { footage in
-                            NavigationLink(value: footage) {
+                            NavigationLink(value: footage.uid.uuidString) {
                                 FootageFolder(title: footage.filename)
                                     .padding(.horizontal)
                             }
@@ -56,9 +56,7 @@ public struct RecentUploadsPresentation: View {
             recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
         .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
-            guard let newFootageUid = initialNavigationViewModel.newFootageUid else {
-                return
-            }
+            guard initialNavigationViewModel.newFootageUid != nil else { return }
             Task {
                 await recentUploadsViewModel.loadFootages()
             }

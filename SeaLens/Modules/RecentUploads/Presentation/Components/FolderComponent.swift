@@ -35,7 +35,6 @@ struct FolderComponent: View {
 
             ZStack {
                 Rectangle()
-//                    .foregroundColor(.gray)
                     .frame(width: w * frontWidthRatio,
                            height: h * whiteHeightRatio)
                     .roundedCorners(radius: h * cornerRadiusRatio,

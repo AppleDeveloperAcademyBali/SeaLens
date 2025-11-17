@@ -17,8 +17,8 @@ struct FootageDetailPresentation: View {
             if viewModel.footageUIDString == "" {
                 loadingView
             }else {
-                VStack(alignment: .leading, spacing: 1) {
-                    FootageDetailHeaderView(FootageDetailViewModel: viewModel)
+                VStack(alignment: .leading, spacing: 1) {                    
+                    FootageDetailHeaderView(footageDetailViewModel: viewModel)
                     
                     FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
 
@@ -27,16 +27,16 @@ struct FootageDetailPresentation: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .padding()
+        .navigationTitle(viewModel.footage?.filename ?? "No Footage")
 //        .navigationDestination(for: UUID.self) { familyID in
 //            FishFamilyDetailPresentation(
 //                viewModel: createFishFamilyDetailViewModel(for: familyID))
 //            
 //        }
-        
-//        .padding(30)
-//        .onAppear {
-//            viewModel.loadFootage()
-//        }
+        .onAppear {
+            viewModel.loadFootage()
+        }
 
     }
     
