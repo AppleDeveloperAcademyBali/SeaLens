@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct FootageDetailPresentation: View {
-    @StateObject var viewModel = FootageDetailViewModel()
+    @ObservedObject var viewModel: FootageDetailViewModel
     
     var body: some View {
         HStack {

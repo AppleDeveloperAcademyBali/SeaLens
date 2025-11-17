@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 final class UploadVideoViewModel: ObservableObject {
+    @Injected var domain: UploadVideoDomain
     
     // MARK: - published properties for the view
     
@@ -42,12 +43,9 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var uploadSucceded = false
     //
     
-        
-    let domain: UploadVideoDomain
     var selectedFileURL: URL?
     
-    init(uploadVideoDomain: UploadVideoDomain) {
-        self.domain = uploadVideoDomain
+    init() {
         self.createLocationSuggestions()
         self.createSiteSuggestions()
         self.createTransectSuggestions()

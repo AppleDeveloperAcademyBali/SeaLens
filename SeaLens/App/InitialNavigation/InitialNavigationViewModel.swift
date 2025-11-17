@@ -12,6 +12,8 @@ class InitialNavigationViewModel: ObservableObject {
 
     @Published var isShowingUploadFootage = false
     @Published var _sidebarSelection = SidebarType.recents.rawValue
+    @Published var newFootageUid: UUID? = nil
+
     var sidebarSelection: String {
             get { _sidebarSelection }
             set {
@@ -27,5 +29,13 @@ class InitialNavigationViewModel: ObservableObject {
     
     func showingUploadFootage() {
         isShowingUploadFootage = true
+    }
+    
+    func submittedFootage(uid: UUID) {
+        //TODO: - Do Something
+        sidebarSelection = SidebarType.recents.rawValue
+        newFootageUid = uid
+        //
+        dismissUploadFootage()
     }
 }

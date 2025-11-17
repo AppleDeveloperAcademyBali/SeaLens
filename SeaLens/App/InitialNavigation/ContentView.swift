@@ -4,6 +4,7 @@ public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     //
     @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
+    @State private var recentPath = NavigationPath()
     
     public var body: some View {
         GeometryReader { geometry in
@@ -16,7 +17,15 @@ public struct ContentView: View {
                     case SidebarType.dashboard.rawValue:
                         DashboardPresentation(modelContext: modelContext)
                     case SidebarType.recents.rawValue:
-                        RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel)
+                        NavigationStack (path: $recentPath) {
+                            RecentUploadsPresentation(
+                                initialNavigationViewModel: initialNavigationViewModel)
+                            .navigationTitle(Text("Recent Uploads"))
+                            .navigationDestination(for: String.self) { uidString in
+                                let footageDetailViewModel = FootageDetailViewModel(footageUIDString: uidString)
+                                FootageDetailPresentation(viewModel: footageDetailViewModel)
+                            }
+                        }
                     case SidebarType.mock.rawValue:
                         MockDataView()
                     default:
@@ -26,12 +35,15 @@ public struct ContentView: View {
                 
             )
             .sheet(isPresented: $initialNavigationViewModel.isShowingUploadFootage, onDismiss: didDismiss) {
-                UploadVideoPresentation(modelContext: modelContext, isPresented: $initialNavigationViewModel.isShowingUploadFootage)
+                UploadVideoPresentation(initialNavigationViewModel: initialNavigationViewModel)
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
         }
-        
+        .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
+            guard let footageUid = newValue else { return }
+            recentPath.append(footageUid)
+        }
     }
     
     //TODO: - Need to move to specific view

@@ -19,6 +19,11 @@ final class FootageDetailViewModel: ObservableObject {
     @Published var footage: Footage?
     @Published var fishFamilies: [FishFamily] = []
     
+    init(footageUIDString: String) {
+        self.footageUIDString = footageUIDString
+        self.loadFootage()
+    }
+    
     func loadFootage() {
         Task {
             if let uid = UUID(uuidString: footageUIDString),
