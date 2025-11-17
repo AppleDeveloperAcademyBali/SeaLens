@@ -13,6 +13,8 @@ public struct DashboardPresentation: View {
     @State private var modelContext: ModelContext
     @State private var dashboardViewModel: DashboardViewModel
     
+    @State var filters: [String: Any] = [:]
+    @State var isInspectorPresented: Bool = true
     @State var seriesChartData: [SeriesOvertimeChart] = []
     
     init(modelContext: ModelContext) {
@@ -32,15 +34,20 @@ public struct DashboardPresentation: View {
         .padding()
         .onAppear() {
             Task {
-                seriesChartData = await dashboardViewModel.processChartOvertimeData(
-                    startDate: Calendar.current.date(byAdding: .month,value: -3, to: Date.now) ?? Date.now,
+                filters = dashboardViewModel.collectFilterInput(
+                    startDate: Calendar.current.date(byAdding: .month,value: -4, to: Date.now) ?? Date.now,
                     endDate: Date.now,
-                    selectedFishFamilies: [],
-                    selectedLocation: [],
-                    selectedSites: [],
+                    selectedFishFamilies: ["Damselfish","Wrasse","Butterflyfish","Surgeonfish"],
+                    selectedLocation: ["Nusa Dua","Menjangan","Tulamben","Amed"],
+                    selectedSites: ["Site 1", "Site 2", "Site 3", "Site 4", "Site 5", "Site 6", "Site 7", "Site 8", "Site 9", "Site 10"],
                     minDepth: 0,
-                    maxDepth: 0)
+                    maxDepth: 100)
+                
+                seriesChartData = await dashboardViewModel.processChartOvertimeData(filters: filters)
             }
+        }
+        .inspector(isPresented: $isInspectorPresented) {
+            Text("This is inspector view")
         }
         
     }
@@ -104,7 +111,7 @@ public struct DashboardPresentation: View {
         if seriesChartData.isEmpty {
             emptyStateView
         } else {
-            FishFamilyOvertimeChartView(seriesChartData: seriesChartData)
+            FishFamilyOvertimeChartView(seriesChartData: seriesChartData, selectedFilters: filters)
         }
     }
     

@@ -12,6 +12,8 @@ class DashboardViewModel: ObservableObject {
     private let modelContext: ModelContext
     private let dashboardDomain: DashboardDomain
     
+    var fishFamiliesOverLocationData: [FishFamily] = []
+    
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
         self.dashboardDomain = DashboardDomain(modelContext: modelContext)
@@ -24,6 +26,33 @@ class DashboardViewModel: ObservableObject {
         return formatter.date(from: text)
     }
     
+    func collectFilterInput(
+        startDate: Date,
+        endDate: Date,
+        selectedFishFamilies: [String],
+        selectedLocation: [String],
+        selectedSites: [String],
+        minDepth: Double,
+        maxDepth: Double
+    ) -> [String: Any] {
+        var filters: [String: Any] = [:]
+        
+        filters["startDate"] = startDate
+        filters["endDate"] = endDate
+        filters["selectedFishFamilies"] = selectedFishFamilies
+        filters["selectedLocations"] = selectedLocation
+        filters["selectedSites"] = selectedSites
+        filters["minDepth"] = minDepth
+        filters["maxDepth"] = maxDepth
+        
+        return filters
+    }
+    
+    func processChartOvertimeData(filters: [String: Any]) async -> [SeriesOvertimeChart]
+    {
+        return await dashboardDomain.processOvertimeChartData(filters: filters)
+    }
+    
     func processChartOvertimeData(
         startDate: Date,
         endDate: Date,
@@ -33,32 +62,70 @@ class DashboardViewModel: ObservableObject {
         minDepth: Double,
         maxDepth: Double) async -> [SeriesOvertimeChart]
     {
-        return await dashboardDomain.processOvertimeChartData(
-            startDate: startDate,
-            endDate: endDate,
-            selectedFishFamilies: selectedFishFamilies,
-            selectedLocation: selectedLocation,
-            selectedSites: selectedSites,
-            minDepth: minDepth,
-            maxDepth: maxDepth)
+        //Put all the criteria in Dictionary
+        let filters = collectFilterInput(
+                                        startDate: startDate,
+                                        endDate: endDate,
+                                        selectedFishFamilies: selectedFishFamilies,
+                                        selectedLocation: selectedLocation,
+                                        selectedSites: selectedSites,
+                                        minDepth: minDepth,
+                                        maxDepth: maxDepth)
+        
+        return await dashboardDomain.processOvertimeChartData(filters: filters)
     }
     
     func processChartData(chartType: ChartType) async -> [SeriesOvertimeChart] {
         return []
     }
     
-    /*private func findNearestPoint(at location: CGPoint, in geometry: GeometryProxy, proxy: ChartProxy) {
-        // Find the nearest data point to cursor
-        guard let plotArea = proxy.plotAreaFrame else { return }
+    func processFamilyOverLocationChartData(
+        selectedMonth: Date,
+        selectedFishFamily: String,
+        selectedFilters: [String: Any]) async -> [StringDataPoint]
+    {
+        fishFamiliesOverLocationData = await dashboardDomain.retrieveFishFamiliesOverLocationData(selectedMonth: selectedMonth, selectedFishFamily: selectedFishFamily, selectedFilters: selectedFilters)
         
-        // This is a simplified approach - you may need to adjust based on your needs
-        let xPosition = location.x - plotArea.origin.x
-        let relativeX = xPosition / plotArea.width
+        return dashboardDomain.processFamilyOverLocationChartData(fishFamilies: fishFamiliesOverLocationData)
+    }
+    
+    func getTitleForAnnotation(
+        fishFamily: String,
+        selectedMonth: Date) -> String
+    {
+        return "\(fishFamily) - \(formatMonthYear(selectedMonth)) "
+    }
+    
+    func getSubtitleForAnnotation() -> String {
+        var numOfFish = 0
+        var numOfObservations = 0
         
-        // Find closest data point based on x position
-        if !chartData.isEmpty {
-            let index = min(max(Int(relativeX * Double(chartData.count)), 0), chartData.count - 1)
-            selectedPoint = chartData[index]
+        if !fishFamiliesOverLocationData.isEmpty {
+            let allFootages = fishFamiliesOverLocationData.map { $0.footage.uid }
+            numOfObservations = Set(allFootages).count
+            
+            numOfFish = Int(fishFamiliesOverLocationData.reduce(0) { (result, data) in
+                result + data.numOfFishDetected
+            })
         }
-    }*/
+        
+        return "\(numOfFish) total fish counted (from \(numOfObservations) observations)"
+    }
+    
+    func getButtonTitleForAnnotation() -> String {
+        var numOfObservations = 0
+        
+        if !fishFamiliesOverLocationData.isEmpty {
+            let allFootages = fishFamiliesOverLocationData.map { $0.footage.uid }
+            numOfObservations = Set(allFootages).count
+        }
+        
+        return "View \(numOfObservations) observations"
+    }
+    
+    private func formatMonthYear(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yyyy"
+        return formatter.string(from: date)
+    }
 }
