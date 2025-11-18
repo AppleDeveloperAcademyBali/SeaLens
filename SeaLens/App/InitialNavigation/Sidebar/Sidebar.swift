@@ -22,7 +22,7 @@ struct Sidebar: View {
     // development pages
     private let devPages: [(title: String, icon: String)] = [
         (SidebarType.mock.rawValue, "gear"),
-
+        (SidebarType.testImageDetail.rawValue, "photo"),
     ]
     
     var body: some View {
