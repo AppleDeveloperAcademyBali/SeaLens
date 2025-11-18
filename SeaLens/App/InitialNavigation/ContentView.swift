@@ -23,6 +23,8 @@ public struct ContentView: View {
                                     initialNavigationViewModel: initialNavigationViewModel)
                             case SidebarType.mock.rawValue:
                                 MockDataView()
+                            case SidebarType.testImageDetail.rawValue:
+                                TestImageDetailLoaderView()
                             default:
                                 Text("Unknown Section")
                             }

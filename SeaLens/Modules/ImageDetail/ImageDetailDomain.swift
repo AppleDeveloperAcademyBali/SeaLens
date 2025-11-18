@@ -18,9 +18,10 @@ class ImageDetailDomain {
     // fetch FishImage by UID
     func getFishImage(by uid: UUID) async -> FishImage? {
         let predicate = #Predicate<FishImage> { $0.uid == uid }
+        let sortDescriptors = [SortDescriptor(\FishImage.dateCreated, order: .reverse)]
 
         // perform fetch
-        await fishData.retrieveFishes(predicate: predicate, sortBy: nil)
+        await fishData.retrieveFishes(predicate: predicate, sortBy: sortDescriptors)
 
         // return the first matched image
         return fishData.fishes.first

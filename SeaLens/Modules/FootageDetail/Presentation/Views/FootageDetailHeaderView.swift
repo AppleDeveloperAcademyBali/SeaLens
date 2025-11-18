@@ -64,7 +64,3 @@ struct FootageDetailHeaderView: View {
 
 }
 
-#Preview {
-    FootageDetailHeaderView(FootageDetailViewModel: .preview)
-        .padding()
-}
