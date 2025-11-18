@@ -77,20 +77,5 @@ struct UploadVideoPresentation: View {
                 }
             }
         }
-//        .navigationDestination(for: UUID.self) { familyID in
-//            Text("Big")
-////            FishFamilyDetailPresentation(
-////                viewModel: createFishFamilyDetailViewModel(for: familyID))
-//            
-//            
-//        }
-//        .navigationDestination(isPresented: $navigateToComplete) {
-//            if let footageUID = viewModel.uploadedFootageUID {
-//                UploadCompletePresentation(
-//                    viewModel: createUploadCompleteViewModel(for: footageUID)
-//                )
-//            }
-//        }
-
     }
 }

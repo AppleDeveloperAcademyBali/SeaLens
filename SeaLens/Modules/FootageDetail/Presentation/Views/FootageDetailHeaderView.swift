@@ -6,6 +6,7 @@
 //
 import SwiftUI
 
+
 struct FootageDetailHeaderView: View {
     @ObservedObject var footageDetailViewModel: FootageDetailViewModel
     @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
@@ -55,7 +56,11 @@ struct FootageDetailHeaderView: View {
 
             }
 
+
         }
         
     }
+    
+
 }
+
