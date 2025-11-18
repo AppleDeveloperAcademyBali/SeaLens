@@ -10,12 +10,14 @@ import SwiftUI
 
 struct FootageFolder: View {
     
+    @State var isHovered: Bool = false
+    
     var title: String
     
     var body: some View {
         ZStack {
-            Image("observationCard")
-                .renderingMode(.original)
+            FolderComponent()
+                .frame(width: 250, height: 150)
             
             VStack {
                 Spacer()
@@ -24,9 +26,14 @@ struct FootageFolder: View {
                     .lineLimit(2)
                     .padding()
             }
-            .frame(width: 285, height: 155, alignment: .leading)
+            .frame(width: 250, height: 150, alignment: .leading)
+            .padding()
         }
         .padding()
-        .frame(width: 285, height: 155)
+        .frame(width: 250, height: 150)
+        .onHover { isHovered in
+            self.isHovered = isHovered
+        }
+        .scaleEffect(self.isHovered ? 1.05 : 1, anchor: .center)
     }
 }

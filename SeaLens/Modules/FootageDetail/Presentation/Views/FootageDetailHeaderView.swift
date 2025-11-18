@@ -8,48 +8,57 @@ import SwiftUI
 
 
 struct FootageDetailHeaderView: View {
-    @ObservedObject var FootageDetailViewModel: FootageDetailViewModel
+    @ObservedObject var footageDetailViewModel: FootageDetailViewModel
+    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     var body: some View {
-        VStack {
+        VStack (alignment: .leading) {
             HStack {
-                Text("Upload Complete")
+                Text(footageDetailViewModel.getTitle())
                     .textstyles(.title1Emphasized)
-
-                if let name = FootageDetailViewModel.footage?.filename  {
-                    VideoTag(fileName: name)
+                
+                Button {
+                    print("Pop Up Info")
+                } label: {
+                    Image(systemName: "info.circle")
+                        .textstyles(.bodyRegular)
+                        
                 }
+                .glassEffect()
+                .clipShape(Circle())
+
             }
 
             HStack {
                 Spacer()
-                Button { } label: {
+                Button {
+                    initialNavigationViewModel.showingReviewFish()
+                } label: {
                     Text("Review fish count")
-                        .foregroundColor(.blue)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                 }
                 .buttonStyle(.glass)
+                
+                SearchBar(searchText: .constant(""))
 
-                Button { } label: {
-                    Image("iconSort")
+                Button {
+                    
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
                         .resizable()
-                        .frame(width: 70, height: 70)
+                        .frame(width: 20, height: 20)
+                        .padding(8)
                         .clipShape(.circle)
                 }
                 .buttonStyle(.plain)
+                .glassEffect()
 
-                Button { } label: {
-                    Image("iconFilter")
-                        .resizable()
-                        .frame(width: 70, height: 70)
-                        .clipShape(.circle)
-                }
-                .buttonStyle(.plain)
             }
 
 
         }
+        
     }
     
 

@@ -8,6 +8,7 @@ struct SeaLensApp: App {
     init() {
         container = SwiftDataService.shared.container
         let dataService = DataService(modelContainer: container)
+        let networkService = NetworkService()
         
         // Datas
         DIContainer.shared.register(FootageData.self) {
@@ -15,9 +16,14 @@ struct SeaLensApp: App {
         }
         DIContainer.shared.register(FishData.self) {          
             FishData(dataService: dataService)
+        DIContainer.shared.register(UploadVideoData.self) {
+            UploadVideoData(networkService: networkService, dataService: dataService)
         }
         
         // Domain
+        DIContainer.shared.register(UploadVideoDomain.self) {
+            UploadVideoDomain()
+        }
         DIContainer.shared.register(RecentUploadsDomain.self) {
             RecentUploadsDomain()
         }

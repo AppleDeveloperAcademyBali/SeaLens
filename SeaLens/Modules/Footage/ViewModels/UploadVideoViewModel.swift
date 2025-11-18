@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 
 @MainActor
 final class UploadVideoViewModel: ObservableObject {
+    @Injected var domain: UploadVideoDomain
     
     // MARK: - published properties for the view
     
@@ -36,29 +37,34 @@ final class UploadVideoViewModel: ObservableObject {
     @Published var date = ""
     @Published var fileSize = ""
     //
+    @Published var rawFileDuration = 0.0
+    @Published var rawDateTaken = Date()
+    @Published var rawFileSize: Double = 0.0
+    //
     @Published var uploadProgress: Double = 0
     @Published var isUploading: Bool = false
     @Published var uploadStatusMessage: String = ""
     @Published var uploadSucceded = false
     //
     
-        
-    let domain: UploadVideoDomain
     var selectedFileURL: URL?
     
-    init(uploadVideoDomain: UploadVideoDomain) {
-        self.domain = uploadVideoDomain
+    init() {
         self.createLocationSuggestions()
         self.createSiteSuggestions()
         self.createTransectSuggestions()
     }
-    
+        
     // MARK: - Assign Metadata to the view
-    func applyMetadata(_ result: (url: URL, duration: String, date: String, fileSize: String)) {
+    func applyMetadata(_ result: (url: URL, duration: Double, date: Date, fileSize: Double)) {
         originalFileName = result.url.lastPathComponent
-        fileDuration = result.duration
-        date = result.date
-        fileSize = result.fileSize
+        rawFileDuration = result.duration
+        rawDateTaken = result.date
+        rawFileSize = result.fileSize
+        
+        fileDuration = formatDuration(rawFileDuration)
+        date = formatCreationDate(rawDateTaken)
+        fileSize = formatFileSize(for: result.url)
         selectedFileURL = result.url
     }
     

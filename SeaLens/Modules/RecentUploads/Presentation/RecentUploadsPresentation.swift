@@ -11,51 +11,59 @@ public struct RecentUploadsPresentation: View {
     @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
     @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
+    let columns = [
+        GridItem(.adaptive(minimum: 250))
+    ]
+    
     public var body: some View  {
-        NavigationStack {
-            ZStack (alignment: .bottom) {
-                VStack(alignment: .leading) {
-                    RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel)
-                        .padding()
-                    
-                    ScrollView {
-                        FlowHStack {
-                            ForEach(recentUploadsViewModel.footages) { footage in
-                                NavigationLink(value: footage) {
-                                    FootageFolder(title: footage.filename)
-                                        .frame(width: 285, height: 170)
-                                }
-                                .buttonStyle(.plain)
+        ZStack (alignment: .bottom) {
+            VStack(alignment: .leading) {
+                RecentUploadHeaderView(recentUploadsViewModel: recentUploadsViewModel)
+                //
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(recentUploadsViewModel.footages) { footage in
+                            NavigationLink(value: footage.uid.uuidString) {
+                                FootageFolder(title: footage.filename)
+                                    .padding(.horizontal)
                             }
+                            .buttonStyle(HoverPressButtonStyle())
                         }
-                        .padding(.bottom, 100)
                     }
-                    .padding(.leading)
+                    .padding(.top, 8)
+                    .padding(.bottom, 100)
                 }
-                
-                Button {
-                    initialNavigationViewModel.showingUploadFootage()
-                } label: {
-                    Label("Upload Video", systemImage: "arrow.up.circle")
-                        .frame(width: 200)
-                        .padding(.vertical, 8)
-                }
-                .clipShape(Capsule())
-                .buttonStyle(.borderedProminent)
-                .padding(.bottom, 30)
-                
-
             }
-            .padding()
-            .navigationDestination(for: Footage.self) { footage in
-                FootageDetailPresentation()
+            
+            Button {
+                initialNavigationViewModel.showingUploadFootage()
+            } label: {
+                Label("Upload Video", systemImage: "arrow.up.circle")
+                    .frame(width: 200)
+                    .padding(.vertical, 8)
             }
+            .clipShape(Capsule())
+            .glassEffect(.regular.tint(.blue.opacity(0.45)).interactive())
+            .padding(.bottom, 30)
         }
+        .padding()
         .task {
             await recentUploadsViewModel.loadFootages()
         }
         .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
             recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
+        .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
+            guard initialNavigationViewModel.newFootageUid != nil else { return }
+            Task {
+                await recentUploadsViewModel.loadFootages()
+            }
+        }
+    }
+}
+
+struct EmptyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
     }
 }

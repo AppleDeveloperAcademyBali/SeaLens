@@ -10,15 +10,19 @@ import SwiftUI
 import SwiftData
 
 struct FootageDetailPresentation: View {
-    @StateObject var viewModel = FootageDetailViewModel()
+    @ObservedObject var viewModel: FootageDetailViewModel
+    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     var body: some View {
-        VStack {
+        HStack {
             if viewModel.footageUIDString == "" {
                 loadingView
             }else {
-                VStack(alignment: .leading, spacing: 1) {
-                    FootageDetailHeaderView(FootageDetailViewModel: viewModel)
+                VStack(alignment: .leading, spacing: 1) {                    
+                    FootageDetailHeaderView(
+                        footageDetailViewModel: viewModel,
+                        initialNavigationViewModel: initialNavigationViewModel
+                    )
                     
                     FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
 
@@ -26,30 +30,24 @@ struct FootageDetailPresentation: View {
                 }
             }
         }
-        .background(.blue)
-//        .navigationDestination(for: UUID.self) { familyID in
-//            FishFamilyDetailPresentation(
-//                viewModel: createFishFamilyDetailViewModel(for: familyID))
-//            
-//        }
-        
-//        .padding(30)
-//        .onAppear {
-//            viewModel.loadFootage()
-//        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .padding()
+        .navigationTitle(viewModel.footage?.filename ?? "")
+        .onAppear {
+            viewModel.loadFootage()
+        }
+        .onChange(of: viewModel.footage) { _, newValue in
+            viewModel.loadFootage()
+        }
 
     }
     
     var loadingView: some View {
         VStack {
-            Spacer()
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle())
             Text("Loading...")
-            Spacer()
         }
-        .frame(width: 100, height: 100)
-        .background(.red)
     }
     
 }
