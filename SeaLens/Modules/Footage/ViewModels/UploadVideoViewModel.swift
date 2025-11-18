@@ -104,7 +104,9 @@ final class UploadVideoViewModel: ObservableObject {
 
             timerCount -= 1
             Task { @MainActor in
-                self.uploadProgress += 0.25
+                if timerCount != 0 {
+                    self.uploadProgress += 0.25
+                }
             }
             if timerCount == 0 {
                 timer.invalidate()

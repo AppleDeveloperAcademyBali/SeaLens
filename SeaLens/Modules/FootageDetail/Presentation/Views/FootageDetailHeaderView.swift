@@ -1,30 +1,22 @@
 //
-//  UploadCompletePresentation.swift
+//  FootageDetailHeaderView.swift
 //  SeaLens
 //
-//  Created by Shreyas Venadan on 7/11/2025.
+//  Created by Handy Handy on 16/11/25.
 //
-
-
 import SwiftUI
-import SwiftData
 
 
-
-struct UploadCompletePresentation: View {
-    @StateObject var viewModel: UploadCompleteViewModel
-    @Environment(\.modelContext) private var modelContext
-    
+struct FootageDetailHeaderView: View {
+    @ObservedObject var FootageDetailViewModel: FootageDetailViewModel
     
     var body: some View {
-
-        VStack(alignment: .leading, spacing: 1) {
-            
+        VStack {
             HStack {
                 Text("Upload Complete")
                     .textstyles(.title1Emphasized)
 
-                if let name = viewModel.footage?.filename  {
+                if let name = FootageDetailViewModel.footage?.filename  {
                     VideoTag(fileName: name)
                 }
             }
@@ -56,23 +48,14 @@ struct UploadCompletePresentation: View {
                 .buttonStyle(.plain)
             }
 
-            FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
 
-            Spacer()
         }
-//        .navigationDestination(for: UUID.self) { familyID in
-//            FishFamilyDetailPresentation(
-//                viewModel: createFishFamilyDetailViewModel(for: familyID))
-//            
-//        }
-        
-        .padding(.horizontal, 30)
-        .padding(.vertical, 30)
-        .onAppear {
-            viewModel.loadFootage()
-        }
-
     }
     
 
+}
+
+#Preview {
+    FootageDetailHeaderView(FootageDetailViewModel: .preview)
+        .padding()
 }

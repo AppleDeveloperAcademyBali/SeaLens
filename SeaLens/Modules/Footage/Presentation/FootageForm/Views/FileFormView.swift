@@ -102,10 +102,12 @@ struct FileFormView: View {
             // upload and process button
             if viewModel.isUploading {
                 VStack {
-                    ProgressView(value: viewModel.uploadProgress)
+                    let clampedProgress = min(max(viewModel.uploadProgress, 0), 1)
+                    ProgressView(value: clampedProgress)
                         .progressViewStyle(.linear)
                         .frame(width: 220)
-                    Text("\(Int(viewModel.uploadProgress * 100))%")
+                    let percentage = Int(clampedProgress * 100)
+                    Text("\(percentage)%")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
