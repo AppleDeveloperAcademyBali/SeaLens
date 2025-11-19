@@ -11,6 +11,8 @@ public struct RecentUploadsPresentation: View {
     @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
     @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
+    @State var selectedFootageUID: Set<UUID> = []
+    
     let columns = [
         GridItem(.adaptive(minimum: 250))
     ]
@@ -48,7 +50,7 @@ public struct RecentUploadsPresentation: View {
         }
         .padding()
         .task {
-            await recentUploadsViewModel.loadFootages()
+            await recentUploadsViewModel.loadFootages(footagesUidList: selectedFootageUID)
         }
         .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
             recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
@@ -56,7 +58,7 @@ public struct RecentUploadsPresentation: View {
         .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
             guard initialNavigationViewModel.newFootageUid != nil else { return }
             Task {
-                await recentUploadsViewModel.loadFootages()
+                await recentUploadsViewModel.loadFootages(footagesUidList: selectedFootageUID)
             }
         }
     }
