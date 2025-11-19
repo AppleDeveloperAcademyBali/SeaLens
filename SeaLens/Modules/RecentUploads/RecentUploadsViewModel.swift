@@ -24,6 +24,11 @@ class RecentUploadsViewModel: ObservableObject {
         footages = allFootages
     }
     
+    func loadFootages(footagesUidList: Set<UUID>) async {
+        allFootages = await recentuploadDomain.retrieveFootage(uuidList: footagesUidList)
+        footages = allFootages
+    }
+    
     // Apply Sorting for the Presentation
     func applySorting(sortOption: SortOption)
     {

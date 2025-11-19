@@ -10,6 +10,8 @@ import SwiftData
 import Charts
 
 struct OvertimeAnnotationView: View {
+    @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
+    
     @State var selectedFamilyName: String
     @State var selectedDate: Date
     @State var selectedColor: Color
@@ -19,6 +21,7 @@ struct OvertimeAnnotationView: View {
     @State var colorCodeSubtitle: String = ""
     @State var buttonTitle: String = ""
     @State var chartData: [StringDataPoint] = []
+    @State var footages: Set<UUID> = []
     
     @State private var isLoading: Bool = true
     
@@ -81,7 +84,10 @@ struct OvertimeAnnotationView: View {
                 .frame(height: 200)
                 
                 //Link to Recents Observations
-                NavigationLink(destination: FishCollectionView()) {
+                NavigationLink(
+                    destination: RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel,
+                    selectedFootageUID: footages))
+                {
                     HStack {
                         Text(buttonTitle)
                             .textstyles(.bodyMedium)
@@ -112,6 +118,7 @@ struct OvertimeAnnotationView: View {
                 chartData = result.chartData
                 colorCodeSubtitle = result.subtitle
                 buttonTitle = result.buttonTitle
+                footages = result.footages
                 isLoading = false
             }
         }
