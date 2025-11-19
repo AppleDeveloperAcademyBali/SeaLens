@@ -7,8 +7,6 @@
 
 import Foundation
 import SwiftUI
-import SwiftData
-
 
 @MainActor
 final class FootageDetailViewModel: ObservableObject {
