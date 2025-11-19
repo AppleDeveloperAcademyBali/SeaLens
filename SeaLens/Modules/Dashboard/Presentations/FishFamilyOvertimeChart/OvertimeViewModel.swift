@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class OvertimeViewModel: ObservableObject {
+class OvertimeChartViewModel: ObservableObject {
     func getColorForFamily(_ family: String) -> Color {
         if let color = ChartConstants.focusedFishFamily[family] {
             return color

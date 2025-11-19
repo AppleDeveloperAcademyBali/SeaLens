@@ -9,22 +9,7 @@ import SwiftUI
 import SwiftData
 import Charts
 
-// Add this struct at the top of your file (outside the view)
-struct AnnotationData: Equatable {
-    let point: DateDataPoint
-    let family: String
-    let color: Color
-    let position: CGPoint
-    
-    static func == (lhs: AnnotationData, rhs: AnnotationData) -> Bool {
-        return lhs.point.date == rhs.point.date &&
-               lhs.point.value == rhs.point.value &&
-               lhs.family == rhs.family &&
-               lhs.position == rhs.position
-    }
-}
-
-struct FishFamilyOvertimeChartView: View {
+struct OvertimeChartView: View {
     @Environment(\.modelContext) private var modelContext
     
     var seriesChartData: [SeriesOvertimeChart] = []
@@ -40,9 +25,9 @@ struct FishFamilyOvertimeChartView: View {
     
     @State private var annotationID = UUID()
     
-    @State private var annotationData: AnnotationData?
+    @State private var annotationData: OvertimeAnnotationData?
     
-    private var overtimeViewModel = OvertimeViewModel()
+    private var overtimeViewModel = OvertimeChartViewModel()
     
     init(seriesChartData: [SeriesOvertimeChart], selectedFilters: [String: Any]) {
         self.seriesChartData = seriesChartData
@@ -124,7 +109,7 @@ struct FishFamilyOvertimeChartView: View {
             
             // Annotation overlay with dynamic positioning
             if let data = annotationData, let geometry = chartGeometry {
-                OvertimeAnnotationView(
+                OvertimeChartAnnotationView(
                     selectedFamilyName: data.family,
                     selectedDate: data.point.date,
                     selectedColor: data.color,
@@ -220,7 +205,7 @@ struct FishFamilyOvertimeChartView: View {
            let pointDate = closestDate {
             
             // Single atomic state update
-            annotationData = AnnotationData(
+            annotationData = OvertimeAnnotationData(
                 point: DateDataPoint(date: pointDate, value: value, monthOfYear: ChartConstants.formatMonthYear(pointDate)),
                 family: family,
                 color: overtimeViewModel.getColorForFamily(family),

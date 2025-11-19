@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 import Charts
 
-struct OvertimeAnnotationView: View {
+struct OvertimeChartAnnotationView: View {
     @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
     
     @State var selectedFamilyName: String

@@ -144,7 +144,7 @@ public struct DashboardPresentation: View {
         if seriesChartData.isEmpty {
             emptyStateView
         } else {
-            FishFamilyOvertimeChartView(seriesChartData: seriesChartData, selectedFilters: filters)
+            OvertimeChartView(seriesChartData: seriesChartData, selectedFilters: filters)
         }
     }
     
