@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct FileFormView: View {
+    @Environment(\.modelContext) var modelContext
     @ObservedObject var viewModel: UploadVideoViewModel
     
     var body: some View {
@@ -114,7 +116,7 @@ struct FileFormView: View {
                 
             } else {
                 Button {
-                    viewModel.uploadSelectedVideo()
+                    viewModel.uploadSelectedVideo(modelContext: modelContext)
                 } label: {
                     Text("Upload and process file")
                         .textstyles(.bodyEmphasized)
