@@ -18,6 +18,8 @@ final class FootageDetailViewModel: ObservableObject {
     //
     @Published var footage: Footage?
     @Published var fishFamilies: [FishFamily] = []
+    @Published var allFishFamilies: [FishFamily] = []
+    @Published var searchText: String = ""
     //
     @Published var totalFish: Int = 0
     @Published var totalPhotos: Int = 0
@@ -26,26 +28,30 @@ final class FootageDetailViewModel: ObservableObject {
         self.footageUIDString = footageUIDString
     }
     
-    func loadFootage() {
-        Task {
-            if let uid = UUID(uuidString: footageUIDString),
-                let fetchedFootage = await domain.getFootage(by: uid)   {
-                self.footage = fetchedFootage
-                self.fishFamilies = fetchedFootage.fishFamily
-            } else {
-                self.footage = .mock
-                self.fishFamilies = []
-            }
+    func loadData() async {
+        await loadFootage()
+        await loadFishFamilies()
+        await getTotalFish()
+        await getTotalPhotos()
+        applySearching()
+    }
+    
+    func loadFootage() async {
+        if let uid = UUID(uuidString: footageUIDString),
+            let fetchedFootage = await domain.getFootage(by: uid)   {
+            self.footage = fetchedFootage
+            self.allFishFamilies = fetchedFootage.fishFamily
+        } else {
+            self.footage = .mock
+            self.allFishFamilies = []
         }
     }
     
-    func loadFishFamilies() {
-        Task {
-            guard let uid = UUID(uuidString: footageUIDString),
-               let fetchedFishFamilies = await domain.getFootage(by: uid)?.fishFamily
-            else { return }
-            self.fishFamilies = fetchedFishFamilies
-        }
+    func loadFishFamilies() async {
+        guard let uid = UUID(uuidString: footageUIDString),
+           let fetchedFishFamilies = await domain.getFootage(by: uid)?.fishFamily
+        else { return }
+        self.allFishFamilies = fetchedFishFamilies
     }
     
     func getTitle() -> String {
@@ -60,17 +66,43 @@ final class FootageDetailViewModel: ObservableObject {
         return "\(location) - \(formattedDate)"
     }
     
-    func getTotalFish() {
-        Task {
-            guard let uid = UUID(uuidString: footageUIDString) else { return }
-            totalFish = await domain.getTotalFish(by: uid)
+    func getTotalFish() async {
+        guard let uid = UUID(uuidString: footageUIDString) else { return }
+        totalFish = await domain.getTotalFish(by: uid)
+    }
+    
+    func getTotalPhotos() async {
+        guard let uid = UUID(uuidString: footageUIDString) else { return }
+        totalPhotos = await domain.getTotalPhotos(by: uid)
+    }
+    
+    // Apply Sorting for the Presentation
+    func applySorting(sortOption: SortOption)
+    {
+        switch sortOption {
+        case .dateTakenNewest:
+            fishFamilies.sort { $0.dateCreated > $1.dateCreated }
+            break
+        case .dateTakenOldest:
+            fishFamilies.sort { $0.dateCreated < $1.dateCreated }
+            break
+        case .filenameAscending:
+            fishFamilies.sort { $0.fishFamilyReference?.commonName ?? "" < $1.fishFamilyReference?.commonName ?? "" }
+            break
+        case .filenameDesscending:
+            fishFamilies.sort { $0.fishFamilyReference?.commonName ?? "" > $1.fishFamilyReference?.commonName ?? "" }
+            break
         }
     }
     
-    func getTotalPhotos() {
-        Task {
-            guard let uid = UUID(uuidString: footageUIDString) else { return }
-            totalPhotos = await domain.getTotalPhotos(by: uid)
+    // Apply Searching for the Presentation
+    func applySearching()
+    {
+        if searchText.isEmpty {
+            fishFamilies = allFishFamilies
+        } else {
+            fishFamilies = allFishFamilies.filter { $0.fishFamilyReference?.commonName.localizedCaseInsensitiveContains(searchText) ?? false }
         }
     }
+    
 }

@@ -8,10 +8,16 @@
 import Foundation
 import AVFoundation
 import UniformTypeIdentifiers
+//TODO: - Remove later after we connect to Server
+import SwiftData
 
 @MainActor
 final class UploadVideoViewModel: ObservableObject {
     @Injected var domain: UploadVideoDomain
+    
+    //TODO: Remove later after connect to server
+    // Store ModelContext on the main-actor-isolated view model to avoid capturing it in @Sendable closures
+    private var modelContext: ModelContext?
     
     // MARK: - published properties for the view
     
@@ -82,7 +88,10 @@ final class UploadVideoViewModel: ObservableObject {
     }
     
     // MARK: - Upload Video
-    func uploadSelectedVideo() {
+    func uploadSelectedVideo(modelContext: ModelContext) {
+        
+        // Store context to avoid capturing non-Sendable parameter in the timer's @Sendable closure
+        self.modelContext = modelContext
         
         // make sure file is selected
         guard let fileURL = selectedFileURL else {
@@ -117,7 +126,12 @@ final class UploadVideoViewModel: ObservableObject {
             if timerCount == 0 {
                 timer.invalidate()
                 Task { @MainActor in
-                    self.saveVideoToLocalStorage()
+                    if let context = self.modelContext {
+                        self.saveVideoToLocalStorage(modelContext: context)
+                    } else {
+                        self.isUploading = false
+                        self.uploadStatusMessage = "Upload Failed: Missing context"
+                    }
                 }
             }
         }
@@ -154,11 +168,12 @@ final class UploadVideoViewModel: ObservableObject {
 //    }
     
     // MARK: - Save Footage to Local Storage
-    func saveVideoToLocalStorage() {
+    func saveVideoToLocalStorage(modelContext: ModelContext) {
         Task { @MainActor in
             let footage = createFootage()
             
-            await self.domain.setFootage(footage: footage)
+            MockDataSeeder.saveData(footage: footage, at: modelContext)
+//            await self.domain.setFootage(footage: footage)
             
             // Store the UUID of the created footage (it's already saved)
             self.uploadedFootageUID = footage.uid

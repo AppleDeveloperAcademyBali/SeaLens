@@ -31,6 +31,7 @@ struct FootageDetailSubtitleComponent: View {
             ProgressView(value: clampedProgress)
                 .progressViewStyle(.linear)
                 .frame(width: 220)
+                .hidden()
         }
     }
 }

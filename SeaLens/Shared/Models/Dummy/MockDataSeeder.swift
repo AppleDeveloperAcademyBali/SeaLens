@@ -117,6 +117,59 @@ struct MockDataSeeder {
 }
 
 @MainActor
+extension MockDataSeeder {
+    static func saveData(footage: Footage, at context: ModelContext) {
+        let scores = FishConfidenceScore.mockArray
+        scores.forEach { context.insert($0) }
+        
+        let familyRefs = FishFamilyReference.mockArray
+        familyRefs.forEach { context.insert($0) }
+        
+        let speciesRefs = FishSpeciesReference.mockArray
+        speciesRefs.forEach { context.insert($0) }
+        
+        
+        let fishFamilies = FishFamily.mockArray
+        fishFamilies.forEach { context.insert($0) }
+        
+        let fishes = Fish.mockArray
+        fishes.forEach { context.insert($0) }
+        
+        let fishImages = FishImage.mockArray
+        fishImages.forEach { context.insert($0) }
+        
+        let masterTags = FootageTag.mockArray
+        masterTags.forEach { context.insert($0) }
+        
+        fishImages.forEach { fishImage in
+            fishImage.fishConfidenceScores = scores
+        }
+        
+        fishes.forEach { fish in
+            fish.fishImages = fishImages
+            fish.fishSpeciesReference = speciesRefs.first!
+        }
+        
+        fishFamilies.forEach { fishFamily in
+            fishFamily.fishes = fishes
+        }
+        
+        footage.footageTags = masterTags
+        footage.fishFamily = fishFamilies
+        
+        context.insert(footage)
+        
+        do {
+            try context.save()
+        } catch {
+            #if DEBUG
+            print("⚠️ MockDataSeeder: failed to save context: \(error)")
+            #endif
+        }
+    }
+}
+
+@MainActor
 private extension MockDataSeeder {
     
     /// Quick heuristic: if there is at least one Footage, we assume DB is seeded.

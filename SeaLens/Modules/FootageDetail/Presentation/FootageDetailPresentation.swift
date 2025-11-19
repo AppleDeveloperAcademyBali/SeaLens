@@ -20,8 +20,7 @@ struct FootageDetailPresentation: View {
             }else {
                 VStack(alignment: .leading, spacing: 20) {                    
                     FootageDetailHeaderView(
-                        footageDetailViewModel: viewModel,
-                        initialNavigationViewModel: initialNavigationViewModel
+                        footageDetailViewModel: viewModel
                     )
                     
                     FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
@@ -31,11 +30,26 @@ struct FootageDetailPresentation: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .padding()
         .navigationTitle(viewModel.footage?.filename ?? "")
-        .onAppear {
-            viewModel.loadFootage()
+        .task {
+            await viewModel.loadData()
         }
         .onChange(of: viewModel.footage) { _, newValue in
-            viewModel.loadFootage()
+            Task {
+                await viewModel.loadData()
+            }
+        }
+        .onChange(of: viewModel.searchText) { _, newValue in
+            viewModel.applySearching()
+        }
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    initialNavigationViewModel.showingReviewFish()
+                } label: {
+                    Text("Review fish count")
+                }
+                .buttonStyle(.glass)
+            }
         }
 
     }

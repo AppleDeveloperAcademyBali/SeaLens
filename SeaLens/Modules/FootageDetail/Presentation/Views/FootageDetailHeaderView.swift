@@ -9,7 +9,6 @@ import SwiftUI
 
 struct FootageDetailHeaderView: View {
     @ObservedObject var footageDetailViewModel: FootageDetailViewModel
-    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     var body: some View {
         HStack {
@@ -38,31 +37,45 @@ struct FootageDetailHeaderView: View {
             Spacer()
             
             VStack (alignment: .trailing, spacing: 10) {
-                Button {
-                    initialNavigationViewModel.showingReviewFish()
-                } label: {
-                    Text("Review fish count")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
-                }
-                .buttonStyle(.glass)
-                .padding(.horizontal)
+                
                 
                 HStack {
-                    SearchBar(searchText: .constant(""))
+                    SearchBar(searchText: $footageDetailViewModel.searchText)
 
-                    Button {
+                    Menu {
+                        Text("Sort By")
+                        Divider()
                         
+                        Section("Date Taken") {
+                            Button("Newest") {
+                                footageDetailViewModel.applySorting(sortOption: .dateTakenNewest)
+                            }
+                            Button("Oldest") {
+                                footageDetailViewModel.applySorting(sortOption: .dateTakenOldest)
+                            }
+                        }
+                        
+                        Section("Filename"){
+                            Button("Alphabetically (A-Z)") {
+                                footageDetailViewModel.applySorting(sortOption: .filenameAscending)
+                            }
+                            Button("Alphabetically (Z-A)") {
+                                footageDetailViewModel.applySorting(sortOption: .filenameDesscending)
+                            }
+                        }
                     } label: {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                             .resizable()
-                            .frame(width: 20, height: 20)
+                            .frame(width: 24, height: 24)
                             .padding(8)
                             .clipShape(.circle)
+                            
                     }
                     .buttonStyle(.plain)
                     .glassEffect()
+                    .padding(.leading, 8)
                 }
+                .offset(y: -7)
                 
             }
 
