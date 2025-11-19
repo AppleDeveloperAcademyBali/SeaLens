@@ -37,9 +37,6 @@ struct FishFamilyGrid: View {
                 let cardsPerRow = max(3, Int((availableWidth + spacing) / (minCardWidth + spacing)))
                 let cardWidth = (availableWidth - spacing * CGFloat(cardsPerRow - 1)) / CGFloat(cardsPerRow)
                 
-                Text("/Users/handyhandy/File/Project/SeaLens/SeaLens/SeaLens/Modules/UploadComplete/Presentation/Views/FishFamilyGrid.swift:14:25 The compiler is unable to type-check this expression in reasonable time; try breaking up the expression into distinct sub-expressions")
-                .frame(maxWidth: .infinity)
-                
 //                ScrollView {
 //
 //                    FishFamilyGridContent(
