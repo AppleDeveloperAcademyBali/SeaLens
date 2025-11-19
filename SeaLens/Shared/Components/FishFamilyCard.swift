@@ -56,7 +56,7 @@ struct FishFamilyCard: View {
                     )
                     
                     HStack(spacing: 4) {
-                        Image(systemName: "photo")
+                        Image(systemName: "photo.on.rectangle.angled")
                             .font(.caption)
                             .foregroundColor(.gray)
                         Text("\(photoCount)")

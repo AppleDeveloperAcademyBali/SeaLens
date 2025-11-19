@@ -26,11 +26,9 @@ struct FootageDetailHeaderView: View {
                 }
                 .glassEffect()
                 .clipShape(Circle())
-
-            }
-
-            HStack {
+                
                 Spacer()
+                
                 Button {
                     initialNavigationViewModel.showingReviewFish()
                 } label: {
@@ -39,6 +37,14 @@ struct FootageDetailHeaderView: View {
                         .padding(.vertical, 8)
                 }
                 .buttonStyle(.glass)
+                .padding(.horizontal)
+
+            }
+
+            HStack {
+                
+    
+                Spacer()
                 
                 SearchBar(searchText: .constant(""))
 
@@ -55,12 +61,7 @@ struct FootageDetailHeaderView: View {
                 .glassEffect()
 
             }
-
-
         }
-        
     }
-    
-
 }
 
