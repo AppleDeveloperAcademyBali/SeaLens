@@ -12,23 +12,32 @@ struct FootageDetailHeaderView: View {
     @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     var body: some View {
-        VStack (alignment: .leading) {
-            HStack {
-                Text(footageDetailViewModel.getTitle())
-                    .textstyles(.title1Emphasized)
-                
-                Button {
-                    print("Pop Up Info")
-                } label: {
-                    Image(systemName: "info.circle")
-                        .textstyles(.bodyRegular)
-                        
+        HStack {
+            VStack (alignment: .leading, spacing: 4) {
+                HStack {
+                    Text(footageDetailViewModel.getTitle())
+                        .textstyles(.title1Emphasized)
+                    
+                    Button {
+                        print("Pop Up Info")
+                    } label: {
+                        Image(systemName: "info.circle")
+                            .textstyles(.bodyRegular)
+                            
+                    }
+                    .glassEffect()
+                    .clipShape(Circle())
                 }
-                .glassEffect()
-                .clipShape(Circle())
                 
-                Spacer()
-                
+                FootageDetailSubtitleComponent(
+                    totalFish: footageDetailViewModel.totalFish,
+                    totalPhotos: footageDetailViewModel.totalPhotos
+                )
+            }
+            
+            Spacer()
+            
+            VStack (alignment: .trailing, spacing: 10) {
                 Button {
                     initialNavigationViewModel.showingReviewFish()
                 } label: {
@@ -38,29 +47,25 @@ struct FootageDetailHeaderView: View {
                 }
                 .buttonStyle(.glass)
                 .padding(.horizontal)
-
-            }
-
-            HStack {
                 
-    
-                Spacer()
-                
-                SearchBar(searchText: .constant(""))
+                HStack {
+                    SearchBar(searchText: .constant(""))
 
-                Button {
-                    
-                } label: {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .padding(8)
-                        .clipShape(.circle)
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .padding(8)
+                            .clipShape(.circle)
+                    }
+                    .buttonStyle(.plain)
+                    .glassEffect()
                 }
-                .buttonStyle(.plain)
-                .glassEffect()
-
+                
             }
+
         }
     }
 }

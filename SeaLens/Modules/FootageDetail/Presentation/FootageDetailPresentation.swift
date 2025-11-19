@@ -18,15 +18,13 @@ struct FootageDetailPresentation: View {
             if viewModel.footageUIDString == "" {
                 loadingView
             }else {
-                VStack(alignment: .leading, spacing: 1) {                    
+                VStack(alignment: .leading, spacing: 20) {                    
                     FootageDetailHeaderView(
                         footageDetailViewModel: viewModel,
                         initialNavigationViewModel: initialNavigationViewModel
                     )
                     
                     FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
-
-                    Spacer()
                 }
             }
         }

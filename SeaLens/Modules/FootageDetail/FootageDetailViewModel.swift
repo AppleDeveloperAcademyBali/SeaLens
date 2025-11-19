@@ -18,6 +18,9 @@ final class FootageDetailViewModel: ObservableObject {
     //
     @Published var footage: Footage?
     @Published var fishFamilies: [FishFamily] = []
+    //
+    @Published var totalFish: Int = 0
+    @Published var totalPhotos: Int = 0
     
     init(footageUIDString: String) {
         self.footageUIDString = footageUIDString
@@ -57,4 +60,17 @@ final class FootageDetailViewModel: ObservableObject {
         return "\(location) - \(formattedDate)"
     }
     
+    func getTotalFish() {
+        Task {
+            guard let uid = UUID(uuidString: footageUIDString) else { return }
+            totalFish = await domain.getTotalFish(by: uid)
+        }
+    }
+    
+    func getTotalPhotos() {
+        Task {
+            guard let uid = UUID(uuidString: footageUIDString) else { return }
+            totalPhotos = await domain.getTotalPhotos(by: uid)
+        }
+    }
 }

@@ -11,7 +11,7 @@ struct FootageDetailSubtitleComponent: View {
     var totalFish: Int = 0
     var totalPhotos: Int = 3
     var body: some View {
-        VStack {
+        VStack (alignment: .leading) {
             HStack {  // Reduced spacing
                 HStack(spacing: 4) {
                     Image(systemName: "fish")
@@ -24,11 +24,13 @@ struct FootageDetailSubtitleComponent: View {
                     Text("\(totalPhotos) \(photo)")
                 }
             }
-            .font(.caption)
+            .textstyles(.bodyRegular)
             .foregroundColor(.gray)
-            .padding(4)
             
-
+            let clampedProgress = min(max(0.3, 0), 1)
+            ProgressView(value: clampedProgress)
+                .progressViewStyle(.linear)
+                .frame(width: 220)
         }
     }
 }
