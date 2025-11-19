@@ -23,6 +23,8 @@ final class FootageDetailViewModel: ObservableObject {
     //
     @Published var totalFish: Int = 0
     @Published var totalPhotos: Int = 0
+    //
+    @Published var popoverIsPresented: Bool = false
     
     init(footageUIDString: String) {
         self.footageUIDString = footageUIDString

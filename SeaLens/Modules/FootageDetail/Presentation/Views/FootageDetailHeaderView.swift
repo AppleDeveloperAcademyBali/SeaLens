@@ -18,14 +18,19 @@ struct FootageDetailHeaderView: View {
                         .textstyles(.title1Emphasized)
                     
                     Button {
-                        print("Pop Up Info")
+                        footageDetailViewModel.popoverIsPresented.toggle()
                     } label: {
                         Image(systemName: "info.circle")
                             .textstyles(.bodyRegular)
-                            
+                        
                     }
                     .glassEffect()
                     .clipShape(Circle())
+                    .popover(
+                        isPresented: $footageDetailViewModel.popoverIsPresented,
+                        arrowEdge: .bottom) {
+                            FootageDetailPopoverView(footageDetailViewModel: footageDetailViewModel)
+                        }
                 }
                 
                 FootageDetailSubtitleComponent(
@@ -41,7 +46,7 @@ struct FootageDetailHeaderView: View {
                 
                 HStack {
                     SearchBar(searchText: $footageDetailViewModel.searchText)
-
+                    
                     Menu {
                         Text("Sort By")
                         Divider()
@@ -69,7 +74,7 @@ struct FootageDetailHeaderView: View {
                             .frame(width: 24, height: 24)
                             .padding(8)
                             .clipShape(.circle)
-                            
+                        
                     }
                     .buttonStyle(.plain)
                     .glassEffect()
@@ -78,7 +83,7 @@ struct FootageDetailHeaderView: View {
                 .offset(y: -7)
                 
             }
-
+            
         }
     }
 }
