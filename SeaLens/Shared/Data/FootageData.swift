@@ -19,16 +19,14 @@ final class FootageData {
     }
     
     // Basic CRUD Operations
-
-    // RETRIEVE FOOTAGE
-    func retrieveFootages() async {
-        errorMessage = nil
-        
+    func retrieveFootages() async -> Result<[Footage], Error> {
         do {
             let sortDescriptors = [SortDescriptor(\Footage.dateTaken, order: .reverse)]
             footages = try await dataService.retrieve(Footage.self, predicate: nil, sortBy: sortDescriptors)
+            return .success(footages)
         } catch {
             errorMessage = "Failed to retrieve footages: \(error.localizedDescription)"
+            return .failure(error)
         }
     }
     
@@ -42,6 +40,18 @@ final class FootageData {
             return .failure(error)
         }
     }
+    
+    // RETRIEVE FOOTAGE
+    /*func retrieveFootages() async {
+        errorMessage = nil
+        
+        do {
+            let sortDescriptors = [SortDescriptor(\Footage.dateTaken, order: .reverse)]
+            footages = try await dataService.retrieve(Footage.self, predicate: nil, sortBy: sortDescriptors)
+        } catch {
+            errorMessage = "Failed to retrieve footages: \(error.localizedDescription)"
+        }
+    }*/
     
 //    func retrieveFootages(predicate: Predicate<Footage>? = nil, sortBy: [SortDescriptor<Footage>]) async -> [Footage] {
 //        errorMessage = nil

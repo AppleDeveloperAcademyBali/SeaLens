@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DateDataPoint: Identifiable {
+struct DateDataPoint: Identifiable, Equatable {
     var date: Date
     var value: Int
     var monthOfYear: String
