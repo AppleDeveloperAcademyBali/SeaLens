@@ -10,9 +10,9 @@ import SwiftUI
 import SwiftData
 
 struct FootageDetailPresentation: View {
+    @EnvironmentObject var router: NavigationRouter
     @ObservedObject var viewModel: FootageDetailViewModel
-    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
-    
+        
     var body: some View {
         HStack {
             if viewModel.footageUIDString == "" {
@@ -44,7 +44,7 @@ struct FootageDetailPresentation: View {
         .toolbar {
             ToolbarItem {
                 Button {
-                    initialNavigationViewModel.showingReviewFish()
+                    router.showingReviewFish()
                 } label: {
                     Text("Review fish count")
                 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ReviewFishPresentation: View {
+    var footageUidString: String?
     @Binding var isShowingSheet: Bool
     var body: some View {
         HStack {

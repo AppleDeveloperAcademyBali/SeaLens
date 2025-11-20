@@ -3,6 +3,9 @@ import SwiftData
 
 @main
 struct SeaLensApp: App {
+    
+    @StateObject private var navigationRouter = NavigationRouter()
+    
     let container: ModelContainer
         
     init() {
@@ -41,6 +44,7 @@ struct SeaLensApp: App {
             ContentView()
                 .frame(minWidth: 1200, minHeight: 800)
                 .modelContainer(container)
+                .environmentObject(navigationRouter)
         }
     }
 }

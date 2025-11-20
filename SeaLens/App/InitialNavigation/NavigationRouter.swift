@@ -1,5 +1,5 @@
 //
-//  InitialNavigationViewModel.swift
+//  NavigationRouter.swift
 //  SeaLens
 //
 //  Created by Handy Handy on 16/11/25.
@@ -8,21 +8,22 @@
 import Foundation
 
 @MainActor
-class InitialNavigationViewModel: ObservableObject {
+class NavigationRouter: ObservableObject {
 
     @Published var isShowingUploadFootage = false
-    @Published var _sidebarSelection = SidebarType.recents.rawValue
+    @Published var sidebarSelection = SidebarType.recents.rawValue
     @Published var newFootageUid: UUID? = nil
     @Published var isShowingReviewFish = false
+    @Published var selectedFootageUid = UUID()
 
-    var sidebarSelection: String {
-            get { _sidebarSelection }
-            set {
-                DispatchQueue.main.async {
-                    self._sidebarSelection = newValue
-                }
-            }
-        }
+//    var sidebarSelection: String {
+//            get { _sidebarSelection }
+//            set {
+//                DispatchQueue.main.async {
+//                    self._sidebarSelection = newValue
+//                }
+//            }
+//        }
     
     func dismissUploadFootage() {
         isShowingUploadFootage = false

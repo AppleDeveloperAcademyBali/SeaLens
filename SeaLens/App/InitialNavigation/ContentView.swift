@@ -2,25 +2,24 @@ import SwiftUI
 
 public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var router: NavigationRouter
     //
-    @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
     @State private var recentPath = NavigationPath()
     
     public var body: some View {
         GeometryReader { geometry in
             NavigationSplitView (
                 sidebar: {
-                    Sidebar(selection: $initialNavigationViewModel.sidebarSelection)
+                    Sidebar(selection: $router.sidebarSelection)
                 },
                 detail: {
                     NavigationStack (path: $recentPath) {
                         Group {
-                            switch initialNavigationViewModel.sidebarSelection {
+                            switch router.sidebarSelection {
                             case SidebarType.dashboard.rawValue:
                                 DashboardPresentation(modelContext: modelContext)
                             case SidebarType.recents.rawValue:
-                                RecentUploadsPresentation(
-                                    initialNavigationViewModel: initialNavigationViewModel)
+                                RecentUploadsPresentation()
                             case SidebarType.mock.rawValue:
                                 MockDataView()
                             case SidebarType.testImageDetail.rawValue:
@@ -32,30 +31,31 @@ public struct ContentView: View {
                         .navigationDestination(for: String.self) { uidString in
                             let footageDetailViewModel = FootageDetailViewModel(footageUIDString: uidString)
                             FootageDetailPresentation(
-                                viewModel: footageDetailViewModel,
-                                initialNavigationViewModel: initialNavigationViewModel
+                                viewModel: footageDetailViewModel
                             )
                         }
                     }
                 }
                 
             )
-            .sheet(isPresented: $initialNavigationViewModel.isShowingUploadFootage, onDismiss: didDismiss) {
-                UploadVideoPresentation(initialNavigationViewModel: initialNavigationViewModel)
+            .sheet(isPresented: $router.isShowingUploadFootage, onDismiss: didDismiss) {
+                UploadVideoPresentation()
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
-            .sheet(isPresented: $initialNavigationViewModel.isShowingReviewFish) {
-                ReviewFishPresentation(isShowingSheet: $initialNavigationViewModel.isShowingReviewFish)
+            .sheet(isPresented: $router.isShowingReviewFish) {
+                ReviewFishPresentation(
+                    footageUidString: "TODO: Replace with actual UID",
+                    isShowingSheet: $router.isShowingReviewFish)
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
         }
-        .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
+        .onChange(of: router.newFootageUid) { _, newValue in
             guard let footageUid = newValue else { return }
             Task {
                 recentPath.append(footageUid.uuidString)
-                await initialNavigationViewModel.resetNewFootageUid()
+                await router.resetNewFootageUid()
             }
             
         }
