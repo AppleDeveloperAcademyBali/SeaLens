@@ -3,6 +3,9 @@ import SwiftData
 
 @main
 struct SeaLensApp: App {
+    
+    @StateObject private var navigationRouter = NavigationRouter()
+    
     let container: ModelContainer
         
     init() {
@@ -20,6 +23,9 @@ struct SeaLensApp: App {
         DIContainer.shared.register(UploadVideoData.self) {
             UploadVideoData(networkService: networkService, dataService: dataService)
         }
+        DIContainer.shared.register(FishFamilyData.self) {
+            FishFamilyData(dataService: dataService)
+        }
         
         // Domain
         DIContainer.shared.register(UploadVideoDomain.self) {
@@ -34,6 +40,9 @@ struct SeaLensApp: App {
         DIContainer.shared.register(ImageDetailDomain.self) {
             ImageDetailDomain()
         }
+        DIContainer.shared.register(FishReviewDomain.self) {
+            FishReviewDomain()
+        }
     }
     
     var body: some Scene {
@@ -41,6 +50,7 @@ struct SeaLensApp: App {
             ContentView()
                 .frame(minWidth: 1200, minHeight: 800)
                 .modelContainer(container)
+                .environmentObject(navigationRouter)
         }
     }
 }

@@ -9,9 +9,7 @@ import SwiftUI
 import SwiftData
 import Charts
 
-struct OvertimeChartAnnotationView: View {
-    @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
-    
+struct OvertimeChartAnnotationView: View {    
     @State var selectedFamilyName: String
     @State var selectedDate: Date
     @State var selectedColor: Color
@@ -84,9 +82,7 @@ struct OvertimeChartAnnotationView: View {
                 .frame(height: 200)
                 
                 //Link to Recents Observations
-                NavigationLink(
-                    destination: RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel,
-                    selectedFootageUID: footages))
+                NavigationLink(destination: RecentUploadsPresentation(selectedFootageUID: footages))
                 {
                     HStack {
                         Text(buttonTitle)

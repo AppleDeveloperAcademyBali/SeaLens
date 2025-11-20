@@ -8,9 +8,9 @@
 import SwiftUI
 
 public struct RecentUploadsPresentation: View {
+    @EnvironmentObject var router: NavigationRouter
     @StateObject private var recentUploadsViewModel = RecentUploadsViewModel()
-    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
-    
+    //
     @State var selectedFootageUID: Set<UUID> = []
     
     let columns = [
@@ -30,6 +30,7 @@ public struct RecentUploadsPresentation: View {
                                     .padding(.horizontal)
                             }
                             .buttonStyle(HoverPressButtonStyle())
+                            .simultaneousGesture(TapGesture().onEnded { router.selectedFootage(footage.uid) })
                         }
                     }
                     .padding(.top, 8)
@@ -38,7 +39,7 @@ public struct RecentUploadsPresentation: View {
             }
             
             Button {
-                initialNavigationViewModel.showingUploadFootage()
+                router.showingUploadFootage()
             } label: {
                 Label("Upload Video", systemImage: "arrow.up.circle")
                     .frame(width: 200)
@@ -55,8 +56,8 @@ public struct RecentUploadsPresentation: View {
         .onChange(of: recentUploadsViewModel.searchText) { _ , _ in
             recentUploadsViewModel.applySearching(searchText: recentUploadsViewModel.searchText)
         }
-        .onChange(of: initialNavigationViewModel.newFootageUid) { _, newValue in
-            guard initialNavigationViewModel.newFootageUid != nil else { return }
+        .onChange(of: router.newFootageUid) { _, newValue in
+            guard router.newFootageUid != nil else { return }
             Task {
                 await recentUploadsViewModel.loadFootages(footagesUidList: selectedFootageUID)
             }

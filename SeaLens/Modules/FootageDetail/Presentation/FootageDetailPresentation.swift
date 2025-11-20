@@ -10,9 +10,9 @@ import SwiftUI
 import SwiftData
 
 struct FootageDetailPresentation: View {
+    @EnvironmentObject var router: NavigationRouter
     @ObservedObject var viewModel: FootageDetailViewModel
-    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
-    
+        
     var body: some View {
         HStack {
             if viewModel.footageUIDString == "" {
@@ -41,10 +41,17 @@ struct FootageDetailPresentation: View {
         .onChange(of: viewModel.searchText) { _, newValue in
             viewModel.applySearching()
         }
+        .onChange(of: router.isShowingReviewFish) { _, newValue in
+            if !router.isShowingReviewFish {
+                Task {
+                    await viewModel.loadData()
+                }
+            }
+        }
         .toolbar {
             ToolbarItem {
                 Button {
-                    initialNavigationViewModel.showingReviewFish()
+                    router.showingReviewFish()
                 } label: {
                     Text("Review fish count")
                 }

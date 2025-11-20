@@ -7,16 +7,18 @@
 
 import SwiftUI
 
-struct ReviewFishPresentation: View {
-    @Binding var isShowingSheet: Bool
+struct FishReviewPresentation: View {
+    @EnvironmentObject var router: NavigationRouter
+    @StateObject private var viewModel = FishReviewViewModel()
+    //
     var body: some View {
         HStack {
             VStack (alignment: .leading) {
                 NavigationFishCountView {
-                    isShowingSheet.toggle()
+                    router.dismissReviewFish()
                 }
                 .padding()
-                FishFamiliesListView()
+                FishFamiliesListView(viewModel: viewModel)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .frame(maxWidth: 360, maxHeight: .infinity)
@@ -28,9 +30,13 @@ struct ReviewFishPresentation: View {
                 .padding(.trailing)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .task {
+            await self.viewModel.assignFootageUid(router.selectedFootageUid)
+            await self.viewModel.getFishFamilies()
+        }
     }
 }
 
 #Preview {
-    ReviewFishPresentation(isShowingSheet: .constant(true))
+    FishReviewPresentation()
 }
