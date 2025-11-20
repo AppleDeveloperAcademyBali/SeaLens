@@ -15,15 +15,6 @@ class NavigationRouter: ObservableObject {
     @Published var newFootageUid: UUID? = nil
     @Published var isShowingReviewFish = false
     @Published var selectedFootageUid = UUID()
-
-//    var sidebarSelection: String {
-//            get { _sidebarSelection }
-//            set {
-//                DispatchQueue.main.async {
-//                    self._sidebarSelection = newValue
-//                }
-//            }
-//        }
     
     func dismissUploadFootage() {
         isShowingUploadFootage = false
@@ -51,5 +42,9 @@ class NavigationRouter: ObservableObject {
     
     func showingReviewFish() {
         isShowingReviewFish = true
+    }
+    
+    func selectedFootage(_ uid: UUID) {
+        selectedFootageUid = uid
     }
 }

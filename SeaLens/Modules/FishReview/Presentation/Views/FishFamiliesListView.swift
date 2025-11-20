@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct FishFamiliesListView: View {
+    @ObservedObject var viewModel: FishReviewViewModel
+    
     var body: some View {
         ScrollView (showsIndicators: false) {
-            ForEach( 1...12 , id: \.self) { _ in
-                ReviewFishComponent()
+            ForEach($viewModel.fishFamilies) { $fishFamily in
+                ReviewFishComponent(
+                    fishReviewViewModel: viewModel,
+                    fishFamily: $fishFamily
+                )
                     .padding(.bottom, 16)
             }
         }
         .frame(width: 360)
-        //        .listStyle(.insetGrouped)
     }
-}
-
-#Preview {
-    FishFamiliesListView()
 }

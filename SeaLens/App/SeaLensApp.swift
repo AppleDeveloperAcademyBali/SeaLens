@@ -23,6 +23,9 @@ struct SeaLensApp: App {
         DIContainer.shared.register(UploadVideoData.self) {
             UploadVideoData(networkService: networkService, dataService: dataService)
         }
+        DIContainer.shared.register(FishFamilyData.self) {
+            FishFamilyData(dataService: dataService)
+        }
         
         // Domain
         DIContainer.shared.register(UploadVideoDomain.self) {
@@ -36,6 +39,9 @@ struct SeaLensApp: App {
         }
         DIContainer.shared.register(ImageDetailDomain.self) {
             ImageDetailDomain()
+        }
+        DIContainer.shared.register(FishReviewDomain.self) {
+            FishReviewDomain()
         }
     }
     

@@ -30,6 +30,7 @@ public struct RecentUploadsPresentation: View {
                                     .padding(.horizontal)
                             }
                             .buttonStyle(HoverPressButtonStyle())
+                            .simultaneousGesture(TapGesture().onEnded { router.selectedFootage(footage.uid) })
                         }
                     }
                     .padding(.top, 8)

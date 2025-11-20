@@ -38,15 +38,13 @@ public struct ContentView: View {
                 }
                 
             )
-            .sheet(isPresented: $router.isShowingUploadFootage, onDismiss: didDismiss) {
+            .sheet(isPresented: $router.isShowingUploadFootage) {
                 UploadVideoPresentation()
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
-            .sheet(isPresented: $router.isShowingReviewFish) {
-                ReviewFishPresentation(
-                    footageUidString: "TODO: Replace with actual UID",
-                    isShowingSheet: $router.isShowingReviewFish)
+            .sheet(isPresented: $router.isShowingReviewFish, onDismiss: didDismiss) {
+                FishReviewPresentation()
                     .frame(width: geometry.size.width - 100,
                            height: geometry.size.height - 100)
             }
@@ -55,6 +53,7 @@ public struct ContentView: View {
             guard let footageUid = newValue else { return }
             Task {
                 recentPath.append(footageUid.uuidString)
+                router.selectedFootage(footageUid)
                 await router.resetNewFootageUid()
             }
             

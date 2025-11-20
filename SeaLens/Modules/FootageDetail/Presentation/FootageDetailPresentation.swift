@@ -41,6 +41,13 @@ struct FootageDetailPresentation: View {
         .onChange(of: viewModel.searchText) { _, newValue in
             viewModel.applySearching()
         }
+        .onChange(of: router.isShowingReviewFish) { _, newValue in
+            if !router.isShowingReviewFish {
+                Task {
+                    await viewModel.loadData()
+                }
+            }
+        }
         .toolbar {
             ToolbarItem {
                 Button {
