@@ -4,8 +4,6 @@ public struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var router: NavigationRouter
     //
-    @State private var recentPath = NavigationPath()
-    
     public var body: some View {
         GeometryReader { geometry in
             NavigationSplitView (
@@ -13,7 +11,7 @@ public struct ContentView: View {
                     Sidebar(selection: $router.sidebarSelection)
                 },
                 detail: {
-                    NavigationStack (path: $recentPath) {
+                    NavigationStack (path: $router.recentPath) {
                         Group {
                             switch router.sidebarSelection {
                             case SidebarType.dashboard.rawValue:
@@ -52,7 +50,7 @@ public struct ContentView: View {
         .onChange(of: router.newFootageUid) { _, newValue in
             guard let footageUid = newValue else { return }
             Task {
-                recentPath.append(footageUid.uuidString)
+                router.recentPath.append(footageUid.uuidString)
                 router.selectedFootage(footageUid)
                 await router.resetNewFootageUid()
             }

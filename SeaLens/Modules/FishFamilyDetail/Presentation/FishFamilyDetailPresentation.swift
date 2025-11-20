@@ -64,9 +64,3 @@ struct FishFamilyDetailPresentation: View {
         }
     }
 }
-
-
-//#Preview {
-//    FishFamilyDetailPresentation(fishFamilyID: Footage.sampleData[9].fishFamily.first!.uid)
-//        .frame(width: 1200, height: 800)
-//}

@@ -6,15 +6,27 @@
 //
 
 import Foundation
+import SwiftUI
 
 @MainActor
 class NavigationRouter: ObservableObject {
-
+    
+    @Published var recentPath = NavigationPath()
+    
     @Published var isShowingUploadFootage = false
-    @Published var sidebarSelection = SidebarType.recents.rawValue
+    @Published var _sidebarSelection = SidebarType.recents.rawValue
     @Published var newFootageUid: UUID? = nil
     @Published var isShowingReviewFish = false
     @Published var selectedFootageUid = UUID()
+    
+    var sidebarSelection: String {
+        get { _sidebarSelection }
+        set {
+            DispatchQueue.main.async {
+                self._sidebarSelection = newValue
+            }
+        }
+    }
     
     func dismissUploadFootage() {
         isShowingUploadFootage = false
