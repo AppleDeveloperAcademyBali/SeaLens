@@ -13,6 +13,8 @@ final class Location {
     @Attribute(.unique) var uid: UUID
     var name: String
     
+    @Transient var sites: [Site] = []
+    
     init(
         uid: UUID = .init(),
         name: String)
@@ -22,11 +24,15 @@ final class Location {
     }
 }
 
-// MARK: - Mock Data
+// MARK: - Location
 extension Location {
-    static var mockArray: [Location] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            Location(name: ["Nusa Dua","Menjangan","Tulamben","Amed"].randomElement()!)
-        }
+    static func mock(in context: ModelContext, name: String? = nil) -> Location {
+        let obj = Location(uid: UUID(), name: name ?? ["Nusa Dua","Menjangan","Tulamben","Amed"].randomElement()!)
+        context.insert(obj)
+        return obj
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 3...6)) -> [Location] {
+        (0..<count).map { _ in mock(in: context) }
     }
 }

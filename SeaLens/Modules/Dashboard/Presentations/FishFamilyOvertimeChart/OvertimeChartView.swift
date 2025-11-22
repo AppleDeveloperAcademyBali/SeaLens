@@ -11,9 +11,10 @@ import Charts
 
 struct OvertimeChartView: View {
     @Environment(\.modelContext) private var modelContext
+    @ObservedObject var filterState: ChartFilterState
     
-    var seriesChartData: [SeriesOvertimeChart] = []
-    var selectedFilters: [String: Any] = [:]
+    @State var seriesChartData: [SeriesOvertimeChart] = []
+    @State var footagesUids: Set<UUID> = []
     
     @State private var persistentSelectedPoint: DateDataPoint?
     @State private var persistentSelectedFamily: String?
@@ -21,35 +22,121 @@ struct OvertimeChartView: View {
     
     // Store the tap location for annotation positioning
     @State private var annotationPosition: CGPoint?
-    @State private var chartGeometry: GeometryProxy?
-    
+    @State private var annotationData: OvertimeAnnotationData?
     @State private var annotationID = UUID()
     
-    @State private var annotationData: OvertimeAnnotationData?
+    @State private var chartGeometry: GeometryProxy?
+    @State private var isLoading: Bool = true
     
-    private var overtimeViewModel = OvertimeChartViewModel()
+    @StateObject var dashboardViewModel: DashboardViewModel
     
-    init(seriesChartData: [SeriesOvertimeChart], selectedFilters: [String: Any]) {
-        self.seriesChartData = seriesChartData
-        self.selectedFilters = selectedFilters
+    init(viewModel: DashboardViewModel, filters: ChartFilterState) {
+        self._dashboardViewModel = StateObject(wrappedValue: viewModel)
+        self.filterState = filters
     }
     
     var body: some View {
-        VStack {
-            if seriesChartData.isEmpty {
-                ContentUnavailableView(
-                    "No Data Available",
-                    systemImage: "chart.line.uptrend.xyaxis",
-                    description: Text("Add footage with fish detections to see the chart")
-                )
+        VStack(alignment: .center, spacing: 8) {
+            chartTitleSection
+            
+            chartContentSection
+        }
+        .onAppear {
+            loadData()
+        }
+        .onChange(of: filterState.startDate) { _, _ in
+            loadData()
+        }
+        .onChange(of: filterState.endDate) { _, _ in
+            loadData()
+        }
+        .onChange(of: filterState.selectedFishFamilies) { _, _ in
+            loadData()
+        }
+        .onChange(of: filterState.minDepth) { _, _ in
+            loadData()
+        }
+        .onChange(of: filterState.maxDepth) { _, _ in
+            loadData()
+        }
+        .onChange(of: filterState.selectedLocations) { _, _ in
+            loadData()
+        }
+        .onChange(of: filterState.selectedSites) { _, _ in
+            loadData()
+        }
+    }
+    
+    func loadData() {
+        Task {
+            isLoading = true
+            
+            let result = await dashboardViewModel.processChartOvertimeData(for: filterState)
+            
+            await MainActor.run {
+                seriesChartData = result.chartData
+                footagesUids = result.footageUids
+                isLoading = false
+            }
+        }
+    }
+    
+    private var chartTitleSection: some View {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Fish Family Population Trends Over Time")
+                    .textstyles(.title1Medium)
+                
+                Text("Tracks the total number of fish counted for each family across all your observations. Each line represents one fish family. Higher points mean more fish of that family were observed during that time period.")
+                    .textstyles(.title3Regular)
+                    .foregroundColor(.secondary)
+                
+                Text("Based on \(footagesUids.count) observations")
+                    .textstyles(.title3Regular)
+                    .italic()
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Button {
+                // Export Chart
+                
+            } label: {
+                Image(systemName: "arrow.down.to.line")
+                    .resizable()
+                    .frame(width: 20, height: 25)
+                    .foregroundColor(Color("CoreColor-DarkBlue"))
+            }
+            .padding()
+            .frame(width: 40, height: 40)
+            .buttonStyle(.borderless)
+            .glassEffect()
+        }
+        .padding()
+    }
+    
+    @ViewBuilder
+    private var chartContentSection: some View {
+        VStack(alignment: .center) {
+            if isLoading {
+                ProgressView()
             } else {
-                chartView
+                if seriesChartData.isEmpty {
+                    ContentUnavailableView(
+                        "No Data Available",
+                        systemImage: "chart.line.uptrend.xyaxis",
+                        description: Text("Add footage with fish detections to see the chart")
+                    )
+                } else {
+                    chartContentView
+                }
             }
         }
     }
     
     @ViewBuilder
-    private var chartView: some View {
+    private var chartContentView: some View {
         ZStack(alignment: .topLeading) {
             Chart {
                 ForEach(seriesChartData) { familyData in
@@ -64,7 +151,7 @@ struct OvertimeChartView: View {
                         .foregroundStyle(.gray.opacity(0.5))
                         .lineStyle(StrokeStyle(lineWidth: 1, dash: [5, 5]))
                 }
-
+                
             }
             .chartForegroundStyleScale(
                 domain: seriesChartData.map { $0.seriesName },
@@ -113,7 +200,7 @@ struct OvertimeChartView: View {
                     selectedFamilyName: data.family,
                     selectedDate: data.point.date,
                     selectedColor: data.color,
-                    selectedFilters: selectedFilters,
+                    filters: filterState,
                     modelContext: modelContext,
                     onDismiss: { annotationData = nil }
                 )
@@ -130,7 +217,7 @@ struct OvertimeChartView: View {
                 )
                 .transition(.opacity.combined(with: .scale(scale: 0.95)))
             }
-
+            
         }
     }
     
@@ -150,7 +237,7 @@ struct OvertimeChartView: View {
                     .shadow(radius: 3)
             } else {
                 Circle()
-                    .fill(overtimeViewModel.getColorForFamily(familyData.seriesName))
+                    .fill(dashboardViewModel.getColorForFamily(familyData.seriesName))
                     .frame(width: 8, height: 8)
                     .opacity(0.8)
             }
@@ -208,7 +295,7 @@ struct OvertimeChartView: View {
             annotationData = OvertimeAnnotationData(
                 point: DateDataPoint(date: pointDate, value: value, monthOfYear: ChartConstants.formatMonthYear(pointDate)),
                 family: family,
-                color: overtimeViewModel.getColorForFamily(family),
+                color: dashboardViewModel.getColorForFamily(family),
                 position: tapLocation
             )
         } else {

@@ -45,28 +45,72 @@ final class FishFamily {
     
 }
 
-// MARK: - Mock Data
+// MARK: - FishFamily
 extension FishFamily {
+    static func shallowMock(in context: ModelContext, footage: Footage) -> FishFamily {
+        let obj = FishFamily(
+            uid: UUID(),
+            numOfFishDetected: Int32.random(in: 1...80),
+            dateCreated: Date(),
+            dateUpdated: Date(),
+            footage: footage,
+            fishFamilyReference: nil,
+            fishes: []
+        )
+        context.insert(obj)
+        return obj
+    }
 
-    static let mock: FishFamily = FishFamily(
-        numOfFishDetected: 10,
-        dateCreated: .randomDaysAgo(10),
-        dateUpdated: .randomDaysAgo(1),
-        footage: Footage.mock,
-        fishFamilyReference: FishFamilyReference.mock,
-        fishes: []
-    )
-
-    static var mockArray: [FishFamily] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            FishFamily(
-                numOfFishDetected: Int32.random(in: 1...80),
-                dateCreated: .randomDaysAgo(Int.random(in: 5...50)),
-                dateUpdated: .randomDaysAgo(1),
-                footage: Footage.mockArray.randomElement() ?? Footage.mock,
-                fishFamilyReference: FishFamilyReference.mockArray.randomElement() ?? FishFamilyReference.mock,
-                fishes: []
-            )
+    static func shallowMock() -> FishFamily {
+        return FishFamily(
+            numOfFishDetected: 10,
+            dateCreated: .randomDaysAgo(10),
+            dateUpdated: .randomDaysAgo(1),
+            footage: Footage.shallowMock(),
+            fishFamilyReference: FishFamilyReference.shallowMock(),
+            fishes: [])
+    }
+    
+    static func shallowMock(
+        in context: ModelContext,
+        footage: Footage,
+        masterFamilyRefs: [FishFamilyReference] = [],
+        attachCompleteRef: Bool = true) -> FishFamily
+    {
+        if attachCompleteRef {
+            let obj = FishFamily.shallowMock(in: context, footage: footage)
+            
+            // FishFamilyReference
+            if masterFamilyRefs.isEmpty {
+                obj.fishFamilyReference = FishFamilyReference.shallowMock(in: context)
+            } else {
+                obj.fishFamilyReference = masterFamilyRefs.randomElement()
+            }
+            
+            // Fish
+            let fish = Fish.mockArray(in: context, fishFamily: obj)
+            obj.fishes = fish
+            
+            return obj
+        } else {
+            return shallowMock(in: context, footage: footage)
         }
+    }
+    
+    static func mock(in context: ModelContext, footage: Footage? = nil, familyRef: FishFamilyReference? = nil, attachFishes: Bool = false) -> FishFamily {
+        let footage = footage ?? Footage.shallowMock(in: context)
+        let obj = shallowMock(in: context, footage: footage)
+        if let familyRef = familyRef {
+            obj.fishFamilyReference = familyRef
+        }
+        if attachFishes {
+            let fish = Fish.shallowMock(in: context, fishFamily: obj)
+            obj.fishes.append(fish)
+        }
+        return obj
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 2...5), footage: Footage? = nil) -> [FishFamily] {
+        (0..<count).map { _ in mock(in: context, footage: footage) }
     }
 }

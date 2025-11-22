@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 public struct RecentUploadsPresentation: View {
     @EnvironmentObject var router: NavigationRouter

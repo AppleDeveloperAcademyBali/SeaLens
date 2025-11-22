@@ -27,6 +27,14 @@ class DashboardViewModel: ObservableObject {
         return formatter.date(from: text)
     }
     
+    func getColorForFamily(_ family: String) -> Color {
+        if let color = ChartConstants.focusedFishFamily[family] {
+            return color
+        }
+        
+        return Color.red
+    }
+    
     func collectFilterInput(
         startDate: Date,
         endDate: Date,
@@ -49,31 +57,9 @@ class DashboardViewModel: ObservableObject {
         return filters
     }
     
-    func processChartOvertimeData(filters: [String: Any]) async -> [SeriesOvertimeChart]
+    func processChartOvertimeData(for filterState: ChartFilterState) async -> (chartData: [SeriesOvertimeChart], footageUids: Set<UUID>)
     {
-        return await dashboardDomain.processOvertimeChartData(filters: filters)
-    }
-    
-    func processChartOvertimeData(
-        startDate: Date,
-        endDate: Date,
-        selectedFishFamilies: [String],
-        selectedLocation: [String],
-        selectedSites: [String],
-        minDepth: Double,
-        maxDepth: Double) async -> [SeriesOvertimeChart]
-    {
-        //Put all the criteria in Dictionary
-        let filters = collectFilterInput(
-                                        startDate: startDate,
-                                        endDate: endDate,
-                                        selectedFishFamilies: selectedFishFamilies,
-                                        selectedLocation: selectedLocation,
-                                        selectedSites: selectedSites,
-                                        minDepth: minDepth,
-                                        maxDepth: maxDepth)
-        
-        return await dashboardDomain.processOvertimeChartData(filters: filters)
+        return await dashboardDomain.processOvertimeChartData(for: filterState)
     }
     
     func processChartData(chartType: ChartType) async -> [SeriesOvertimeChart] {
@@ -83,10 +69,11 @@ class DashboardViewModel: ObservableObject {
     func processFamilyOverLocationChartData(
         selectedMonth: Date,
         selectedFishFamily: String,
-        selectedFilters: [String: Any]) async -> (chartData: [StringDataPoint], subtitle: String, buttonTitle: String, footages: Set<UUID>)
+        selectedFilters: ChartFilterState) async -> (chartData: [StringDataPoint], subtitle: String, buttonTitle: String, footages: Set<UUID>, insights: [String])
     {
-        fishFamiliesOverLocationData = await dashboardDomain.retrieveFishFamiliesOverLocationData(selectedMonth: selectedMonth, selectedFishFamily: selectedFishFamily, selectedFilters: selectedFilters)
-        
+        let result = await dashboardDomain.retrieveFishFamiliesOverLocationData(selectedMonth: selectedMonth, selectedFishFamily: selectedFishFamily, selectedFilters: selectedFilters)
+        let fishFamiliesOverLocationData = result.targetFishFamilies
+    
         let chartData = dashboardDomain.processFamilyOverLocationChartData(fishFamilies: fishFamiliesOverLocationData)
         
         var numOfFish = 0
@@ -105,7 +92,7 @@ class DashboardViewModel: ObservableObject {
         let subtitie = "\(numOfFish) total fish, \(numOfObservations) total observations"
         let buttonTitle = "View \(numOfObservations) observations"
         
-        return (chartData, subtitie, buttonTitle, allFootages)
+        return (chartData, subtitie, buttonTitle, allFootages, result.keyInsights)
     }
     
     func getTitleForAnnotation(
@@ -141,4 +128,5 @@ class DashboardViewModel: ObservableObject {
         
         return "View \(numOfObservations) observations"
     }
+
 }

@@ -22,11 +22,15 @@ final class Site {
     }
 }
 
-// MARK: - Mock Data
+// MARK: - Site
 extension Site {
-    static var mockArray: [Site] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            Site(name: "Site \(Int.random(in: 1...10))")
-        }
+    static func mock(in context: ModelContext, name: String? = nil) -> Site {
+        let obj = Site(uid: UUID(), name: name ?? "Site \(Int.random(in: 1...10))")
+        context.insert(obj)
+        return obj
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 2...6)) -> [Site] {
+        (0..<count).map { _ in mock(in: context) }
     }
 }

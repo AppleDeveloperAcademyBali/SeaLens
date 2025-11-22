@@ -31,38 +31,20 @@ struct MockDataSeeder {
         // NOTE: We call `.mockArray` exactly once per type here so you get one
         // consistent in-memory graph per seeding run.
         
-        let familyRefs = FishFamilyReference.mockArray
-        familyRefs.forEach { context.insert($0) }
-        
-        let speciesRefs = FishSpeciesReference.mockArray
-        speciesRefs.forEach { context.insert($0) }
-        
-        let locations = Location.mockArray
-        locations.forEach { context.insert($0) }
-        
-        let sites = Site.mockArray
+        let sites = Site.mockArray(in: context)
         sites.forEach { context.insert($0) }
         
-        let transects = Transect.mockArray
+        let locations = Location.mockArray(in: context)
+        locations.forEach { context.insert($0) }
+        
+        let transects = Transect.mockArray(in: context)
         transects.forEach { context.insert($0) }
         
-        let footages = Footage.mockArray
+        let familyRefs = FishFamilyReference.mockArray(in: context, count: 12)
+        familyRefs.forEach { context.insert($0) }
+        
+        let footages = Footage.mockCompleteArray(in: context, masterFamilyRefs: familyRefs)
         footages.forEach { context.insert($0) }
-        
-        let fishFamilies = FishFamily.mockArray
-        fishFamilies.forEach { context.insert($0) }
-        
-        let fishes = Fish.mockArray
-        fishes.forEach { context.insert($0) }
-        
-        let fishImages = FishImage.mockArray
-        fishImages.forEach { context.insert($0) }
-        
-        let scores = FishConfidenceScore.mockArray
-        scores.forEach { context.insert($0) }
-        
-        let masterTags = FootageTag.mockArray
-        masterTags.forEach { context.insert($0) }
         
         do {
             try context.save()
@@ -119,43 +101,27 @@ struct MockDataSeeder {
 @MainActor
 extension MockDataSeeder {
     static func saveData(footage: Footage, at context: ModelContext) {
-        let scores = FishConfidenceScore.mockArray
-        scores.forEach { context.insert($0) }
-        
-        let familyRefs = FishFamilyReference.mockArray
-        familyRefs.forEach { context.insert($0) }
-        
-        let speciesRefs = FishSpeciesReference.mockArray
-        speciesRefs.forEach { context.insert($0) }
-        
-        
-        let fishFamilies = FishFamily.mockArray
-        fishFamilies.forEach { context.insert($0) }
-        
-        let fishes = Fish.mockArray
-        fishes.forEach { context.insert($0) }
-        
-        let fishImages = FishImage.mockArray
-        fishImages.forEach { context.insert($0) }
-        
-        let masterTags = FootageTag.mockArray
-        masterTags.forEach { context.insert($0) }
-        
-        fishImages.forEach { fishImage in
-            fishImage.fishConfidenceScores = scores
+        // Get FishFamilyReference
+        // in order to use existing value, so that it won't get duplicated
+        let familyRefsSortBy = [SortDescriptor(\FishFamilyReference.commonName)]
+        let descriptor = FetchDescriptor<FishFamilyReference>(predicate: nil, sortBy: familyRefsSortBy)
+        var familyRefs: [FishFamilyReference] = []
+        do {
+            familyRefs = try context.fetch(descriptor)
+        } catch {
+            print("Failed to retrieve Fish Family Reference (MockDataSeeder): \(error.localizedDescription)")
         }
         
-        fishes.forEach { fish in
-            fish.fishImages = fishImages
-            fish.fishSpeciesReference = speciesRefs.first!
+        let fishFamilies =  (0..<Int.random(in: 1...12)).map { _ in
+            FishFamily.shallowMock(in: context, footage: footage, masterFamilyRefs: familyRefs,  attachCompleteRef: true)
         }
-        
-        fishFamilies.forEach { fishFamily in
-            fishFamily.fishes = fishes
-        }
-        
-        footage.footageTags = masterTags
         footage.fishFamily = fishFamilies
+        
+        let tags = (0..<Int.random(in: 3...10)).map { _ in
+            FootageTag.shallowMock(in: context, footage: footage)
+        }
+        
+        footage.footageTags = tags
         
         context.insert(footage)
         

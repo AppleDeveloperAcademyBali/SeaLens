@@ -30,22 +30,22 @@ final class FishConfidenceScore {
     }
 }
 
-// MARK: - Mock Data
+// MARK: - FishConfidenceScore
 extension FishConfidenceScore {
+    static func shallowMock(in context: ModelContext, fish: FishImage) -> FishConfidenceScore {
+        let obj = FishConfidenceScore(uid: UUID(), familyLatinName: ["Pomacentridae","Labridae","Acanthuridae"].randomElement()!, confidenceValue: Double.random(in: 0.1...0.99), fish: fish)
+        context.insert(obj)
+        return obj
+    }
 
-    static let mock: FishConfidenceScore = FishConfidenceScore(
-        familyLatinName: "Pomacentridae",
-        confidenceValue: 0.85,
-        fish: FishImage.mock
-    )
+    static func mock(in context: ModelContext, fish: FishImage? = nil) -> FishConfidenceScore {
+        let fish = fish ?? FishImage.mock(in: context)
+        return shallowMock(in: context, fish: fish)
+    }
 
-    static var mockArray: [FishConfidenceScore] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            FishConfidenceScore(
-                familyLatinName: ["Pomacentridae","Labridae","Acanthuridae"].randomElement()!,
-                confidenceValue: Double.random(in: 0.1...0.99),
-                fish: FishImage.mockArray.randomElement() ?? FishImage.mock
-            )
-        }
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 1...5), fish: FishImage? = nil) -> [FishConfidenceScore] {
+        (0..<count).map { _ in mock(in: context, fish: fish) }
     }
 }
+
+

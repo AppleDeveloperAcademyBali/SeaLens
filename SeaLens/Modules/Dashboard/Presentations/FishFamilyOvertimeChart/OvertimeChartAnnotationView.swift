@@ -9,17 +9,19 @@ import SwiftUI
 import SwiftData
 import Charts
 
-struct OvertimeChartAnnotationView: View {    
+struct OvertimeChartAnnotationView: View {
+    @ObservedObject private var filterState: ChartFilterState
+    
     @State var selectedFamilyName: String
     @State var selectedDate: Date
     @State var selectedColor: Color
-    @State var selectedFilters: [String: Any]
     @State var dashboardViewModel: DashboardViewModel
     
     @State var colorCodeSubtitle: String = ""
     @State var buttonTitle: String = ""
     @State var chartData: [StringDataPoint] = []
     @State var footages: Set<UUID> = []
+    @State var keyInsights: [String] = []
     
     @State private var isLoading: Bool = true
     
@@ -29,14 +31,14 @@ struct OvertimeChartAnnotationView: View {
         selectedFamilyName: String,
         selectedDate: Date,
         selectedColor: Color,
-        selectedFilters: [String: Any],
+        filters: ChartFilterState,
         modelContext: ModelContext,
         onDismiss: @escaping () -> Void)
     {
         self.selectedFamilyName = selectedFamilyName
         self.selectedDate = selectedDate
         self.selectedColor = selectedColor
-        self.selectedFilters = selectedFilters
+        self.filterState = filters
         self.dashboardViewModel = DashboardViewModel(modelContext: modelContext)
         self.onDismiss = onDismiss
     }
@@ -61,25 +63,14 @@ struct OvertimeChartAnnotationView: View {
                     }
                     .buttonStyle(.plain)
                 }
+                .padding(.bottom, 5)
                 
-                // TODO: Key Insight
-                //Text("KEY INSIGHT")
-                //    .textstyles(.caption1Regular)
+                KeyInsightSection
                 
                 Divider()
+                    .padding(.vertical, 10)
                 
-                Text("LOCATION BREAKDOWN")
-                    .textstyles(.caption1Regular)
-                
-                // Bar Chart for each location
-                Chart(chartData) { dataPoint in
-                    BarMark (
-                        x: .value("Number of Fish", dataPoint.value),
-                        y: .value("Location", dataPoint.name)
-                    )
-                }
-                .padding()
-                .frame(height: 200)
+                LocationChartSection
                 
                 //Link to Recents Observations
                 NavigationLink(destination: RecentUploadsPresentation(selectedFootageUID: footages))
@@ -109,14 +100,52 @@ struct OvertimeChartAnnotationView: View {
         .onAppear() {
             Task {
                 isLoading = true
-                let result = await dashboardViewModel.processFamilyOverLocationChartData(selectedMonth: selectedDate, selectedFishFamily: selectedFamilyName, selectedFilters: selectedFilters)
+                let result = await dashboardViewModel.processFamilyOverLocationChartData(selectedMonth: selectedDate, selectedFishFamily: selectedFamilyName, selectedFilters: filterState)
                 
                 chartData = result.chartData
                 colorCodeSubtitle = result.subtitle
                 buttonTitle = result.buttonTitle
                 footages = result.footages
+                keyInsights = result.insights
                 isLoading = false
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var KeyInsightSection: some View {
+        // KEY INSIGHT
+        VStack(alignment: .leading) {
+            Text("KEY INSIGHT")
+                .textstyles(.caption1Regular)
+                .padding(.bottom, 5)
+            
+            ForEach(keyInsights, id:\.self) { insight in
+                HStack {
+                    Image(systemName: "plus.magnifyingglass")
+                        .foregroundStyle(.secondary)
+                    Text(insight)
+                        .textstyles(.bodyRegular)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var LocationChartSection: some View {
+        VStack(alignment: .leading) {
+            Text("LOCATION BREAKDOWN")
+                .textstyles(.caption1Regular)
+            
+            // Bar Chart for each location
+            Chart(chartData) { dataPoint in
+                BarMark (
+                    x: .value("Number of Fish", dataPoint.value),
+                    y: .value("Location", dataPoint.name)
+                )
+            }
+            .padding()
+            .frame(height: 200)
         }
     }
 }
