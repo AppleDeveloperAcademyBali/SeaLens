@@ -31,7 +31,22 @@ struct MockDataSeeder {
         // NOTE: We call `.mockArray` exactly once per type here so you get one
         // consistent in-memory graph per seeding run.
         
-        let familyRefs = FishFamilyReference.mockArray
+        let sites = Site.mockArray(in: context)
+        sites.forEach { context.insert($0) }
+        
+        let locations = Location.mockArray(in: context)
+        locations.forEach { context.insert($0) }
+        
+        let transects = Transect.mockArray(in: context)
+        transects.forEach { context.insert($0) }
+        
+        let familyRefs = FishFamilyReference.mockArray(in: context, count: 12)
+        familyRefs.forEach { context.insert($0) }
+        
+        let footages = Footage.mockCompleteArray(in: context, masterFamilyRefs: familyRefs)
+        footages.forEach { context.insert($0) }
+        
+        /*let familyRefs = FishFamilyReference.mockArray
         familyRefs.forEach { context.insert($0) }
         
         let speciesRefs = FishSpeciesReference.mockArray
@@ -62,7 +77,7 @@ struct MockDataSeeder {
         scores.forEach { context.insert($0) }
         
         let masterTags = FootageTag.mockArray
-        masterTags.forEach { context.insert($0) }
+        masterTags.forEach { context.insert($0) }*/
         
         do {
             try context.save()

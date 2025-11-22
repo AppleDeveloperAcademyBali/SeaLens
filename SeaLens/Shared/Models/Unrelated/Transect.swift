@@ -22,11 +22,15 @@ final class Transect {
     }
 }
 
-// MARK: - Mock Data
+// MARK: - Transect
 extension Transect {
-    static var mockArray: [Transect] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            Transect(name: "Transect \(Int.random(in: 1...10))")
-        }
+    static func mock(in context: ModelContext, name: String? = nil) -> Transect {
+        let obj = Transect(uid: UUID(), name: name ?? "Transect \(Int.random(in: 1...10))")
+        context.insert(obj)
+        return obj
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 2...5)) -> [Transect] {
+        (0..<count).map { _ in mock(in: context) }
     }
 }

@@ -30,7 +30,7 @@ final class FootageDetailViewModel: ObservableObject {
                 self.footage = fetchedFootage
                 self.fishFamilies = fetchedFootage.fishFamily
             } else {
-                self.footage = .mock
+                self.footage = .shallowMock()
                 self.fishFamilies = []
             }
         }

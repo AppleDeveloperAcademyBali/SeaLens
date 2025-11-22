@@ -32,7 +32,7 @@ final class FishFamilyData {
         }
     }
     
-    func retrieveFishFamilies(predicate: Predicate<FishFamily>? = nil, sortBy: [SortDescriptor<FishFamily>]?) async {
+    /*func retrieveFishFamilies(predicate: Predicate<FishFamily>? = nil, sortBy: [SortDescriptor<FishFamily>]?) async {
         errorMessage = nil
         
         do {
@@ -40,7 +40,7 @@ final class FishFamilyData {
         } catch {
             errorMessage = "Failed to retrieve fish families: \(error.localizedDescription)"
         }
-    }
+    }*/
     
     func retrieveFishFamilies(predicate: Predicate<FishFamily>? = nil, sortBy: [SortDescriptor<FishFamily>]?) async -> [FishFamily] {
         errorMessage = nil

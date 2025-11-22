@@ -49,32 +49,25 @@ final class FishImage {
     
 }
 
-// MARK: - Mock Data
+// MARK: - FishImage
 extension FishImage {
+    static func shallowMock(in context: ModelContext, fish: Fish) -> FishImage {
+        let obj = FishImage(uid: UUID(), imageUrl: "file:///images/\(UUID().uuidString).jpg", objectRecognitionConf: Double.random(in: 0.5...0.99), timestamp: "00:00:\(Int.random(in: 10...59))", isFavorites: Bool.random(), dateCreated: Date(), dateUpdated: Date(), fish: fish, fishConfidenceScore: [])
+        context.insert(obj)
+        return obj
+    }
 
-    static let mock: FishImage = FishImage(
-        imageUrl: "file:///images/fish_mock.jpg",
-        objectRecognitionConf: 0.92,
-        timestamp: "00:01:20",
-        isFavorites: true,
-        dateCreated: .randomDaysAgo(30),
-        dateUpdated: .randomDaysAgo(2),
-        fish: Fish.mock,
-        fishConfidenceScore: []
-    )
-
-    static var mockArray: [FishImage] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            FishImage(
-                imageUrl: "file:///images/\(UUID.randomString()).jpg",
-                objectRecognitionConf: Double.random(in: 0.5...0.99),
-                timestamp: "00:0\(Int.random(in: 1...5)):\(Int.random(in: 10...59))",
-                isFavorites: Bool.random(),
-                dateCreated: .randomDaysAgo(Int.random(in: 10...60)),
-                dateUpdated: .randomDaysAgo(1),
-                fish: Fish.mockArray.randomElement() ?? Fish.mock,
-                fishConfidenceScore: []
-            )
+    static func mock(in context: ModelContext, fish: Fish? = nil, attachScores: Bool = true) -> FishImage {
+        let fish = fish ?? Fish.mock(in: context)
+        let obj = shallowMock(in: context, fish: fish)
+        if attachScores {
+            let score = FishConfidenceScore.shallowMock(in: context, fish: obj)
+            obj.fishConfidenceScores.append(score)
         }
+        return obj
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 1...4), fish: Fish? = nil) -> [FishImage] {
+        (0..<count).map { _ in mock(in: context, fish: fish) }
     }
 }

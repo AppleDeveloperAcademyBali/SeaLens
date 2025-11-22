@@ -29,19 +29,19 @@ final class FootageTag {
 
 // MARK: - Mock Data
 extension FootageTag {
-    static let mock: FootageTag = FootageTag(
-        uid: UUID(),
-        name: "reef",
-        footage: Footage.mock
-    )
+    static func shallowMock(in context: ModelContext, footage: Footage) -> FootageTag {
+        let obj = FootageTag(uid: UUID(), name: ["reef","training","deep","nursery","survey"].randomElement()!, footage: footage)
+        context.insert(obj)
+        return obj
+    }
 
-    static var mockArray: [FootageTag] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            FootageTag(
-                uid: UUID(),
-                name: ["reef","training","deep","nursery","survey"].randomElement()!,
-                footage: Footage.mockArray.randomElement() ?? Footage.mock
-            )
-        }
+    static func mock(in context: ModelContext, footage: Footage? = nil) -> FootageTag {
+        let footage = footage ?? Footage.shallowMock(in: context)
+        return shallowMock(in: context, footage: footage)
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 2...5), footage: Footage? = nil) -> [FootageTag] {
+        let footage = footage ?? Footage.shallowMock(in: context)
+        return (0..<count).map { _ in shallowMock(in: context, footage: footage) }
     }
 }

@@ -32,7 +32,7 @@ final class Fish {
         dateCreated: Date,
         dateUpdated: Date,
         fishFamily: FishFamily,
-        fishSpeciesReference: FishSpeciesReference,
+        fishSpeciesReference: FishSpeciesReference?,
         fishImages: [FishImage])
     {
         self.uid = uid
@@ -47,26 +47,36 @@ final class Fish {
 
 // MARK: - Mock Data
 extension Fish {
+    static func shallowMock(in context: ModelContext, fishFamily: FishFamily) -> Fish {
+        let obj = Fish(uid: UUID(), fishId: "FISH-\(UUID().uuidString.prefix(6))", dateCreated: Date(), dateUpdated: Date(), fishFamily: fishFamily, fishSpeciesReference: nil, fishImages: [])
+        context.insert(obj)
+        return obj
+    }
 
-    static let mock: Fish = Fish(
-        fishId: "FISH-0001",
-        dateCreated: .randomDaysAgo(20),
-        dateUpdated: .randomDaysAgo(1),
-        fishFamily: FishFamily.mock,
-        fishSpeciesReference: FishSpeciesReference.mock,
-        fishImages: []
-    )
-
-    static var mockArray: [Fish] {
-        (0..<Int.random(in: 3...10)).map { _ in
-            Fish(
-                fishId: "FISH-\(UUID.randomString())",
-                dateCreated: .randomDaysAgo(Int.random(in: 10...40)),
-                dateUpdated: .randomDaysAgo(1),
-                fishFamily: FishFamily.mockArray.randomElement() ?? FishFamily.mock,
-                fishSpeciesReference: FishSpeciesReference.mockArray.randomElement() ?? FishSpeciesReference.mock,
-                fishImages: []
-            )
+    static func shallowMock() -> Fish {
+        return Fish(
+            fishId: "FISH-0001",
+            dateCreated: .randomDaysAgo(20),
+            dateUpdated: .randomDaysAgo(1),
+            fishFamily: FishFamily.shallowMock(),
+            fishSpeciesReference: FishSpeciesReference.shallowMock(),
+            fishImages: []
+        )
+    }
+    
+    static func mock(in context: ModelContext, fishFamily: FishFamily? = nil, speciesRef: FishSpeciesReference? = nil, attachImages: Bool = true) -> Fish {
+        let family = fishFamily ?? FishFamily.mock(in: context)
+        let obj = shallowMock(in: context, fishFamily: family)
+        if let speciesRef = speciesRef { obj.fishSpeciesReference = speciesRef }
+        if attachImages {
+            let img = FishImage.mockArray(in: context, count: 5, fish: obj)
+            obj.fishImages = img
         }
+        return obj
+    }
+
+    static func mockArray(in context: ModelContext, count: Int = Int.random(in: 2...6), fishFamily: FishFamily? = nil) -> [Fish] {
+        (0..<count).map { _ in mock(in: context, fishFamily: fishFamily) }
     }
 }
+

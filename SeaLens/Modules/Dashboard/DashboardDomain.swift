@@ -37,34 +37,37 @@ class DashboardDomain: ObservableObject {
         }
     }
     
-    func processOvertimeChartData(filters: [String: Any]) async -> [SeriesOvertimeChart]
+    func processOvertimeChartData(for filters: ChartFilterState) async -> (chartData: [SeriesOvertimeChart], footageUids: Set<UUID>)
     {
         // Get list of month in specified date range
-        guard let startDate = filters["startDate"] as? Date,
-              let endDate = filters["endDate"] as? Date else { return [] }
+        let startDate = filters.startDate
+        let endDate = filters.endDate
         
         let months = getListOfMonths(startDate: startDate, endDate: endDate)
         
         // Filter the data based on selected value
         let sortDescriptors = [SortDescriptor(\FishFamily.fishFamilyReference?.commonName)]
-        let predicate = getPredicate(filters: filters)
+        let predicate = getPredicate(for: filters)
         let allFishFamilies = await retrieveFishFamilies(predicate: predicate, sortBy: sortDescriptors)
         
-        let fishFamiliesToShow = filters["selectedFishFamilies"] as? [String] ?? []
+        let fishFamiliesToShow = filters.selectedFishFamilies
         
         let selectedFishFamilies = allFishFamilies.filter { fishFamily in
-            let commonName = fishFamily.fishFamilyReference?.commonName ?? ""
+            let fishFamilyUid = fishFamily.fishFamilyReference?.uid ?? UUID()
             
-            return fishFamiliesToShow.contains(commonName)
+            return fishFamiliesToShow.contains(fishFamilyUid)
         }
         
         var seriesChartData: [SeriesOvertimeChart] = []
+        var footagesUids: Set<UUID> = []
         
         for family in selectedFishFamilies {
             guard let familyRef = family.fishFamilyReference else { continue }
             
             let footage = family.footage
             
+            footagesUids.insert(footage.uid
+            )
             // Check if no fish family in array
             // Create 0 data point to fish that is not detected / have 0 value
             if !seriesChartData.contains(where: { $0.seriesName == familyRef.commonName })
@@ -84,7 +87,7 @@ class DashboardDomain: ObservableObject {
             // Append real data
             let calendar = Calendar.current
             guard let dateTaken = calendar.date(from: calendar.dateComponents([.year, .month], from: footage.dateTaken)) else {
-                return seriesChartData
+                return (seriesChartData, footagesUids)
             }
             
             // Get existing array and append
@@ -94,18 +97,18 @@ class DashboardDomain: ObservableObject {
                 }
             }
         }
-        return seriesChartData
+        return (seriesChartData, footagesUids)
     }
     
-    private func getPredicate(filters: [String: Any]) -> Predicate<FishFamily>? {
-        let startDate = filters["startDate"] as? Date ?? Date.now
-        let endDate = filters["endDate"] as? Date ?? Date.now
+    private func getPredicate(for filters: ChartFilterState) -> Predicate<FishFamily>? {
+        let startDate = filters.startDate
+        let endDate = filters.endDate
         
-        let minDepth = filters["minDepth"] as? Double ?? 0
-        let maxDepth = filters["maxDepth"] as? Double ?? 100
+        let minDepth = filters.minDepth
+        let maxDepth = filters.maxDepth
         
-        let selectedLocations = filters["selectedLocations"] as? [String] ?? []
-        let selectedSites = filters["selectedSites"] as? [String] ?? []
+        let selectedLocations = filters.selectedLocations
+        let selectedSites = filters.selectedSites
         
         let predicate = #Predicate<FishFamily> { fishFamily in
             //Filter Date, Depth, Location and Site (Except FishFamilies to simplify predicates)
@@ -121,29 +124,23 @@ class DashboardDomain: ObservableObject {
     func retrieveFishFamiliesOverLocationData(
         selectedMonth: Date,
         selectedFishFamily: String,
-        selectedFilters: [String: Any]) async -> [FishFamily]
+        selectedFilters: ChartFilterState) async -> [FishFamily]
     {
-        var customFilters = selectedFilters
-        if customFilters.index(forKey: "startDate") == nil {
-            customFilters["startDate"] = Date.now
-        }
-        customFilters["startDate"] = selectedMonth
+        let customFilters = ChartFilterState()
+        customFilters.startDate = selectedMonth
         
         var endDateComponent = DateComponents()
         endDateComponent.month = 1
-        let endOfMonth = Calendar.current.date(byAdding: endDateComponent, to: selectedMonth) ?? selectedMonth.addingTimeInterval(3600 * 24 * 30)
-        if customFilters.index(forKey: "endDate") == nil {
-            customFilters["endDate"] = Date.now
-        }
-        customFilters["endDate"] = endOfMonth
+        customFilters.endDate = Calendar.current.date(byAdding: endDateComponent, to: selectedMonth) ?? selectedMonth.addingTimeInterval(3600 * 24 * 30)
+        
+        customFilters.selectedLocations = selectedFilters.selectedLocations
+        customFilters.selectedSites = selectedFilters.selectedSites
+        customFilters.minDepth = selectedFilters.minDepth
+        customFilters.maxDepth = selectedFilters.maxDepth
         
         let fishFamiliesToShow = [selectedFishFamily]
-        if customFilters.index(forKey: "selectedFishFamilies") == nil {
-            customFilters["selectedFishFamilies"] = []
-        }
-        customFilters["selectedFishFamilies"] = fishFamiliesToShow
         
-        let predicate = getPredicate(filters: customFilters)
+        let predicate = getPredicate(for: customFilters)
         
         // Filter the data based on selected value (except for FishFamily to simplify the predicate)
         let sortDescriptors = [SortDescriptor(\FishFamily.footage.locationName)]

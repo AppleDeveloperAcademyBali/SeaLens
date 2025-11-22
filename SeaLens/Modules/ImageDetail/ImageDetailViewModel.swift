@@ -68,7 +68,7 @@ final class ImageDetailViewModel: ObservableObject {
 extension ImageDetailViewModel {
     static var preview: ImageDetailViewModel {
         let vm = ImageDetailViewModel()
-        let mockFish = Fish.mock
+        let mockFish = Fish.shallowMock()
         vm.images = mockFish.fishImages
         vm.selectedImage = mockFish.fishImages.first
         vm.fish = mockFish

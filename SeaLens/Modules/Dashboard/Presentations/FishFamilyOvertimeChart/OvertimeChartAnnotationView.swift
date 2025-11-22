@@ -11,11 +11,11 @@ import Charts
 
 struct OvertimeChartAnnotationView: View {
     @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
+    @ObservedObject private var filterState: ChartFilterState
     
     @State var selectedFamilyName: String
     @State var selectedDate: Date
     @State var selectedColor: Color
-    @State var selectedFilters: [String: Any]
     @State var dashboardViewModel: DashboardViewModel
     
     @State var colorCodeSubtitle: String = ""
@@ -31,14 +31,14 @@ struct OvertimeChartAnnotationView: View {
         selectedFamilyName: String,
         selectedDate: Date,
         selectedColor: Color,
-        selectedFilters: [String: Any],
+        filters: ChartFilterState,
         modelContext: ModelContext,
         onDismiss: @escaping () -> Void)
     {
         self.selectedFamilyName = selectedFamilyName
         self.selectedDate = selectedDate
         self.selectedColor = selectedColor
-        self.selectedFilters = selectedFilters
+        self.filterState = filters
         self.dashboardViewModel = DashboardViewModel(modelContext: modelContext)
         self.onDismiss = onDismiss
     }
@@ -113,7 +113,7 @@ struct OvertimeChartAnnotationView: View {
         .onAppear() {
             Task {
                 isLoading = true
-                let result = await dashboardViewModel.processFamilyOverLocationChartData(selectedMonth: selectedDate, selectedFishFamily: selectedFamilyName, selectedFilters: selectedFilters)
+                let result = await dashboardViewModel.processFamilyOverLocationChartData(selectedMonth: selectedDate, selectedFishFamily: selectedFamilyName, selectedFilters: filterState)
                 
                 chartData = result.chartData
                 colorCodeSubtitle = result.subtitle
