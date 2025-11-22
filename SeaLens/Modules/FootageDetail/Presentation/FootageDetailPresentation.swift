@@ -10,34 +10,53 @@ import SwiftUI
 import SwiftData
 
 struct FootageDetailPresentation: View {
+    @EnvironmentObject var router: NavigationRouter
     @ObservedObject var viewModel: FootageDetailViewModel
-    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
-    
+        
     var body: some View {
         HStack {
             if viewModel.footageUIDString == "" {
                 loadingView
             }else {
-                VStack(alignment: .leading, spacing: 1) {                    
+                VStack(alignment: .leading, spacing: 20) {                    
                     FootageDetailHeaderView(
-                        footageDetailViewModel: viewModel,
-                        initialNavigationViewModel: initialNavigationViewModel
+                        footageDetailViewModel: viewModel
                     )
                     
                     FishFamilyGrid(fishFamilies: viewModel.fishFamilies)
-
-                    Spacer()
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .padding()
         .navigationTitle(viewModel.footage?.filename ?? "")
-        .onAppear {
-            viewModel.loadFootage()
+        .task {
+            await viewModel.loadData()
         }
         .onChange(of: viewModel.footage) { _, newValue in
-            viewModel.loadFootage()
+            Task {
+                await viewModel.loadData()
+            }
+        }
+        .onChange(of: viewModel.searchText) { _, newValue in
+            viewModel.applySearching()
+        }
+        .onChange(of: router.isShowingReviewFish) { _, newValue in
+            if !router.isShowingReviewFish {
+                Task {
+                    await viewModel.loadData()
+                }
+            }
+        }
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    router.showingReviewFish()
+                } label: {
+                    Text("Review fish count")
+                }
+                .buttonStyle(.glass)
+            }
         }
 
     }

@@ -23,6 +23,23 @@ final class FootageDetailDomain {
         }
     }
 
+    func getTotalFish(by footageUid: UUID) async -> Int {
+        let footage = await getFootage(by: footageUid)
+        guard let footage else { return 0 }
+        let numOfFishDetected = footage.fishFamily.compactMap(\.numOfFishDetected)
+        let totalFish = numOfFishDetected.reduce(0, +)
+        return Int(totalFish)
+    }
     
+    func getTotalPhotos(by footageUid: UUID) async -> Int {
+        let footage = await getFootage(by: footageUid)
+        guard let footage else { return 0 }
+        let arrayOfFishes = footage.fishFamily.compactMap(\.fishes)
+        let totalPhotos = arrayOfFishes
+            .flatMap { $0 }            // flatten [[Fish]] → [Fish]
+            .flatMap { $0.fishImages } // flatten all fishImages → [FishImage]
+            .count
+        return totalPhotos
+    }
     
 }

@@ -23,46 +23,31 @@ struct FishFamilyCard: View {
             Image(imageURL)
                 .resizable()
                 .scaledToFill()
-                .frame(height: 180)
+                .frame(height: 150)
                 .clipped()
             
-            // White background section with text
-            VStack(spacing: 13)    {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(familyName)
-                        .textstyles(.title2Regular)
-                        .bold(true)
-                    
-                    Text(latinName)
-                        .textstyles(.bodyRegular)
-                        .italic()
-                }
+            VStack (alignment: .leading) {
+                Text(familyName)
+                    .textstyles(.title2Regular)
+                    .bold(true)
                 
-                // Icons row
+                Text(latinName)
+                    .textstyles(.bodyRegular)
+                    .italic()
+                
                 HStack(spacing: 8) {  // Reduced spacing
-                    HStack(spacing: 4) {
-                        Image(systemName: "fish")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        Text("\(fishCount)")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+                    Group {
+                        HStack(spacing: 4) {
+                            Image(systemName: "fish")
+                            Text("\(fishCount)")
+                        }
+                        HStack(spacing: 4) {
+                            Image(systemName: "photo.on.rectangle.angled")
+                            Text("\(photoCount)")
+                        }
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                    )
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: "photo")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        Text("\(photoCount)")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                    }
+                    .font(.caption)
+                    .foregroundColor(.gray)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .overlay(
@@ -71,13 +56,14 @@ struct FishFamilyCard: View {
                     )
                 }
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                
+            .padding(.horizontal)
+            .padding(.top, 4)
+            .padding(.bottom, 16)
+            
         }
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 31)
                 .stroke(Color.gray.opacity(0.2), lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
@@ -93,6 +79,7 @@ struct FishFamilyCard: View {
         fishCount: 4,
         imageURL: "samplePicture"
     )
-    .frame(width: 258, height: 274)
+    .frame(width: 250, height: 250)
+//    .background(.red)
     .padding()
 }

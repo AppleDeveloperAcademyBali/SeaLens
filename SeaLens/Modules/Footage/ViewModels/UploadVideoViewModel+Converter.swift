@@ -83,18 +83,13 @@ extension UploadVideoViewModel {
     // MARK: - Helper Functions
     // format time
     func formatDuration(_ time: Double) -> String {
-        let minutes = Int(time) / 60
-        let seconds = Int(time) % 60
-        return "\(minutes)m \(seconds)s"
+        return time.formatDuration()
     }
     
     // format date
     func formatCreationDate(_ date: Date?) -> String {
         guard let date else { return "Unknown" }
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter.string(from: date)
+        return date.formatCreationDate()
     }
     
     // format file size
@@ -102,10 +97,8 @@ extension UploadVideoViewModel {
         guard let fileSizeValue = try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
             return "Unknown"
         }
-        
         let bytes = Double(fileSizeValue)
-        let megaBytes = bytes / (1024 * 1024)
-        return String(format: "%.1f MB", megaBytes)
+        return bytes.formatFileSize()
     }
     
 }

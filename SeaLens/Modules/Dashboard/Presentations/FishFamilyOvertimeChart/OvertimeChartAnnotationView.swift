@@ -84,9 +84,7 @@ struct OvertimeChartAnnotationView: View {
                 .frame(height: 200)
                 
                 //Link to Recents Observations
-                NavigationLink(
-                    destination: RecentUploadsPresentation(initialNavigationViewModel: initialNavigationViewModel,
-                    selectedFootageUID: footages))
+                NavigationLink(destination: RecentUploadsPresentation(selectedFootageUID: footages))
                 {
                     HStack {
                         Text(buttonTitle)

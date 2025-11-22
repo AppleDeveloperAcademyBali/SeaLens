@@ -10,8 +10,8 @@ import SwiftData
 
 struct UploadVideoPresentation: View {
     
+    @EnvironmentObject var router: NavigationRouter
     @StateObject var viewModel = UploadVideoViewModel()
-    @ObservedObject var initialNavigationViewModel: InitialNavigationViewModel
     
     var body: some View {
         ScrollView {
@@ -31,7 +31,7 @@ struct UploadVideoPresentation: View {
                     Spacer()
                     
                     Button {
-                        initialNavigationViewModel.dismissUploadFootage()
+                        router.dismissUploadFootage()
                     } label: {
                         Image(systemName: "xmark")
                             .resizable()
@@ -73,7 +73,7 @@ struct UploadVideoPresentation: View {
             .onChange(of: viewModel.uploadSucceded) { _, newValue in
                 if newValue {
                     guard let footageUID = viewModel.uploadedFootageUID else { return }
-                    initialNavigationViewModel.submittedFootage(uid: footageUID)
+                    router.submittedFootage(uid: footageUID)
                 }
             }
         }

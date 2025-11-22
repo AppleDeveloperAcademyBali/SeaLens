@@ -8,21 +8,23 @@
 import SwiftUI
 
 struct ReviewFishComponent: View {
-    @State private var totalFish: String = "1.201"
+    @ObservedObject var fishReviewViewModel: FishReviewViewModel
+    @Binding var fishFamily: FishFamily
     
     var body: some View {
         VStack (spacing: 0) {
-            Image("samplePicture")
+            //TODO: - Do we need thumbnail for this?
+            Image("\(fishFamily.fishes.first?.fishImages.first?.url ?? "samplePicture")")
                 .resizable()
                 .scaledToFill()
                 .frame(width: 300, height: 145)
                 .clipped()
             HStack {
                 VStack (alignment: .leading) {
-                    Text("Surgeonfish")
+                    Text("\(fishFamily.fishFamilyReference?.commonName ?? "Common Name Not Found")")
                         .textstyles(.title2Regular)
                         .padding(.bottom, 2)
-                    Text("Acanthuridae")
+                    Text("\(fishFamily.fishFamilyReference?.latinName ?? "Common Name Not Found")")
                         .textstyles(.bodyRegular)
                 }
                 
@@ -33,8 +35,7 @@ struct ReviewFishComponent: View {
                         .textstyles(.caption1Regular)
                         .opacity(0.6)
                     
-                    TextField(text: $totalFish) {
-                    }
+                    TextField("", value: $fishFamily.numOfFishDetected, formatter: NumberFormatter())
                     .multilineTextAlignment(.trailing)
                     .frame(width: 80)
                 }
@@ -47,9 +48,10 @@ struct ReviewFishComponent: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color("borderColor"), lineWidth: 1)
         )
+        .onChange(of: fishFamily.numOfFishDetected) { _, newValue in
+            Task {
+                await fishReviewViewModel.updateFishFamilies(fishFamily)
+            }
+        }
     }
-}
-
-#Preview {
-    ReviewFishComponent()
 }
