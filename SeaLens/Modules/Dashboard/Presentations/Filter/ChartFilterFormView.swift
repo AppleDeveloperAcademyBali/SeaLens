@@ -322,8 +322,15 @@ struct ChartFilterFormView: View {
     private func resetFilters() {
         filterState.reset()
         
+        var index = 0
         for family in fishFamilies {
-            family.isSelected = true
+            //Reset to top 5 Fish Family
+            if index < 5 {
+                family.isSelected = true
+            } else {
+                family.isSelected = false
+            }
+            index += 1
             
             handleFamilySelectionChange(family)
         }

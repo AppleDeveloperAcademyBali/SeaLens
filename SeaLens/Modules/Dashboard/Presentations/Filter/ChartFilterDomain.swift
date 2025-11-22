@@ -63,7 +63,7 @@ class ChartFilterDomain: ObservableObject {
         
         for reference in refData {
             let item = FamilyForChartFilter(uid: reference.uid, latinName: reference.latinName, commonName: reference.commonName)
-            item.isSelected = true
+            item.isSelected = false
             
             result.append(item)
         }

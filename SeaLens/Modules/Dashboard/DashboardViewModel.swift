@@ -69,10 +69,11 @@ class DashboardViewModel: ObservableObject {
     func processFamilyOverLocationChartData(
         selectedMonth: Date,
         selectedFishFamily: String,
-        selectedFilters: ChartFilterState) async -> (chartData: [StringDataPoint], subtitle: String, buttonTitle: String, footages: Set<UUID>)
+        selectedFilters: ChartFilterState) async -> (chartData: [StringDataPoint], subtitle: String, buttonTitle: String, footages: Set<UUID>, insights: [String])
     {
-        fishFamiliesOverLocationData = await dashboardDomain.retrieveFishFamiliesOverLocationData(selectedMonth: selectedMonth, selectedFishFamily: selectedFishFamily, selectedFilters: selectedFilters)
-        
+        let result = await dashboardDomain.retrieveFishFamiliesOverLocationData(selectedMonth: selectedMonth, selectedFishFamily: selectedFishFamily, selectedFilters: selectedFilters)
+        let fishFamiliesOverLocationData = result.targetFishFamilies
+    
         let chartData = dashboardDomain.processFamilyOverLocationChartData(fishFamilies: fishFamiliesOverLocationData)
         
         var numOfFish = 0
@@ -91,7 +92,7 @@ class DashboardViewModel: ObservableObject {
         let subtitie = "\(numOfFish) total fish, \(numOfObservations) total observations"
         let buttonTitle = "View \(numOfObservations) observations"
         
-        return (chartData, subtitie, buttonTitle, allFootages)
+        return (chartData, subtitie, buttonTitle, allFootages, result.keyInsights)
     }
     
     func getTitleForAnnotation(

@@ -17,10 +17,6 @@ class DashboardDomain: ObservableObject {
         self.modelContext = modelContext
         footageData = FootageData(dataService: DataService(modelContainer: modelContext.container))
         fishFamilyData = FishFamilyData(dataService: DataService(modelContainer: modelContext.container))
-        
-        Task {
-            await footageData.retrieveFootages()
-        }
     }
     
     func retrieveFishFamilies(predicate: Predicate<FishFamily>?, sortBy: [SortDescriptor<FishFamily>]) async -> [FishFamily] {
@@ -124,14 +120,11 @@ class DashboardDomain: ObservableObject {
     func retrieveFishFamiliesOverLocationData(
         selectedMonth: Date,
         selectedFishFamily: String,
-        selectedFilters: ChartFilterState) async -> [FishFamily]
+        selectedFilters: ChartFilterState) async -> (targetFishFamilies: [FishFamily], keyInsights: [String])
     {
         let customFilters = ChartFilterState()
         customFilters.startDate = selectedMonth
-        
-        var endDateComponent = DateComponents()
-        endDateComponent.month = 1
-        customFilters.endDate = Calendar.current.date(byAdding: endDateComponent, to: selectedMonth) ?? selectedMonth.addingTimeInterval(3600 * 24 * 30)
+        customFilters.endDate = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonth) ?? selectedMonth.addingTimeInterval(3600 * 24 * 30)
         
         customFilters.selectedLocations = selectedFilters.selectedLocations
         customFilters.selectedSites = selectedFilters.selectedSites
@@ -152,7 +145,109 @@ class DashboardDomain: ObservableObject {
             return fishFamiliesToShow.contains(commonName)
         }
         
-        return selectedFishFamilies
+        let insights = await generateKeyInsight(from: customFilters, selectedFishFamilies: fishFamiliesToShow, currentMonthFish: selectedFishFamilies)
+        
+        return (selectedFishFamilies, insights)
+    }
+    
+    func generateKeyInsight(from filterState: ChartFilterState, selectedFishFamilies: [String], currentMonthFish: [FishFamily]) async -> [String] {
+        var result: [String] = []
+        
+        // Get Last Month FishFamily recorded
+        let filter = filterState
+        filter.endDate = filter.startDate
+        filter.startDate = Calendar.current.date(byAdding: .month, value: -1, to: filter.startDate) ?? filter.startDate.addingTimeInterval(-3600 * 24 * 30)
+        
+        let predicate = getPredicate(for: filter)
+        let sortDescriptors = [SortDescriptor(\FishFamily.footage.locationName)]
+        let allLastMonthFish = await retrieveFishFamilies(predicate: predicate, sortBy: sortDescriptors)
+        let lastMonthFish = allLastMonthFish.filter { fishFamily in
+            let commonName = fishFamily.fishFamilyReference?.commonName ?? ""
+            
+            return selectedFishFamilies.contains(commonName)
+        }
+    
+        // Generate Growth Insight
+        var keyInsight = generateFishGrowth(currentMonthFishList: currentMonthFish, lastMonthFishList: lastMonthFish, lastMonth: filter.startDate)
+        result.append(keyInsight)
+        
+        // Generate Location Insight
+        keyInsight = generateLocationInsight(currentMonthFishList: currentMonthFish)
+        result.append(keyInsight)
+        
+        //Generate Depth Insight
+        keyInsight = generateDepthInsight(currentMonthFishList: currentMonthFish)
+        result.append(keyInsight)
+        
+        return result
+    }
+    
+    private func generateDepthInsight(currentMonthFishList: [FishFamily]) -> String {
+        let depthFishFamily: [(depthInMeter: String, totalFishCount: Int)] = currentMonthFishList.map { item in
+            (depthInMeter: String(format: "%.2f", item.footage.depthInMeter), totalFishCount: Int(item.numOfFishDetected))
+        }
+
+        let totalsByDepth = depthFishFamily.reduce(into: [String: Int]()) { result, item in
+            result[item.depthInMeter, default: 0] += item.totalFishCount
+        }
+        
+        let sortedTotalsByDepth = totalsByDepth.sorted { $0.value > $1.value }
+        
+        let depthValue = sortedTotalsByDepth.first?.key ?? "0.00"
+        let mostFishCount = sortedTotalsByDepth.first?.value ?? 0
+        
+        let keyInsight = "Most common at \(depthValue)m depth (\(mostFishCount) fish)"
+        
+        return keyInsight
+    }
+    
+    private func generateLocationInsight(currentMonthFishList: [FishFamily]) -> String {
+        let totalFishCount = currentMonthFishList.reduce(0) { count, fishFamily in
+            count + fishFamily.numOfFishDetected
+        }
+        
+        let locationFishFamily: [(location: String, totalFishCount: Int)] = currentMonthFishList.map { item in
+            (location: item.footage.locationName, totalFishCount: Int(item.numOfFishDetected))
+        }
+
+        let totalsByLocation = locationFishFamily.reduce(into: [String: Int]()) { result, item in
+            result[item.location, default: 0] += item.totalFishCount
+        }
+        
+        let sortedTotalsByLocation = totalsByLocation.sorted { $0.value > $1.value }
+        
+        let locationName = sortedTotalsByLocation.first?.key ?? "Unknown"
+        let mostFishCount = sortedTotalsByLocation.first?.value ?? 0
+        
+        let keyInsight = "\(Int((Double(mostFishCount)/Double(totalFishCount)) * 100))%  found in \(locationName) (\(mostFishCount) fish)"
+        
+        return keyInsight
+    }
+    
+    private func generateFishGrowth(currentMonthFishList: [FishFamily], lastMonthFishList: [FishFamily], lastMonth: Date) -> String {
+        let currentMonthFishCount = currentMonthFishList.reduce(0) { count, fishFamily in
+            count + fishFamily.numOfFishDetected
+        }
+        let lastMonthFishCount = lastMonthFishList.reduce(0) { count, fishFamily in
+            count + fishFamily.numOfFishDetected
+        }
+        
+        let diffCount = currentMonthFishCount - lastMonthFishCount
+        let percentageChange: Int = lastMonthFishCount == 0 ? 100 : abs(Int((Double(diffCount) / Double(lastMonthFishCount)) * 100))
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "LLLL"
+        
+        let month = formatter.string(from: lastMonth)
+        
+        var result = "No change from \(month)"
+        if diffCount > 0 {
+            result = "\(percentageChange)% increase from \(month) (\(diffCount) fish)"
+        } else if diffCount < 0 {
+            result = "\(percentageChange)% decrease from \(month) (\(diffCount) fish)"
+        }
+        
+        return result
     }
     
     func processFamilyOverLocationChartData(
@@ -172,13 +267,13 @@ class DashboardDomain: ObservableObject {
         let calendar = Calendar.current
         var months: [Date] = []
         
-        guard var currentDate = calendar.date(from: calendar.dateComponents([.year, .month], from: startDate)) else {
-            return months
-        }
+        var currentDateComponents = calendar.dateComponents([.year, .month], from: startDate)
+        currentDateComponents.day = 1
+        var currentDate = calendar.date(from: currentDateComponents) ?? Date()
         
-        guard let endMonthDate = calendar.date(from: calendar.dateComponents([.year, .month], from: endDate)) else {
-            return months
-        }
+        var endDateComponents = calendar.dateComponents([.year, .month], from: endDate)
+        endDateComponents.day = 1
+        let endMonthDate = calendar.date(from: endDateComponents) ?? Date()
         
         while currentDate <= endMonthDate {
             months.append(currentDate)

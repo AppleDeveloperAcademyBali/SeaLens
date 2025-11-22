@@ -19,10 +19,30 @@ class ChartFilterViewModel: ObservableObject {
     }
     
     func getFishFamilies() async  -> [FamilyForChartFilter] {
-        return await domain.getFishFamilies()
+        let fishFamilies = await domain.getFishFamilies()
+        
+        return selectTopFishFamily(fishFamilies, topN: 5)
     }
     
     func getLocations() async -> [LocationForChartFilter] {
         return await domain.getLocations()
+    }
+    
+    func selectTopFishFamily(_ families: [FamilyForChartFilter], topN: Int) -> [FamilyForChartFilter] {
+        var count = 0
+        
+        if families.count < topN {
+            count = families.count
+        } else {
+            count = topN
+        }
+        
+        let sortedFamilies = families.sorted { $0.totalFishCount > $1.totalFishCount }
+        
+        for i in 0..<count {
+            sortedFamilies[i].isSelected = true
+        }
+        
+        return sortedFamilies
     }
 }

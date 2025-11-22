@@ -10,7 +10,6 @@ import SwiftData
 import Charts
 
 struct OvertimeChartAnnotationView: View {
-    @StateObject private var initialNavigationViewModel = InitialNavigationViewModel()
     @ObservedObject private var filterState: ChartFilterState
     
     @State var selectedFamilyName: String
@@ -22,6 +21,7 @@ struct OvertimeChartAnnotationView: View {
     @State var buttonTitle: String = ""
     @State var chartData: [StringDataPoint] = []
     @State var footages: Set<UUID> = []
+    @State var keyInsights: [String] = []
     
     @State private var isLoading: Bool = true
     
@@ -63,25 +63,14 @@ struct OvertimeChartAnnotationView: View {
                     }
                     .buttonStyle(.plain)
                 }
+                .padding(.bottom, 5)
                 
-                // TODO: Key Insight
-                //Text("KEY INSIGHT")
-                //    .textstyles(.caption1Regular)
+                KeyInsightSection
                 
                 Divider()
+                    .padding(.vertical, 10)
                 
-                Text("LOCATION BREAKDOWN")
-                    .textstyles(.caption1Regular)
-                
-                // Bar Chart for each location
-                Chart(chartData) { dataPoint in
-                    BarMark (
-                        x: .value("Number of Fish", dataPoint.value),
-                        y: .value("Location", dataPoint.name)
-                    )
-                }
-                .padding()
-                .frame(height: 200)
+                LocationChartSection
                 
                 //Link to Recents Observations
                 NavigationLink(destination: RecentUploadsPresentation(selectedFootageUID: footages))
@@ -117,8 +106,46 @@ struct OvertimeChartAnnotationView: View {
                 colorCodeSubtitle = result.subtitle
                 buttonTitle = result.buttonTitle
                 footages = result.footages
+                keyInsights = result.insights
                 isLoading = false
             }
+        }
+    }
+    
+    @ViewBuilder
+    private var KeyInsightSection: some View {
+        // KEY INSIGHT
+        VStack(alignment: .leading) {
+            Text("KEY INSIGHT")
+                .textstyles(.caption1Regular)
+                .padding(.bottom, 5)
+            
+            ForEach(keyInsights, id:\.self) { insight in
+                HStack {
+                    Image(systemName: "plus.magnifyingglass")
+                        .foregroundStyle(.secondary)
+                    Text(insight)
+                        .textstyles(.bodyRegular)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var LocationChartSection: some View {
+        VStack(alignment: .leading) {
+            Text("LOCATION BREAKDOWN")
+                .textstyles(.caption1Regular)
+            
+            // Bar Chart for each location
+            Chart(chartData) { dataPoint in
+                BarMark (
+                    x: .value("Number of Fish", dataPoint.value),
+                    y: .value("Location", dataPoint.name)
+                )
+            }
+            .padding()
+            .frame(height: 200)
         }
     }
 }

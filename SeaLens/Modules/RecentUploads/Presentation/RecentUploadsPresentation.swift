@@ -26,8 +26,6 @@ public struct RecentUploadsPresentation: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(recentUploadsViewModel.footages) { footage in
-                            Text(footage.uid.uuidString)
-                                .foregroundStyle(.red)
                             NavigationLink(value: footage.uid.uuidString) {
                                 FootageFolder(title: footage.filename)
                                     .padding(.horizontal)
